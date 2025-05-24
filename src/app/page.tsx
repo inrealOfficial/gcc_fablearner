@@ -14,13 +14,13 @@ export default function Home() {
   return (
     <div className="overflow-x-hidden font-sans bg-gradient-to-b from-blue-50 to-white">
       <HeroSection />
-      <ResultsSection />
+      {/* <ResultsSection />
       <BenefitsSection />
       <TestimonialsSection />
       <ScheduleSection />
       <FaqSection />
       <RegistrationSection />
-      <Footer />
+      <Footer /> */}
     </div>
   );
 }
