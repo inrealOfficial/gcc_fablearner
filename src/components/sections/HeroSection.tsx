@@ -630,18 +630,18 @@ export const HeroSection = () => {
               </motion.div>
             </div>
 
-            {/* Right Image Column - Removed 3D Effect */}
+            {/* Right Image Column with Mobile Optimizations */}
             <motion.div
               className="relative order-first md:order-last"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.5, duration: 0.8 }}
             >
-              {/* Floating statistics badges - without parallax movement */}
+              {/* Floating statistics badges - hidden on mobile */}
               {stats.map((stat, index) => (
                 <motion.div
                   key={index}
-                  className="absolute bg-white/90 backdrop-blur-md rounded-lg px-3 py-2 shadow-lg z-20"
+                  className="absolute bg-white/90 backdrop-blur-md rounded-lg px-3 py-2 shadow-lg z-20 hidden md:block"
                   style={{
                     top: `${25 + index * 25}%`,
                     left: index % 2 === 0 ? "-10%" : "auto",
@@ -671,12 +671,11 @@ export const HeroSection = () => {
                 </motion.div>
               ))}
 
-              {/* Decorative elements - without parallax movement */}
-              <motion.div className="absolute -top-6 -left-6 w-24 h-24 bg-yellow-300/30 rounded-full filter blur-md" />
+              {/* Decorative elements - smaller/hidden on mobile */}
+              <motion.div className="absolute -top-3 -left-3 md:-top-6 md:-left-6 w-12 h-12 md:w-24 md:h-24 bg-yellow-300/30 rounded-full filter blur-md" />
+              <motion.div className="absolute -bottom-3 -right-3 md:-bottom-6 md:-right-6 w-16 h-16 md:w-32 md:h-32 bg-pink-300/30 rounded-full filter blur-md" />
 
-              <motion.div className="absolute -bottom-6 -right-6 w-32 h-32 bg-pink-300/30 rounded-full filter blur-md" />
-
-              {/* Main Hero Image - without 3D effect */}
+              {/* Main Hero Image */}
               <div className="relative rounded-2xl overflow-hidden border-4 border-white/30 shadow-2xl">
                 <Image
                   src="https://fablearner.com/wp-content/uploads/2025/05/hero-1.png"
@@ -687,25 +686,25 @@ export const HeroSection = () => {
                   priority
                 />
 
-                {/* Interactive image overlay */}
+                {/* Interactive image overlay - simplified on mobile */}
                 <motion.div
                   className="absolute inset-0 bg-gradient-to-t from-pink-700/50 via-transparent to-transparent flex flex-col-reverse"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 1.2, duration: 0.8 }}
                 >
-                  <div className="p-6">
+                  <div className="p-3 md:p-6">
                     <div
-                      className={`bg-white/90 backdrop-blur-md rounded-lg p-3 transform -rotate-1 shadow-lg max-w-xs mx-auto ${andika.className}`}
+                      className={`bg-white/90 backdrop-blur-md rounded-lg p-2 md:p-3 transform -rotate-1 shadow-lg max-w-xs mx-auto ${andika.className}`}
                     >
-                      <div className="flex items-start gap-3">
+                      {/* Simplified content for mobile */}
+                      <div className="md:flex items-start gap-3 hidden md:block">
                         <div className="bg-pink-100 rounded-full p-1.5">
                           <svg
                             width="20"
                             height="20"
                             viewBox="0 0 24 24"
                             fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
                           >
                             <path
                               d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
@@ -737,15 +736,25 @@ export const HeroSection = () => {
                           </p>
                         </div>
                       </div>
-                      <div className="h-px bg-gray-200 my-3"></div>
-                      <div className="flex items-start gap-3">
+
+                      {/* Mobile-only simplified version */}
+                      <div className="md:hidden text-center">
+                        <h4 className="font-bold text-green-700">Reality:</h4>
+                        <p className="text-sm text-gray-700">
+                          Children as young as 2 years can learn to read!
+                        </p>
+                      </div>
+
+                      <div className="h-px bg-gray-200 my-2 md:my-3 hidden md:block"></div>
+
+                      {/* Full content shown only on larger screens */}
+                      <div className="md:flex items-start gap-3 hidden md:block">
                         <div className="bg-green-100 rounded-full p-1.5">
                           <svg
                             width="20"
                             height="20"
                             viewBox="0 0 24 24"
                             fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
                           >
                             <path
                               d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
@@ -772,6 +781,25 @@ export const HeroSection = () => {
                     </div>
                   </div>
                 </motion.div>
+              </div>
+
+              {/* Mobile stats display at the bottom instead of floating */}
+              <div className="md:hidden mt-6 grid grid-cols-3 gap-2">
+                {stats.map((stat, index) => (
+                  <div
+                    key={index}
+                    className="bg-white/20 backdrop-blur-sm p-2 rounded-xl text-center"
+                  >
+                    <p className="font-dingdong text-white text-sm">
+                      <span className="font-bold block text-base">
+                        {stat.number}
+                      </span>
+                      <span className="text-xs text-white/80">
+                        {stat.label}
+                      </span>
+                    </p>
+                  </div>
+                ))}
               </div>
             </motion.div>
           </div>
