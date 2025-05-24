@@ -1,0 +1,795 @@
+"use client";
+
+import { useState, useEffect, useRef } from "react";
+import {
+  motion,
+  useAnimation,
+  useScroll,
+  AnimatePresence,
+  useInView,
+  useMotionValue,
+  useTransform,
+} from "framer-motion";
+import Image from "next/image";
+import { Andika } from "next/font/google";
+
+// Import Andika font
+const andika = Andika({
+  weight: ["400", "700"],
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-andika",
+});
+
+export const HeroSection = () => {
+  // State management
+  const [scrolled, setScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [currentWord, setCurrentWord] = useState(0);
+  const [childAge, setChildAge] = useState<number | null>(null);
+  const [letterIndex, setLetterIndex] = useState(0);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const heroRef = useRef<HTMLElement>(null);
+  
+  // Animation hooks
+  const controls = useAnimation();
+  const { scrollYProgress } = useScroll();
+  const isInView = useInView(heroRef, { once: true });
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+  
+  // Words for the interactive reading demo
+  const readingWords = ["CAT", "DOG", "SUN", "PLAY", "BOOK"];
+  const currentDemoWord = readingWords[currentWord];
+  
+  // Statistics for floating badges
+  const stats = [
+    { number: "90%", label: "Success rate" },
+    { number: "3x", label: "Faster learning" },
+    { number: "15 min", label: "Daily practice" },
+  ];
+
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 50);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Word rotation effect
+  useEffect(() => {
+    const wordInterval = setInterval(() => {
+      setCurrentWord((prev) => (prev + 1) % readingWords.length);
+      // Reset letter animation when word changes
+      setLetterIndex(0);
+    }, 4000);
+    return () => clearInterval(wordInterval);
+  }, []);
+
+  // Letter-by-letter animation
+  useEffect(() => {
+    if (letterIndex < currentDemoWord.length) {
+      const letterTimeout = setTimeout(() => {
+        setLetterIndex(prev => prev + 1);
+      }, 300);
+      return () => clearTimeout(letterTimeout);
+    }
+  }, [letterIndex, currentDemoWord]);
+
+  // Track mouse for parallax effect
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      // Update mouse position state
+      setMousePosition({
+        x: (e.clientX / window.innerWidth) - 0.5,
+        y: (e.clientY / window.innerHeight) - 0.5
+      });
+      
+      // Update motion values
+      mouseX.set(e.clientX);
+      mouseY.set(e.clientY);
+    };
+
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, [mouseX, mouseY]);
+
+  // Parallax transform values
+  const rotateX = useTransform(mouseY, [-0.5, 0.5], [5, -5]);
+  const rotateY = useTransform(mouseX, [-0.5, 0.5], [-5, 5]);
+  const imageX = useTransform(mouseX, [-0.5, 0.5], [-15, 15]);
+  const imageY = useTransform(mouseY, [-0.5, 0.5], [-15, 15]);
+  const bgX = useTransform(mouseX, [-0.5, 0.5], [30, -30]);
+  const bgY = useTransform(mouseY, [-0.5, 0.5], [30, -30]);
+
+  return (
+    <>
+      {/* Fixed Header/Navigation */}
+      <motion.header
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+          scrolled ? "bg-white/95 shadow-md py-3" : "bg-transparent py-5"
+        }`}
+        initial={{ y: -100 }}
+        animate={{ y: 0 }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
+      >
+        {/* Header content */}
+        <div className="container mx-auto px-4 flex justify-between items-center">
+          <motion.div
+            className="flex items-center"
+            whileHover={{ scale: 1.03 }}
+            transition={{ type: "spring", stiffness: 400, damping: 10 }}
+          >
+            <Image
+              src="https://fablearner.com/wp-content/uploads/2025/05/logo.png"
+              alt="Fablearner Logo"
+              width={180}
+              height={50}
+              className="h-10 w-auto"
+            />
+          </motion.div>
+
+          {/* Navigation */}
+          <div className="hidden md:flex items-center gap-6">
+            <motion.nav className={`flex gap-4 ${andika.className}`}>
+              {["Our Method", "Results", "FAQ", "Success Stories"].map(
+                (item, i) => (
+                  <motion.a
+                    key={item}
+                    href={`#${item.toLowerCase().replace(/\s+/g, "-")}`}
+                    className={`font-medium px-1 py-2 border-b-2 transition-all ${
+                      scrolled
+                        ? "text-pink-700 border-transparent hover:border-pink-600"
+                        : "text-white border-transparent hover:border-white/50"
+                    }`}
+                    whileHover={{ y: -2 }}
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.1 * i, duration: 0.5 }}
+                  >
+                    {item}
+                  </motion.a>
+                )
+              )}
+            </motion.nav>
+
+            <motion.a
+              href="#register"
+              className={`bg-white text-pink-600 font-medium rounded-full px-6 py-2.5 transition-all font-dingdong ${
+                scrolled ? "bg-pink-600 text-white hover:bg-pink-700" : "hover:bg-white/90 hover:shadow-white/20 hover:shadow-lg"
+              }`}
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.5, duration: 0.5 }}
+              whileHover={{
+                scale: 1.05,
+                boxShadow: "0 10px 25px -5px rgba(255, 255, 255, 0.4)",
+              }}
+              whileTap={{ scale: 0.98 }}
+            >
+              Reserve Your Spot
+            </motion.a>
+          </div>
+          
+          {/* Mobile menu button */}
+          <div className="md:hidden">
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className={`focus:outline-none ${
+                scrolled ? "text-pink-700" : "text-white"
+              }`}
+            >
+              {mobileMenuOpen ? (
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                  <path
+                    d="M18 6L6 18M6 6L18 18"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                  />
+                </svg>
+              ) : (
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                  <path
+                    d="M4 6H20M4 12H20M4 18H20"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                  />
+                </svg>
+              )}
+            </button>
+          </div>
+        </div>
+
+        {/* Mobile menu */}
+        <AnimatePresence>
+          {mobileMenuOpen && (
+            <motion.div
+              className="md:hidden absolute w-full bg-white/95 shadow-lg"
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              {/* Mobile menu content */}
+              <div className="flex flex-col items-center py-4 gap-4">
+                {["Our Method", "Results", "FAQ", "Success Stories"].map((item) => (
+                  <a
+                    key={item}
+                    href={`#${item.toLowerCase().replace(/\s+/g, "-")}`}
+                    className={`${andika.className} text-pink-700 font-medium w-full text-center py-3 hover:bg-pink-50`}
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    {item}
+                  </a>
+                ))}
+                <a
+                  href="#register"
+                  className="bg-pink-600 text-white font-medium rounded-full px-6 py-2.5 w-4/5 text-center font-dingdong"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Reserve Your Spot
+                </a>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.header>
+
+      {/* Hero Section with SVG Background Pattern */}
+      <section
+        ref={heroRef}
+        className="relative min-h-screen flex items-center pt-24 pb-16 overflow-hidden transition-all duration-500"
+        style={{ backgroundColor: "rgba(218, 38, 83, 0.8)" }}
+      >
+        {/* SVG Background Pattern with Parallax Effect */}
+        <motion.div 
+          className="absolute inset-0 z-0 opacity-10"
+          style={{ 
+            x: bgX,
+            y: bgY
+          }}
+        >
+          <div
+            className="absolute inset-0"
+            style={{
+              backgroundImage: "url('/bg.svg')",
+              backgroundSize: "110% 110%",
+              backgroundRepeat: "no-repeat",
+              backgroundPosition: "center",
+            }}
+          ></div>
+        </motion.div>
+
+        {/* Animated background elements */}
+        <div className="absolute inset-0 z-0">
+          {/* Main background gradient circles */}
+          <motion.div
+            className="absolute top-[20%] left-[10%] w-[30vw] h-[30vw] rounded-full bg-pink-500/30 filter blur-3xl"
+            animate={{
+              scale: [1, 1.2, 1],
+              opacity: [0.2, 0.3, 0.2],
+            }}
+            transition={{
+              duration: 8,
+              repeat: Infinity,
+              repeatType: "reverse",
+            }}
+          />
+          <motion.div
+            className="absolute bottom-[10%] right-[10%] w-[40vw] h-[40vw] rounded-full bg-purple-500/30 filter blur-3xl"
+            animate={{
+              scale: [1, 1.1, 1],
+              opacity: [0.2, 0.3, 0.2],
+            }}
+            transition={{
+              duration: 10,
+              repeat: Infinity,
+              repeatType: "reverse",
+              delay: 2,
+            }}
+          />
+        </div>
+
+        {/* Floating alphabet letters in background */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          {['A', 'B', 'C', 'R', 'E', 'S', 'T', 'P', 'M'].map((letter, i) => (
+            <motion.div
+              key={letter}
+              className="absolute font-dingdong text-white/10 text-6xl md:text-8xl font-bold"
+              style={{
+                left: `${10 + (i * 20) % 80}%`,
+                top: `${5 + (i * 15) % 90}%`,
+              }}
+              animate={{
+                y: [0, -30, 0],
+                rotate: [0, i % 2 === 0 ? 10 : -10, 0],
+                opacity: [0.1, 0.15, 0.1]
+              }}
+              transition={{
+                duration: 3 + (i % 3),
+                repeat: Infinity,
+                ease: "easeInOut",
+                delay: i * 0.3
+              }}
+            >
+              {letter}
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Content Container */}
+        <div className="container mx-auto px-4 relative z-10">
+          {/* Date Badge with Countdown */}
+          <motion.div
+            className="mb-6 md:mb-8 max-w-fit mx-auto md:mx-0 relative"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2, duration: 0.6 }}
+          >
+            <div className="bg-white/20 backdrop-blur-md rounded-full px-6 py-3 border border-white/30 shadow-xl">
+              <div className="flex items-center gap-3">
+                <div className="bg-white/20 backdrop-blur-sm rounded-full h-10 w-10 flex items-center justify-center">
+                  <motion.div
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+                  >
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M12 6V12L16 14" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="white" strokeWidth="2"/>
+                    </svg>
+                  </motion.div>
+                </div>
+                <div>
+                  <p className="font-dingdong text-lg md:text-xl text-white flex items-center">
+                    <span>24-25 May 2025</span>
+                    <span className="bg-white/20 h-4 w-px mx-3 inline-block"></span>
+                    <span className="text-yellow-200">6:00-7:30 PM</span>
+                  </p>
+                  <div className="flex gap-1 mt-1">
+                    <div className="bg-white/20 px-1.5 py-0.5 rounded text-xs text-white">
+                      <span className="font-bold">23</span> days
+                    </div>
+                    <div className="bg-white/20 px-1.5 py-0.5 rounded text-xs text-white">
+                      <span className="font-bold">14</span> hrs
+                    </div>
+                    <div className="bg-white/20 px-1.5 py-0.5 rounded text-xs text-white">
+                      <span className="font-bold">56</span> min
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            {/* Limited seats indicator */}
+            <div className="absolute -top-3 -right-3 bg-yellow-400 text-pink-800 text-xs font-bold rounded-full px-2 py-1 transform rotate-12 shadow-lg">
+              Only 28 seats left!
+            </div>
+          </motion.div>
+
+          <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
+            {/* Left Content Column */}
+            <div>
+              {/* Headline with child age personalization */}
+              <div className="mb-8">
+                {!childAge ? (
+                  <motion.div 
+                    className="bg-white/20 backdrop-blur-md rounded-xl p-5 mb-6"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.3, duration: 0.6 }}
+                  >
+                    <p className={`${andika.className} text-white mb-3`}>How old is your child?</p>
+                    <div className="flex flex-wrap gap-2">
+                      {[2, 3, 4, 5, "6+"].map((age) => (
+                        <motion.button
+                          key={age}
+                          className="bg-white/20 hover:bg-white/30 text-white px-4 py-1 rounded-full"
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                          onClick={() => setChildAge(typeof age === "number" ? age : 6)}
+                        >
+                          {age} {typeof age === 'number' ? "years" : ""}
+                        </motion.button>
+                      ))}
+                    </div>
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.5 }}
+                    className="mb-5"
+                  >
+                    <div className="flex items-center gap-2 text-white/80 text-sm mb-3">
+                      <span>Child age: {childAge}+</span>
+                      <button 
+                        className="underline hover:text-white"
+                        onClick={() => setChildAge(null)}
+                      >
+                        Change
+                      </button>
+                    </div>
+                    <div className={`inline-flex bg-gradient-to-r from-yellow-400/20 to-yellow-400/30 backdrop-blur-sm text-yellow-200 rounded-full px-4 py-2 text-sm ${andika.className} font-bold`}>
+                      Perfect timing! Age {childAge} is optimal for early reading skills.
+                    </div>
+                  </motion.div>
+                )}
+
+                <motion.h1
+                  className="font-dingdong text-4xl md:text-5xl lg:text-6xl text-white leading-tight"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.4, duration: 0.6 }}
+                >
+                  {childAge 
+                    ? `At Age ${childAge}, Your Child Can Already Read`
+                    : "Your Child Can Start Reading"
+                  }
+                  <span className="text-yellow-300 block mt-2">Before Age 3!</span>
+                </motion.h1>
+              </div>
+
+              {/* Interactive Reading Demo */}
+              <motion.div
+                className="bg-white/10 backdrop-blur-md rounded-xl p-5 mb-8 overflow-hidden relative"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5, duration: 0.6 }}
+                whileHover={{ 
+                  backgroundColor: "rgba(255, 255, 255, 0.15)",
+                  transition: { duration: 0.2 }
+                }}
+              >
+                <div className="absolute top-3 right-3 flex items-center">
+                  <div className="bg-yellow-400 w-2 h-2 rounded-full mr-1 animate-pulse"></div>
+                  <span className="text-white/70 text-xs">Live Demo</span>
+                </div>
+
+                <p className={`${andika.className} text-white mb-3`}>See how children learn to read with our method:</p>
+                
+                <div className="flex gap-6 items-center">
+                  <div className="flex-1 bg-white/10 rounded-lg p-4 flex items-center justify-center">
+                    <div className="flex items-center h-16">
+                      {currentDemoWord.split('').map((letter, idx) => (
+                        <motion.div
+                          key={`${currentWord}-${idx}`}
+                          className="font-dingdong text-4xl md:text-5xl mx-1"
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={idx < letterIndex ? { opacity: 1, y: 0 } : { opacity: 0.3, y: 20 }}
+                          transition={{ duration: 0.3 }}
+                        >
+                          <span className={idx < letterIndex ? "text-yellow-300" : "text-white/30"}>
+                            {letter}
+                          </span>
+                        </motion.div>
+                      ))}
+                    </div>
+                  </div>
+                  
+                  <div className="hidden md:block">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none">
+                      <path d="M5 12H19M19 12L13 6M19 12L13 18" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  </div>
+                  
+                  <div className="flex-1 hidden md:flex bg-white/10 rounded-lg p-4 items-center justify-center">
+                    <div className="relative w-20 h-20">
+                      {currentWord === 0 && (
+                        <Image 
+                          src="/cat.png" 
+                          alt="Cat" 
+                          width={80} 
+                          height={80} 
+                          className="object-contain" 
+                        />
+                      )}
+                      {currentWord === 1 && (
+                        <Image 
+                          src="/dog.png" 
+                          alt="Dog" 
+                          width={80} 
+                          height={80} 
+                          className="object-contain" 
+                        />
+                      )}
+                      {currentWord === 2 && (
+                        <Image 
+                          src="/sun.png" 
+                          alt="Sun" 
+                          width={80} 
+                          height={80} 
+                          className="object-contain" 
+                        />
+                      )}
+                      {currentWord === 3 && (
+                        <Image 
+                          src="/play.png" 
+                          alt="Play" 
+                          width={80} 
+                          height={80} 
+                          className="object-contain" 
+                        />
+                      )}
+                      {currentWord === 4 && (
+                        <Image 
+                          src="/book.png" 
+                          alt="Book" 
+                          width={80} 
+                          height={80} 
+                          className="object-contain" 
+                        />
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* CTA Button */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.7, duration: 0.6 }}
+                className="mb-8"
+              >
+                <div className="relative inline-block">
+                  {/* Animated glow effect */}
+                  <motion.div
+                    className="absolute -inset-3 bg-yellow-300/70 rounded-full blur-lg"
+                    animate={{
+                      scale: [1, 1.2, 1],
+                      opacity: [0.4, 0.6, 0.4],
+                    }}
+                    transition={{
+                      duration: 2,
+                      repeat: Infinity,
+                      repeatType: "reverse",
+                    }}
+                  />
+                  <motion.a
+                    href="#register"
+                    className="relative block bg-white text-pink-700 font-dingdong text-xl px-8 py-4 rounded-full shadow-xl"
+                    whileHover={{ scale: 1.03 }}
+                    whileTap={{ scale: 0.98 }}
+                    animate={{
+                      y: [0, -5, 0],
+                    }}
+                    transition={{
+                      y: {
+                        duration: 2.5,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                      },
+                    }}
+                  >
+                    Reserve Your Spot - Rs.499
+                    <div className="absolute -top-3 -right-3 bg-yellow-400 text-pink-800 text-xs font-bold rounded-full px-2 py-1 transform rotate-12">
+                      70% OFF
+                    </div>
+                  </motion.a>
+                </div>
+                
+                <div className="mt-4 flex items-center justify-start">
+                  <svg className="w-5 h-5 text-yellow-300 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                  </svg>
+                  <p className={`${andika.className} text-white text-sm`}>
+                    <span className="font-bold">4.7/5</span> from 800+ reviews
+                  </p>
+                </div>
+              </motion.div>
+            </div>
+
+            {/* Right Image Column with 3D Effect */}
+            <motion.div
+              className="relative order-first md:order-last perspective-1000"
+              style={{
+                rotateX,
+                rotateY,
+                transformStyle: "preserve-3d",
+              }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.5, duration: 0.8 }}
+            >
+              {/* Floating statistics badges */}
+              {stats.map((stat, index) => (
+                <motion.div
+                  key={index}
+                  className="absolute bg-white/90 backdrop-blur-md rounded-lg px-3 py-2 shadow-lg z-20"
+                  style={{
+                    x: imageX,
+                    y: imageY,
+                    top: `${25 + (index * 25)}%`,
+                    left: index % 2 === 0 ? '-10%' : 'auto',
+                    right: index % 2 === 1 ? '-5%' : 'auto',
+                    transformStyle: "preserve-3d",
+                    transform: "translateZ(20px)",
+                  }}
+                  initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
+                  animate={{ 
+                    opacity: 1,
+                    x: 0,
+                    y: [0, -5, 0],
+                  }}
+                  transition={{ 
+                    delay: 0.7 + (index * 0.2),
+                    y: {
+                      repeat: Infinity,
+                      duration: 2 + index,
+                      ease: "easeInOut"
+                    }
+                  }}
+                >
+                  <p className="font-dingdong text-pink-700 text-sm">
+                    <span className="font-bold text-base">{stat.number}</span>
+                    <span className="block text-xs text-pink-600">{stat.label}</span>
+                  </p>
+                </motion.div>
+              ))}
+
+              {/* Decorative elements */}
+              <motion.div 
+                className="absolute -top-6 -left-6 w-24 h-24 bg-yellow-300/30 rounded-full filter blur-md"
+                style={{
+                  x: imageX,
+                  y: imageY,
+                  transformStyle: "preserve-3d",
+                  transform: "translateZ(10px)",
+                }}
+              />
+              
+              <motion.div 
+                className="absolute -bottom-6 -right-6 w-32 h-32 bg-pink-300/30 rounded-full filter blur-md"
+                style={{
+                  x: imageX,
+                  y: imageY,
+                  transformStyle: "preserve-3d",
+                  transform: "translateZ(5px)",
+                }}
+              />
+
+              {/* Main Hero Image with 3D effect */}
+              <div className="relative rounded-2xl overflow-hidden border-4 border-white/30 shadow-2xl">
+                <motion.div
+                  style={{
+                    x: imageX,
+                    y: imageY,
+                    transformStyle: "preserve-3d",
+                    transform: "translateZ(40px)",
+                  }}
+                >
+                  <Image
+                    src="https://fablearner.com/wp-content/uploads/2025/05/hero-1.png"
+                    alt="Child learning to read"
+                    width={600}
+                    height={600}
+                    className="w-full h-auto"
+                    priority
+                  />
+                </motion.div>
+
+                {/* Interactive image overlay */}
+                <motion.div
+                  className="absolute inset-0 bg-gradient-to-t from-pink-700/50 via-transparent to-transparent flex flex-col-reverse"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 1.2, duration: 0.8 }}
+                >
+                  <div className="p-6">
+                    <div className={`bg-white/90 backdrop-blur-md rounded-lg p-3 transform -rotate-1 shadow-lg max-w-xs mx-auto ${andika.className}`}>
+                      <div className="flex items-start gap-3">
+                        <div className="bg-pink-100 rounded-full p-1.5">
+                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="#D2386C" strokeWidth="2"/>
+                            <path d="M15 9L9 15" stroke="#D2386C" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                            <path d="M9 9L15 15" stroke="#D2386C" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                          </svg>
+                        </div>
+                        <div>
+                          <h4 className="font-bold text-pink-700">Common Myths:</h4>
+                          <p className="text-sm text-gray-700">Children under 3 can't learn to read on their own.</p>
+                        </div>
+                      </div>
+                      <div className="h-px bg-gray-200 my-3"></div>
+                      <div className="flex items-start gap-3">
+                        <div className="bg-green-100 rounded-full p-1.5">
+                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="#10B981" strokeWidth="2"/>
+                            <path d="M8 12L11 15L16 9" stroke="#10B981" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                          </svg>
+                        </div>
+                        <div>
+                          <h4 className="font-bold text-green-700">Reality:</h4>
+                          <p className="text-sm text-gray-700">Our science-backed method works for children as young as 2 years old!</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              </div>
+            </motion.div>
+          </div>
+
+          {/* Stats Row */}
+          <motion.div
+            className="mt-12 md:mt-16 grid grid-cols-1 md:grid-cols-3 gap-4"
+            variants={{
+              hidden: { opacity: 0, y: 20 },
+              show: {
+                opacity: 1,
+                y: 0,
+                transition: { staggerChildren: 0.2 },
+              },
+            }}
+            initial="hidden"
+            animate={isInView ? "show" : "hidden"}
+          >
+            {[
+              {
+                icon: "🌎",
+                number: "100+",
+                label: "Cities Worldwide",
+              },
+              {
+                icon: "👨‍👩‍👧‍👦",
+                number: "10,000+",
+                label: "Parents Attended",
+              },
+              {
+                icon: "📚",
+                number: "2,000+",
+                label: "Kids Reading",
+              },
+            ].map((stat, index) => (
+              <motion.div
+                key={index}
+                className="bg-white/20 backdrop-blur-sm p-4 rounded-xl flex items-center"
+                variants={{
+                  hidden: { opacity: 0, y: 20 },
+                  show: { opacity: 1, y: 0 },
+                }}
+                whileHover={{ 
+                  backgroundColor: "rgba(255, 255, 255, 0.3)",
+                  y: -5,
+                  transition: { duration: 0.2 }
+                }}
+              >
+                <div className="w-12 h-12 bg-white/30 rounded-full flex items-center justify-center text-2xl mr-4">
+                  {stat.icon}
+                </div>
+                <div>
+                  <div className="font-dingdong text-2xl text-white">
+                    {stat.number}
+                  </div>
+                  <p
+                    className={`${andika.className} text-sm text-white/80`}
+                  >
+                    {stat.label}
+                  </p>
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
+          
+          {/* Scroll indicator */}
+          <motion.div
+            className="absolute bottom-6 left-1/2 transform -translate-x-1/2"
+            animate={{ y: [0, 10, 0] }}
+            transition={{ duration: 1.5, repeat: Infinity }}
+          >
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="none">
+              <path
+                d="M7 10L12 15L17 10"
+                stroke="white"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </motion.div>
+        </div>
+      </section>
+    </>
+  );
+};
