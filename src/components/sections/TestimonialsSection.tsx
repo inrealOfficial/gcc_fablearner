@@ -176,19 +176,23 @@ export const TestimonialsSection = () => {
         </motion.div>
 
         {/* Updated Card Styles */}
-        <div className="relative mt-16 px-4">
-          <div className="relative max-w-6xl mx-auto">
-            {/* Updated Navigation Buttons */}
+        <div className="relative mt-16">
+          <div className="relative max-w-6xl mx-auto px-12"> {/* Added px-12 for arrow space */}
+            {/* Left Arrow Button */}
             <motion.button
-              className="absolute -left-2 md:-left-8 top-1/2 -translate-y-1/2 z-20 
-                bg-white rounded-full p-3 md:p-5
+              className="absolute -left-2 top-1/2 -translate-y-1/2 z-20 
+                bg-white/90 backdrop-blur-sm rounded-full p-2.5 md:p-4
                 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.1)] text-pink-600 hover:text-purple-600
-                hover:shadow-[0_4px_20px_-4px_rgba(236,72,153,0.3)] transition-all duration-300"
+                hover:shadow-[0_4px_20px_-4px_rgba(236,72,153,0.3)] 
+                transition-all duration-300
+                border border-pink-100
+                flex items-center justify-center
+                w-10 h-10 md:w-12 md:h-12"
               onClick={slideLeft}
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
             >
-              <svg className="w-4 h-4 md:w-6 md:h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <svg className="w-5 h-5 md:w-6 md:h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
               </svg>
             </motion.button>
@@ -218,19 +222,26 @@ export const TestimonialsSection = () => {
                     shadow-[0_4px_20px_-4px_rgba(0,0,0,0.06)]
                     hover:shadow-[0_4px_20px_-4px_rgba(236,72,153,0.15)]
                     transition-all duration-500">
-                    {/* Enhanced Image Container */}
-                    <div className="relative aspect-[4/3] w-full overflow-hidden">
+                    {/* Updated Image Container with better mobile handling */}
+                    <div className="relative w-full aspect-[4/3] overflow-hidden">
                       <Image
                         src={testimonial.imageUrl}
                         alt={`Parent Testimonial ${testimonial.id}`}
                         fill
                         priority={index === 1}
-                        className="object-cover object-center transform transition-all duration-700
-                          group-hover:scale-110 group-hover:rotate-1"
-                        sizes="(max-width: 768px) 90vw, (max-width: 1536px) 33vw, 400px"
+                        className={`
+                          object-contain
+                          transform transition-all duration-700
+                          md:object-cover md:object-center
+                          ${index !== 1 ? 'md:group-hover:scale-110 md:group-hover:rotate-1' : ''}
+                        `}
+                        sizes="(max-width: 768px) 100vw, (max-width: 1536px) 33vw, 400px"
+                        quality={90}
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent 
-                        opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                        opacity-0 group-hover:opacity-100 transition-opacity duration-500
+                        md:block hidden" 
+                      />
                     </div>
 
                     {/* Card Content */}
@@ -257,17 +268,21 @@ export const TestimonialsSection = () => {
               ))}
             </motion.div>
 
-            {/* Next Button */}
+            {/* Right Arrow Button */}
             <motion.button
-              className="absolute -right-2 md:-right-8 top-1/2 -translate-y-1/2 z-20 
-                bg-white rounded-full p-3 md:p-5
+              className="absolute -right-2 top-1/2 -translate-y-1/2 z-20 
+                bg-white/90 backdrop-blur-sm rounded-full p-2.5 md:p-4
                 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.1)] text-pink-600 hover:text-purple-600
-                hover:shadow-[0_4px_20px_-4px_rgba(236,72,153,0.3)] transition-all duration-300"
+                hover:shadow-[0_4px_20px_-4px_rgba(236,72,153,0.3)] 
+                transition-all duration-300
+                border border-pink-100
+                flex items-center justify-center
+                w-10 h-10 md:w-12 md:h-12"
               onClick={slideRight}
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
             >
-              <svg className="w-4 h-4 md:w-6 md:h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <svg className="w-5 h-5 md:w-6 md:h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
               </svg>
             </motion.button>
