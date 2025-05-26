@@ -13,6 +13,28 @@ const andika = Andika({
   variable: "--font-andika",
 });
 
+// Helper function to get the date 24 hours from now
+const get24HoursFromNow = () => {
+  const date = new Date();
+  date.setHours(date.getHours() + 24);
+  return date;
+};
+
+// Keyframe animation for wobble effect
+const wobbleKeyframes = {
+  "0%": { transform: "rotate(0deg) scale(1)" },
+  "10%": { transform: "rotate(-15deg) scale(1.05)" },
+  "20%": { transform: "rotate(10deg) scale(1.05)" },
+  "30%": { transform: "rotate(-10deg) scale(1.05)" },
+  "40%": { transform: "rotate(8deg) scale(1.05)" },
+  "50%": { transform: "rotate(-8deg) scale(1.05)" },
+  "60%": { transform: "rotate(6deg) scale(1.05)" },
+  "70%": { transform: "rotate(-4deg) scale(1.05)" },
+  "80%": { transform: "rotate(2deg) scale(1.05)" },
+  "90%": { transform: "rotate(-1deg) scale(1.05)" },
+  "100%": { transform: "rotate(0deg) scale(1)" }
+};
+
 export const RegistrationSection = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const [isHovering, setIsHovering] = useState(false);
@@ -163,13 +185,13 @@ export const RegistrationSection = () => {
 
         {/* Countdown Timer */}
         <motion.div 
-          className="mb-16 scale-110 flex justify-center items-center" // Added flex and center classes
+          className="mb-16 scale-110 flex justify-center items-center"
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1.1, opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.4 }}
         >
-          <div className="flex gap-4 justify-center items-center"> {/* Added container for timer */}
-            <CountdownTimer targetDate="May 24, 2025 18:00:00" />
+          <div className="flex gap-4 justify-center items-center">
+            <CountdownTimer targetDate={get24HoursFromNow().toString()} />
           </div>
         </motion.div>
 
@@ -197,18 +219,44 @@ export const RegistrationSection = () => {
                 px-12 py-6
                 rounded-xl
                 border-4 border-red-500
-                transition-all duration-300
                 shadow-[4px_4px_0px_0px_rgba(239,68,68,1)]
                 hover:shadow-[2px_2px_0px_0px_rgba(239,68,68,1)]
-                hover:translate-x-[2px]
-                hover:translate-y-[2px]
-                active:shadow-none
-                active:translate-x-[4px]
-                active:translate-y-[4px]
+                origin-[50%_90%]
+                transform-gpu
               `}
-              whileTap={{ scale: 0.98 }}
-              onClick={shootConfetti}
+              animate={{
+                rotate: [0, -3, 3, -2, 2, -1, 1, 0],
+                transition: {
+                  duration: 2,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }
+              }}
+              whileHover={{
+                scale: 1.05,
+                transition: {
+                  duration: 0.2
+                }
+              }}
+              whileTap={{ scale: 0.95 }}
+              onClick={(e) => {
+                shootConfetti();
+                // Add extra wobble on click
+                const target = e.currentTarget;
+                target.style.animation = 'none';
+                target.offsetHeight; // Trigger reflow
+                target.style.animation = 'bigWobble 0.8s cubic-bezier(0.36, 0, 0.66, -0.56)';
+              }}
             >
+              <style jsx global>{`
+                @keyframes bigWobble {
+                  0% { transform: rotate(0deg) scale(1); }
+                  25% { transform: rotate(-20deg) scale(1.1); }
+                  50% { transform: rotate(15deg) scale(1.1); }
+                  75% { transform: rotate(-10deg) scale(1.05); }
+                  100% { transform: rotate(0deg) scale(1); }
+                }
+              `}</style>
               <div className="relative z-10 flex flex-col items-center justify-center gap-1">
                 <span className="font-dingdong text-2xl md:text-3xl">
                   RESERVE YOUR

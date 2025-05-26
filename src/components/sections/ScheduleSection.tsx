@@ -107,7 +107,7 @@ export const ScheduleSection = () => {
         </motion.div>
 
         {/* Enhanced Schedule Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 px-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 px-4">
           {scheduleData.map((day, index) => (
             <motion.div
               key={day.day}
@@ -115,113 +115,105 @@ export const ScheduleSection = () => {
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.6, delay: index * 0.2 }}
               whileHover={{ 
-                y: -12, 
+                y: -8, 
                 scale: 1.02,
                 transition: { duration: 0.3 } 
               }}
               className="group"
             >
               <div className={`
-                relative bg-white p-10
-                rounded-[2rem]
-                shadow-[0_8px_32px_-8px_rgba(236,72,153,0.15)]
-                hover:shadow-[0_20px_48px_-12px_rgba(236,72,153,0.25)]
-                transition-all duration-500
-                border border-pink-100
+                relative p-6
+                rounded-2xl
+                ${index === 0 
+                  ? 'bg-gradient-to-br from-pink-100 via-pink-50/95 to-rose-100/90' 
+                  : 'bg-gradient-to-br from-purple-100 via-purple-50/95 to-pink-100/90'}
+                border border-white/20
+                backdrop-blur-sm
                 overflow-hidden
-                backdrop-blur-xl
+                transition-all duration-300
+                hover:shadow-[0_15px_30px_-8px_rgba(236,72,153,0.25)]
+                h-full
               `}>
-                {/* Animated Background Gradient */}
-                <motion.div 
-                  className="absolute inset-0 opacity-20"
-                  animate={{
-                    background: [
-                      'radial-gradient(circle at 0% 0%, #fdf2f8 0%, transparent 50%)',
-                      'radial-gradient(circle at 100% 100%, #fdf2f8 0%, transparent 50%)',
-                      'radial-gradient(circle at 0% 0%, #fdf2f8 0%, transparent 50%)',
-                    ],
-                  }}
-                  transition={{
-                    duration: 8,
-                    repeat: Infinity,
-                    ease: "easeInOut"
-                  }}
-                />
+                {/* Content Container */}
+                <div className="relative z-10 flex flex-col h-full">
+                  {/* Day Badge & Title Group */}
+                  <div className="flex items-start gap-4 mb-4">
+                    <div className={`
+                      flex-shrink-0 flex flex-col items-center justify-center
+                      w-16 h-16 rounded-xl
+                      ${index === 0 
+                        ? 'bg-gradient-to-br from-pink-500 to-rose-600' 
+                        : 'bg-gradient-to-br from-purple-500 to-pink-600'}
+                      text-white
+                      shadow-lg
+                      group-hover:scale-105
+                      transition-all duration-300
+                    `}>
+                      <span className="font-dingdong text-sm font-medium opacity-80">DAY</span>
+                      <span className="font-dingdong text-2xl font-bold -mt-1">{day.day}</span>
+                    </div>
 
-                {/* Enhanced Day Badge */}
-                <motion.div
-                  className={`
-                    inline-flex items-center gap-3 px-6 py-3
-                    bg-gradient-to-r from-pink-500/10 to-purple-500/10
-                    text-pink-600
-                    rounded-2xl text-lg font-bold mb-8
-                    border border-pink-200/20
-                    shadow-[0_4px_20px_-4px_rgba(236,72,153,0.15)]
-                  `}
-                  whileHover={{ scale: 1.05 }}
-                >
-                  <motion.span
-                    animate={{
-                      rotate: [0, 360],
-                    }}
-                    transition={{
-                      duration: 20,
-                      repeat: Infinity,
-                      ease: "linear"
-                    }}
-                  >
-                    {day.emoji}
-                  </motion.span>
-                  <span className="font-dingdong">DAY {day.day}</span>
-                </motion.div>
+                    <motion.div 
+                      className={`
+                        inline-flex items-center gap-2 px-4 py-2
+                        ${index === 0 ? 'bg-pink-500/10' : 'bg-purple-500/10'}
+                        ${index === 0 ? 'text-pink-600' : 'text-purple-600'}
+                        rounded-xl
+                        ${andika.className}
+                        text-sm font-semibold
+                        backdrop-blur-sm
+                        border border-white/20
+                      `}
+                      animate={{
+                        y: [0, -3, 0],
+                      }}
+                      transition={{
+                        duration: 2,
+                        repeat: Infinity,
+                        ease: "easeInOut"
+                      }}
+                    >
+                      <span className="text-lg">{day.emoji}</span>
+                      <span>15 Minutes</span>
+                    </motion.div>
+                  </div>
 
-                {/* Enhanced Title */}
-                <h3 className={`
-                  font-dingdong text-2xl md:text-3xl font-bold mb-6
-                  bg-gradient-to-r from-pink-600 via-purple-600 to-pink-600
-                  text-transparent bg-clip-text
-                  leading-tight
-                `}>
-                  {day.title}
-                </h3>
+                  {/* Title with enhanced styling */}
+                  <h3 className={`
+                    font-dingdong text-xl md:text-2xl font-bold mb-3
+                    ${index === 0 ? 'text-pink-700' : 'text-purple-700'}
+                    leading-tight
+                  `}>
+                    {day.title}
+                  </h3>
 
-                {/* Enhanced Description */}
-                <p className={`
-                  ${andika.className} 
-                  text-gray-600 leading-relaxed text-lg
-                  relative z-10
-                `}>
-                  {day.description}
-                </p>
+                  {/* Description with improved contrast */}
+                  <p className={`
+                    ${andika.className}
+                    text-base
+                    ${index === 0 ? 'text-pink-950' : 'text-purple-950'}
+                    leading-relaxed
+                    opacity-90
+                  `}>
+                    {day.description}
+                  </p>
 
-                {/* Decorative Elements */}
-                <div className="absolute top-0 right-0 w-40 h-40 -mr-20 -mt-20
-                  bg-gradient-to-br from-pink-200/20 to-purple-200/20
-                  rounded-full blur-3xl
-                  group-hover:scale-150 transition-transform duration-700
-                "/>
-                
-                {/* Floating Dots */}
-                {[...Array(3)].map((_, i) => (
-                  <motion.div
-                    key={i}
-                    className="absolute w-1 h-1 rounded-full bg-pink-400/30"
-                    style={{
-                      left: `${20 + i * 30}%`,
-                      bottom: '10%',
-                    }}
-                    animate={{
-                      y: [-10, 10, -10],
-                      opacity: [0.3, 0.6, 0.3],
-                    }}
-                    transition={{
-                      duration: 2 + i,
-                      repeat: Infinity,
-                      ease: "easeInOut",
-                      delay: i * 0.2,
-                    }}
-                  />
-                ))}
+                  {/* Enhanced Decorative Elements */}
+                  <div className={`
+                    absolute top-0 right-0 w-80 h-80 -mr-40 -mt-40
+                    rounded-full
+                    ${index === 0 
+                      ? 'bg-gradient-to-br from-pink-200/30 via-rose-200/20 to-transparent' 
+                      : 'bg-gradient-to-br from-purple-200/30 via-pink-200/20 to-transparent'}
+                    blur-3xl
+                    group-hover:scale-110
+                    transition-transform duration-700
+                  `} />
+                  
+                  {/* Additional subtle patterns */}
+                  <div className="absolute bottom-0 left-0 w-full h-32 
+                    bg-gradient-to-t from-white/5 to-transparent" />
+                </div>
               </div>
             </motion.div>
           ))}
