@@ -94,7 +94,7 @@ export const FaqSection = () => {
               FAQ
             </span>
           </motion.div>
-          <h2 className="font-bold text-4xl md:text-5xl bg-gradient-to-r from-pink-600 via-purple-600 to-pink-600 
+          <h2 className="font-dingdong text-4xl md:text-5xl bg-gradient-to-r from-pink-600 via-purple-600 to-pink-600 
             bg-clip-text text-transparent relative">
             WE'VE GOT ALL THE ANSWERS FOR YOU!
             <motion.span 

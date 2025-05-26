@@ -145,14 +145,13 @@ export const TestimonialsSection = () => {
       </motion.div>
 
       <div className="max-w-7xl mx-auto relative z-10">
-        {/* Updated Header Background */}
         <motion.div
           className="text-center mb-20"
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8 }}
         >
-          <motion.div className="relative inline-block mb-6">
+          <motion.div className="relative mb-4">
             <span className={`
               ${andika.className} 
               relative inline-flex items-center px-6 py-2
@@ -168,10 +167,12 @@ export const TestimonialsSection = () => {
             </span>
           </motion.div>
 
-          <h2 className="font-dingdong text-5xl md:text-6xl font-bold bg-gradient-to-r from-pink-600 via-purple-600 to-pink-600 
-            bg-clip-text text-transparent relative inline-block">
-            DOES IT REALLY WORK?
-          </h2>
+          <div className="mt-4">
+            <h2 className="font-dingdong text-5xl md:text-6xl font-bold bg-gradient-to-r from-pink-600 via-purple-600 to-pink-600 
+              bg-clip-text text-transparent relative inline-block">
+              DOES IT REALLY WORK?
+            </h2>
+          </div>
         </motion.div>
 
         {/* Updated Card Styles */}

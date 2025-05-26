@@ -44,7 +44,7 @@ export const RegistrationSection = () => {
             </span>
           </div>
           
-          <h2 className="text-4xl md:text-5xl font-bold mb-4 
+          <h2 className="font-dingdong text-4xl md:text-5xl font-bold mb-4 
             bg-gradient-to-r from-pink-600 via-purple-600 to-pink-600 
             bg-clip-text text-transparent">
             REGISTRATION FOR THE NEXT
@@ -62,13 +62,13 @@ export const RegistrationSection = () => {
         <div className="text-center">
           <a
             href="#register"
-            className="inline-flex items-center justify-center gap-3 px-8 py-4 
+            className={`${andika.className} inline-flex items-center justify-center gap-3 px-8 py-4 
               bg-gradient-to-r from-pink-600 to-purple-600 rounded-lg 
               text-white font-bold text-xl
               shadow-[0_4px_20px_-4px_rgba(236,72,153,0.5)]
               hover:shadow-[0_4px_20px_-4px_rgba(236,72,153,0.8)]
               hover:scale-105 active:scale-95
-              transition-all duration-300"
+              transition-all duration-300`}
           >
             <span>RESERVE YOUR SPOT - RS.499</span>
             <span>→</span>
