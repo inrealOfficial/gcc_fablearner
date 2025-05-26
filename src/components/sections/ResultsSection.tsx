@@ -146,7 +146,7 @@ export const ResultsSection = () => {
   return (
     <section
       ref={sectionRef}
-      className="relative py-24 px-4 min-h-screen bg-white overflow-hidden"
+      className="relative py-16 px-4 bg-white overflow-hidden"
     >
       {/* SVG Background Pattern with Parallax */}
       <motion.div

@@ -40,7 +40,7 @@ export const ScheduleSection = () => {
   return (
     <section
       ref={sectionRef}
-      className="relative py-32 px-4 min-h-[80vh] overflow-hidden bg-white"
+      className="relative py-16 px-4 bg-white overflow-hidden" // Reduced from py-32 to py-16
     >
       {/* Updated Background with subtle gradient */}
       <motion.div

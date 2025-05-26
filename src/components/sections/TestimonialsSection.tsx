@@ -134,7 +134,7 @@ export const TestimonialsSection = () => {
   return (
     <section
       ref={sectionRef}
-      className="relative py-32 px-4 min-h-screen bg-white overflow-hidden"
+      className="relative py-16 px-4 bg-white overflow-hidden"
     >
       {/* Simplified Background Effect */}
       <motion.div
