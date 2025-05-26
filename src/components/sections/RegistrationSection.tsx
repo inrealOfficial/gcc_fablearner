@@ -175,46 +175,50 @@ export const RegistrationSection = () => {
 
         {/* Enhanced CTA Button */}
         <motion.div className="text-center">
-          <motion.a
-            href="#register"
-            className={`
-              ${andika.className} 
-              group
-              relative inline-flex items-center justify-center gap-4 
-              px-12 py-6
-              bg-gradient-to-r from-pink-600 via-purple-600 to-pink-600 
-              rounded-2xl
-              text-white font-bold text-2xl
-              shadow-[0_8px_32px_-8px_rgba(236,72,153,0.5)]
-              hover:shadow-[0_16px_48px_-8px_rgba(236,72,153,0.6)]
-              transition-all duration-300
-              overflow-hidden
-            `}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onTap={shootConfetti}
-          >
-            {/* Shine effect */}
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent 
-              translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
-            
-            {/* Button content with floating arrow */}
-            <span>RESERVE YOUR SPOT - RS.499</span>
-            <motion.span 
-              className="transform"
-              animate={{ 
-                x: [0, 4, 0],
-                y: [0, -2, 0]
+          <div className="relative inline-block">
+            {/* Pulse animation wrapper */}
+            <motion.div
+              className="absolute -inset-2 rounded-xl bg-red-500/50"
+              animate={{
+                scale: [1, 1.1, 1],
+                opacity: [0.7, 0, 0.7],
               }}
-              transition={{ 
-                duration: 1.5, 
+              transition={{
+                duration: 2,
                 repeat: Infinity,
-                ease: "easeInOut"
+                ease: "easeInOut",
               }}
+            />
+            <motion.a
+              href="#register"
+              className={`
+                relative block
+                bg-yellow-300 text-black
+                px-12 py-6
+                rounded-xl
+                border-4 border-red-500
+                transition-all duration-300
+                shadow-[4px_4px_0px_0px_rgba(239,68,68,1)]
+                hover:shadow-[2px_2px_0px_0px_rgba(239,68,68,1)]
+                hover:translate-x-[2px]
+                hover:translate-y-[2px]
+                active:shadow-none
+                active:translate-x-[4px]
+                active:translate-y-[4px]
+              `}
+              whileTap={{ scale: 0.98 }}
+              onClick={shootConfetti}
             >
-              →
-            </motion.span>
-          </motion.a>
+              <div className="relative z-10 flex flex-col items-center justify-center gap-1">
+                <span className="font-dingdong text-2xl md:text-3xl">
+                  RESERVE YOUR
+                </span>
+                <span className="font-dingdong text-2xl md:text-3xl tracking-wider">
+                  SPOT - RS.499
+                </span>
+              </div>
+            </motion.a>
+          </div>
         </motion.div>
       </div>
     </section>

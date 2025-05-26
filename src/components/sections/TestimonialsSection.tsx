@@ -180,31 +180,36 @@ export const TestimonialsSection = () => {
           <div className="relative max-w-6xl mx-auto">
             {/* Updated Navigation Buttons */}
             <motion.button
-              className="absolute -left-8 top-1/2 -translate-y-1/2 z-20 bg-white rounded-full p-5
+              className="absolute -left-2 md:-left-8 top-1/2 -translate-y-1/2 z-20 
+                bg-white rounded-full p-3 md:p-5
                 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.1)] text-pink-600 hover:text-purple-600
                 hover:shadow-[0_4px_20px_-4px_rgba(236,72,153,0.3)] transition-all duration-300"
               onClick={slideLeft}
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
             >
-              <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <svg className="w-4 h-4 md:w-6 md:h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
               </svg>
             </motion.button>
 
-            {/* Updated Testimonials Grid */}
+            {/* Updated Testimonials Grid with Responsive Layout */}
             <motion.div
-              className="grid grid-cols-3 gap-8"
+              className="grid grid-cols-1 md:grid-cols-3 gap-8"
               variants={slideVariants}
               initial="enter"
               animate="center"
               exit="exit"
               custom={direction}
             >
+              {/* Show all 3 on desktop, but only middle one on mobile */}
               {visibleTestimonials.map((testimonial, index) => (
                 <motion.div
                   key={`${testimonial.id}-${index}`}
-                  className="group relative"
+                  className={`
+                    group relative
+                    ${index !== 1 ? 'hidden md:block' : ''}
+                  `}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: index * 0.2 }}
@@ -222,15 +227,14 @@ export const TestimonialsSection = () => {
                         priority={index === 1}
                         className="object-cover object-center transform transition-all duration-700
                           group-hover:scale-110 group-hover:rotate-1"
-                        sizes="(max-width: 1536px) 33vw, 400px"
+                        sizes="(max-width: 768px) 90vw, (max-width: 1536px) 33vw, 400px"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent 
                         opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                     </div>
 
-                    {/* Updated Card Content Background */}
+                    {/* Card Content */}
                     <div className="p-6 bg-white">
-                      {/* Enhanced Rating and Info */}
                       <div className="flex justify-center space-x-1 text-yellow-400 text-xl mb-3">
                         {Array(testimonial.rating).fill("★").map((star, i) => (
                           <motion.span
@@ -255,14 +259,15 @@ export const TestimonialsSection = () => {
 
             {/* Next Button */}
             <motion.button
-              className="absolute -right-8 top-1/2 -translate-y-1/2 z-20 bg-white rounded-full p-5
+              className="absolute -right-2 md:-right-8 top-1/2 -translate-y-1/2 z-20 
+                bg-white rounded-full p-3 md:p-5
                 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.1)] text-pink-600 hover:text-purple-600
                 hover:shadow-[0_4px_20px_-4px_rgba(236,72,153,0.3)] transition-all duration-300"
               onClick={slideRight}
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
             >
-              <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <svg className="w-4 h-4 md:w-6 md:h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
               </svg>
             </motion.button>
