@@ -120,7 +120,9 @@ export const HeroSection = () => {
               alt="Fablearner Logo"
               width={180}
               height={50}
-              className="h-10 w-auto"
+              className="h-12 w-auto object-contain"
+              priority
+              unoptimized // Add this if the image still doesn't load
             />
           </motion.div>
 
@@ -149,7 +151,7 @@ export const HeroSection = () => {
             </motion.nav>
 
             <motion.a
-              href="#register"
+              href="/checkout"
               className={`
     font-medium rounded-full px-6 py-2.5 
     transition-all duration-300 font-dingdong
@@ -230,7 +232,7 @@ export const HeroSection = () => {
                   )
                 )}
                 <a
-                  href="#register"
+                  href="/checkout"
                   className="bg-pink-600 text-white font-medium rounded-full px-6 py-2.5 w-4/5 text-center font-dingdong"
                   onClick={() => setMobileMenuOpen(false)}
                 >
@@ -599,7 +601,7 @@ export const HeroSection = () => {
                     }}
                   />
                   <motion.a
-                    href="#register"
+                    href="/checkout"
                     className="relative block bg-white text-pink-700 font-dingdong text-xl px-8 py-4 rounded-full shadow-xl"
                     whileHover={{ scale: 1.03 }}
                     whileTap={{ scale: 0.98 }}

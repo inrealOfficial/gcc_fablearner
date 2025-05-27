@@ -119,6 +119,7 @@ export const ResultsSection = () => {
     setPage([page + newDirection, newDirection]);
   };
 
+  // Update the slideVariants object
   const slideVariants = {
     enter: (direction: number) => ({
       x: direction > 0 ? 1000 : -1000,
@@ -261,13 +262,17 @@ export const ResultsSection = () => {
             {/* Previous Button - Updated positioning and styling */}
             <motion.button
               className="absolute left-0 top-1/2 -translate-y-1/2 z-20 
-        bg-white rounded-full p-3 
-        shadow-lg text-pink-600 hover:text-purple-600
-        hover:shadow-[0_4px_20px_-4px_rgba(236,72,153,0.3)]
-        transition-all duration-300
-        flex items-center justify-center
-        w-10 h-10 md:w-12 md:h-12"
-              onClick={() => paginate(-1)}
+    bg-white rounded-full p-3 
+    shadow-lg text-pink-600 hover:text-purple-600
+    hover:shadow-[0_4px_20px_-4px_rgba(236,72,153,0.3)]
+    transition-all duration-300
+    flex items-center justify-center
+    w-10 h-10 md:w-12 md:h-12
+    transform-gpu"
+              onClick={(e) => {
+                e.preventDefault();
+                paginate(-1);
+              }}
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
             >
@@ -358,13 +363,17 @@ export const ResultsSection = () => {
             {/* Next Button - Updated positioning and styling */}
             <motion.button
               className="absolute right-0 top-1/2 -translate-y-1/2 z-20 
-        bg-white rounded-full p-3
-        shadow-lg text-pink-600 hover:text-purple-600
-        hover:shadow-[0_4px_20px_-4px_rgba(236,72,153,0.3)]
-        transition-all duration-300
-        flex items-center justify-center
-        w-10 h-10 md:w-12 md:h-12"
-              onClick={() => paginate(1)}
+    bg-white rounded-full p-3
+    shadow-lg text-pink-600 hover:text-purple-600
+    hover:shadow-[0_4px_20px_-4px_rgba(236,72,153,0.3)]
+    transition-all duration-300
+    flex items-center justify-center
+    w-10 h-10 md:w-12 md:h-12
+    transform-gpu"
+              onClick={(e) => {
+                e.preventDefault();
+                paginate(1);
+              }}
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
             >

@@ -282,7 +282,7 @@ export const RegistrationSection = () => {
         {/* Button with synchronized animations */}
         <motion.div className="text-center">
           <motion.a
-            href="#register"
+            href="/checkout" // Update this line
             className={`
               relative block
               bg-yellow-300 text-black
