@@ -150,17 +150,22 @@ export const HeroSection = () => {
 
             <motion.a
               href="#register"
-              className={`bg-white text-pink-600 font-medium rounded-full px-6 py-2.5 transition-all font-dingdong ${
-                scrolled
-                  ? "bg-pink-600 text-white hover:bg-pink-700"
-                  : "hover:bg-white/90 hover:shadow-white/20 hover:shadow-lg"
-              }`}
+              className={`
+    font-medium rounded-full px-6 py-2.5 
+    transition-all duration-300 font-dingdong
+    ${scrolled 
+      ? "bg-pink-600 text-white hover:bg-pink-700 hover:shadow-pink-200 hover:shadow-lg" 
+      : "bg-white text-pink-600 hover:bg-white/90 hover:shadow-white/20 hover:shadow-lg"
+    }
+  `}
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.5, duration: 0.5 }}
               whileHover={{
                 scale: 1.05,
-                boxShadow: "0 10px 25px -5px rgba(255, 255, 255, 0.4)",
+                boxShadow: scrolled 
+                  ? "0 10px 25px -5px rgba(236, 72, 153, 0.3)"
+                  : "0 10px 25px -5px rgba(255, 255, 255, 0.4)",
               }}
               whileTap={{ scale: 0.98 }}
             >
