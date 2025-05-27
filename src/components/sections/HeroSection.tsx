@@ -153,9 +153,10 @@ export const HeroSection = () => {
               className={`
     font-medium rounded-full px-6 py-2.5 
     transition-all duration-300 font-dingdong
-    ${scrolled 
-      ? "bg-pink-600 text-white hover:bg-pink-700 hover:shadow-pink-200 hover:shadow-lg" 
-      : "bg-white text-pink-600 hover:bg-white/90 hover:shadow-white/20 hover:shadow-lg"
+    ${
+      scrolled
+        ? "bg-pink-600 text-white hover:bg-pink-700 hover:shadow-pink-200 hover:shadow-lg"
+        : "bg-white text-pink-600 hover:bg-white/90 hover:shadow-white/20 hover:shadow-lg"
     }
   `}
               initial={{ opacity: 0, scale: 0.9 }}
@@ -163,7 +164,7 @@ export const HeroSection = () => {
               transition={{ delay: 0.5, duration: 0.5 }}
               whileHover={{
                 scale: 1.05,
-                boxShadow: scrolled 
+                boxShadow: scrolled
                   ? "0 10px 25px -5px rgba(236, 72, 153, 0.3)"
                   : "0 10px 25px -5px rgba(255, 255, 255, 0.4)",
               }}
@@ -546,7 +547,7 @@ export const HeroSection = () => {
                       )}
                       {currentWord === 2 && (
                         <Image
-                          src="/sun.png"
+                          src="/sub.webp"
                           alt="Sun"
                           width={80}
                           height={80}
@@ -555,7 +556,7 @@ export const HeroSection = () => {
                       )}
                       {currentWord === 3 && (
                         <Image
-                          src="/play.png"
+                          src="/play.webp"
                           alt="Play"
                           width={80}
                           height={80}
@@ -564,7 +565,7 @@ export const HeroSection = () => {
                       )}
                       {currentWord === 4 && (
                         <Image
-                          src="/book.png"
+                          src="/book.jpg"
                           alt="Book"
                           width={80}
                           height={80}
