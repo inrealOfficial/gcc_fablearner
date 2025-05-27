@@ -6,6 +6,8 @@ import { Andika } from "next/font/google";
 import Image from "next/image";
 import Link from "next/link";
 import ReactCountryFlag from "react-country-flag";
+import { nanoid } from 'nanoid';
+import CryptoJS from 'crypto-js';
 
 const andika = Andika({
   weight: ["400", "700"],
@@ -311,6 +313,37 @@ const detectCountry = async () => {
   }
 };
 
+// PayU configuration
+const PAYU_CONFIG = {
+  key: process.env.NEXT_PUBLIC_PAYU_KEY || '',
+  salt: process.env.NEXT_PUBLIC_PAYU_SALT || '',
+  baseURL: process.env.NODE_ENV === 'production' 
+    ? 'https://secure.payu.in' 
+    : 'https://test.payu.in',
+};
+
+// Add this type for payment data
+type PaymentData = {
+  key: string;
+  txnid: string;
+  amount: string;
+  productinfo: string;
+  firstname: string;
+  lastname: string;
+  email: string;
+  phone: string;
+  surl: string;
+  furl: string;
+};
+
+// Add these helper functions
+const generateTxnId = () => `FAB-${nanoid(8)}`;
+
+const generateHash = (data: PaymentData) => {
+  const hashString = `${PAYU_CONFIG.key}|${data.txnid}|${data.amount}|${data.productinfo}|${data.firstname}|${data.email}|||||||||||${PAYU_CONFIG.salt}`;
+  return CryptoJS.SHA512(hashString).toString();
+};
+
 export default function CheckoutPage() {
   const [formData, setFormData] = useState({
     email: "",
@@ -345,6 +378,61 @@ export default function CheckoutPage() {
     };
     setInitialCountry();
   }, []);
+
+  const handlePayment = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    try {
+      setIsProcessing(true);
+
+      // Form validation
+      if (!formData.email || !formData.firstName || !formData.phone) {
+        alert('Please fill in all required fields');
+        setIsProcessing(false);
+        return;
+      }
+
+      // Prepare payment data
+      const paymentData: PaymentData = {
+        key: PAYU_CONFIG.key,
+        txnid: generateTxnId(),
+        amount: '500.00',
+        productinfo: 'FAB MASTERCLASS',
+        firstname: formData.firstName,
+        lastname: formData.lastName || '',
+        email: formData.email,
+        phone: formData.phone,
+        surl: `${window.location.origin}/payment/success`,
+        furl: `${window.location.origin}/payment/failure`,
+      };
+
+      // Generate hash
+      const hash = generateHash(paymentData);
+
+      // Create and submit form
+      const form = document.createElement('form');
+      form.method = 'POST';
+      form.action = `${PAYU_CONFIG.baseURL}/_payment`;
+      form.style.display = 'none';
+
+      // Add all fields to form
+      const allData = { ...paymentData, hash };
+      Object.entries(allData).forEach(([key, value]) => {
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = key;
+        input.value = value;
+        form.appendChild(input);
+      });
+
+      document.body.appendChild(form);
+      form.submit();
+    } catch (error) {
+      console.error('Payment error:', error);
+      alert('Payment initialization failed. Please try again.');
+      setIsProcessing(false);
+    }
+  };
 
   return (
     <div className={`${andika.variable} min-h-screen bg-gradient-to-br from-pink-50 via-white to-purple-50`}>
@@ -435,257 +523,234 @@ export default function CheckoutPage() {
 
       {/* Add margin-top to main content to account for fixed header */}
       <main className="pt-24 max-w-3xl mx-auto py-8 px-4">
-        <h1 className="text-4xl font-serif mb-8">Checkout</h1>
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={step}
-            initial="initial"
-            animate="animate"
-            exit="exit"
-            variants={fadeInUp}
-            className="bg-white rounded-2xl shadow-xl p-6 sm:p-8 border border-gray-100"
-          >
-            {/* Customer Information */}
-            <div className="mb-6 sm:mb-8">
-              <h2 className="text-lg sm:text-xl mb-3 sm:mb-4 font-dingdong">Customer information</h2>
-              <div className="mb-4">
-                <label className="block mb-2 text-sm sm:text-base">
-                  Email Address <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="email"
-                  className="w-full p-3 border border-gray-300 rounded-lg text-sm sm:text-base
-                    focus:ring-2 focus:ring-pink-200 focus:border-pink-500 transition-all
-                    placeholder:text-gray-400 bg-gray-50 focus:bg-white"
-                  value={formData.email}
-                  onChange={(e) => setFormData({...formData, email: e.target.value})}
-                  required
-                />
-              </div>
+        <motion.div
+          className="bg-white rounded-3xl shadow-lg p-8 relative overflow-hidden"
+          variants={fadeInUp}
+        >
+          {/* Decorative Background Gradients */}
+          <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-pink-50 to-purple-50 
+            opacity-20 rounded-full blur-3xl -translate-y-48 translate-x-48 rotate-12"/>
+          <div className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-br from-blue-50 to-cyan-50 
+            opacity-20 rounded-full blur-3xl translate-y-48 -translate-x-48 -rotate-12"/>
+
+          {/* Content Container */}
+          <div className="relative space-y-8">
+            {/* Title Section */}
+            <div className="text-center space-y-3">
+              <motion.h1 
+                className="font-dingdong text-3xl bg-gradient-to-r from-pink-600 to-purple-600 
+                  bg-clip-text text-transparent"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+              >
+                Complete Your Purchase
+              </motion.h1>
+              <motion.div 
+                className="w-32 h-1 bg-gradient-to-r from-pink-500 to-purple-500 mx-auto rounded-full"
+                initial={{ width: 0 }}
+                animate={{ width: 128 }}
+              />
             </div>
 
-            {/* Billing Details */}
-            <div className="mb-6 sm:mb-8">
-              <h2 className="text-lg sm:text-xl mb-3 sm:mb-4 font-dingdong">Billing details</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-                <div>
-                  <label className="block mb-2 text-sm sm:text-base">First name</label>
-                  <input
-                    type="text"
-                    className="w-full p-3 border border-gray-300 rounded-lg text-sm sm:text-base"
-                    value={formData.firstName}
-                    onChange={(e) => setFormData({...formData, firstName: e.target.value})}
-                  />
+            {/* Course Summary Card */}
+            <motion.div className="bg-gradient-to-r from-pink-50/50 to-purple-50/50 rounded-2xl p-6 border-2 
+              border-gray-100 group hover:border-pink-100 transition-all duration-300">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <div className="w-16 h-16 rounded-xl bg-white shadow-lg flex items-center justify-center">
+                    <motion.span 
+                      className="text-3xl"
+                      animate={{ rotate: [0, -10, 10, -10, 10, 0] }}
+                      transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
+                    >
+                      📚
+                    </motion.span>
+                  </div>
+                  <div>
+                    <h2 className={`${andika.className} text-xl font-bold text-gray-800`}>
+                      FAB MASTERCLASS
+                    </h2>
+                    <p className="font-dingdong text-gray-500">Lifetime Access</p>
+                  </div>
                 </div>
-                <div>
-                  <label className="block mb-2 text-sm sm:text-base">Last name</label>
-                  <input
-                    type="text"
-                    className="w-full p-3 border border-gray-300 rounded-lg text-sm sm:text-base"
-                    value={formData.lastName}
-                    onChange={(e) => setFormData({...formData, lastName: e.target.value})}
-                  />
+                <div className="text-right">
+                  <p className="text-sm text-gray-500">Total Amount</p>
+                  <p className={`${andika.className} text-2xl font-bold text-pink-600`}>₹500.00</p>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Form Section */}
+            <motion.div 
+              className="space-y-8"
+              variants={containerVariants}
+              initial="hidden"
+              animate="visible"
+            >
+              {/* Customer Information */}
+              <div className="space-y-6 p-6 rounded-2xl bg-gray-50/50 border border-gray-100">
+                <h3 className={`${andika.className} text-lg font-bold text-gray-800`}>Customer Information</h3>
+                <div className="space-y-4">
+                  <div>
+                    <label className={`${andika.className} block text-sm font-medium text-gray-700 mb-1`}>
+                      Email Address <span className="text-pink-500">*</span>
+                    </label>
+                    <input
+                      type="email"
+                      className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl
+                        focus:ring-2 focus:ring-pink-100 focus:border-pink-500 transition-all"
+                      value={formData.email}
+                      onChange={(e) => setFormData({...formData, email: e.target.value})}
+                      required
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className={`${andika.className} block text-sm font-medium text-gray-700 mb-1`}>
+                        First name
+                      </label>
+                      <input
+                        type="text"
+                        className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl
+                          focus:ring-2 focus:ring-pink-100 focus:border-pink-500 transition-all"
+                        value={formData.firstName}
+                        onChange={(e) => setFormData({...formData, firstName: e.target.value})}
+                      />
+                    </div>
+                    <div>
+                      <label className={`${andika.className} block text-sm font-medium text-gray-700 mb-1`}>
+                        Last name
+                      </label>
+                      <input
+                        type="text"
+                        className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl
+                          focus:ring-2 focus:ring-pink-100 focus:border-pink-500 transition-all"
+                        value={formData.lastName}
+                        onChange={(e) => setFormData({...formData, lastName: e.target.value})}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className={`${andika.className} block text-sm font-medium text-gray-700 mb-1`}>
+                        Country <span className="text-pink-500">*</span>
+                      </label>
+                      <div className="relative">
+                        <select
+                          className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl
+                            focus:ring-2 focus:ring-pink-100 focus:border-pink-500 transition-all appearance-none"
+                          value={formData.country}
+                          onChange={(e) => setFormData({...formData, country: e.target.value})}
+                          required
+                        >
+                          <option value="">Select country</option>
+                          {COUNTRIES.map((country) => (
+                            <option key={country.code} value={country.code}>
+                              {country.name}
+                            </option>
+                          ))}
+                        </select>
+                        <div className="absolute right-4 top-1/2 -translate-y-1/2">
+                          <ReactCountryFlag
+                            countryCode={formData.country || 'IN'}
+                            style={{ fontSize: '1.2em', opacity: 0.7 }}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <div>
+                      <label className={`${andika.className} block text-sm font-medium text-gray-700 mb-1`}>
+                        Phone Number
+                      </label>
+                      <input
+                        type="tel"
+                        className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl
+                          focus:ring-2 focus:ring-pink-100 focus:border-pink-500 transition-all"
+                        value={formData.phone}
+                        onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
 
-              {/* Country Select */}
-              <div className="mb-4">
-                <label className="block mb-2 text-sm sm:text-base">
-                  Country <span className="text-red-500">*</span>
-                </label>
-                <div className="relative">
-                  <div className="absolute left-3 top-1/2 -translate-y-1/2">
+              {/* Payment Section */}
+              <div className="space-y-6 p-6 rounded-2xl bg-gradient-to-br from-pink-50/30 to-purple-50/30 
+                border border-gray-100">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className={`${andika.className} text-lg font-bold text-gray-800`}>
+                      Payment Method
+                    </h3>
+                    <p className="text-sm text-gray-600 mt-1">
+                      Secure payment via PayU
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-2">
                     <Image
-                      src="https://cdn-icons-png.flaticon.com/512/9746/9746676.png"
-                      alt="Globe"
-                      width={24}
-                      height={24}
-                      className="opacity-70"
+                      src="/payu-secure-badge.png"
+                      alt="PayU Secure"
+                      width={60}
+                      height={60}
+                      className="h-12 w-auto"
                       unoptimized
                     />
                   </div>
-                  <select
-                    className="w-full p-3 pl-12 border border-gray-300 rounded-lg text-sm sm:text-base bg-white
-                      focus:ring-2 focus:ring-pink-200 focus:border-pink-500 transition-all appearance-none"
-                    value={formData.country}
-                    onChange={(e) => setFormData({...formData, country: e.target.value})}
-                    required
-                  >
-                    <option value="">Select a country</option>
-                    {COUNTRIES.map((country) => (
-                      <option key={country.code} value={country.code}>
-                        {country.name}
-                      </option>
-                    ))}
-                  </select>
-                  <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
-                    <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                    </svg>
-                  </div>
                 </div>
               </div>
 
-              {/* Phone Number */}
-              <div className="mb-4">
-                <label className="block mb-2 text-sm sm:text-base">Phone Number</label>
-                <input
-                  type="tel"
-                  className="w-full p-3 border border-gray-300 rounded-lg text-sm sm:text-base"
-                  value={formData.phone}
-                  onChange={(e) => setFormData({...formData, phone: e.target.value})}
-                />
-              </div>
-            </div>
-
-            {/* Order Summary */}
-            <div className="mb-6 sm:mb-8">
-              <h2 className="text-lg sm:text-xl mb-3 sm:mb-4 font-dingdong">Your order</h2>
-              <div className="relative overflow-hidden rounded-xl border border-gray-200 p-6 my-8
-                bg-gradient-to-br from-pink-50 to-purple-50">
-                <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-pink-100 to-purple-100 
-                  opacity-50 transform rotate-45 translate-x-20 -translate-y-20" />
-                <div className="flex flex-col sm:flex-row justify-between py-3 border-b gap-2">
-                  <div className="flex items-center gap-3">
-                    <div className="bg-gray-100 p-2 rounded flex-shrink-0">
-                      <span className="text-xl sm:text-2xl">📚</span>
-                    </div>
-                    <p className="font-semibold text-sm sm:text-base">MASTERCLASS AT 500INR × 1</p>
-                  </div>
-                  <div className="text-right text-sm sm:text-base">₹500.00</div>
-                </div>
-                
-                {/* Subtotal and Total */}
-                <div className="flex justify-between py-3 border-b text-sm sm:text-base">
+              {/* Order Summary */}
+              <div className="p-6 rounded-2xl bg-gray-50 space-y-4">
+                <div className="flex justify-between text-gray-600">
                   <span>Subtotal</span>
                   <span>₹500.00</span>
                 </div>
-                <div className="flex justify-between py-3 text-sm sm:text-base">
-                  <span className="font-bold">Total</span>
-                  <span className="font-bold text-lg sm:text-xl text-pink-600">₹500.00</span>
+                <div className="flex justify-between text-lg font-bold">
+                  <span>Total</span>
+                  <span className="text-pink-600">₹500.00</span>
                 </div>
               </div>
-            </div>
 
-            {/* Coupon Code */}
-            <div className="mb-6 sm:mb-8">
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  placeholder="Coupon Code"
-                  className="flex-1 p-3 border border-gray-300 rounded-lg text-sm sm:text-base"
-                  value={formData.couponCode}
-                  onChange={(e) => setFormData({...formData, couponCode: e.target.value})}
-                />
-                <button className="bg-yellow-400 text-black px-6 sm:px-8 py-3 rounded-lg hover:bg-yellow-500 text-sm sm:text-base font-semibold">
-                  Apply
-                </button>
-              </div>
-            </div>
-
-            {/* Payment Section */}
-            <div className="mb-8">
-              <h2 className="text-2xl font-dingdong mb-4">Payment</h2>
-              <div className="border rounded-lg">
-                <div className="p-4 flex items-center gap-3 border-b">
-                  <div className="font-andika text-gray-700">Credit/Debit Card & NetBanking Payment</div>
-                  <Image
-                    src="https://fablearner.com/wp-content/plugins/payu-india/images/payubizlogo.png"
-                    alt="PayU"
-                    width={80}
-                    height={30}
-                    className="h-8 w-auto object-contain"
-                    unoptimized
-                    priority
-                  />
-                </div>
-
-                <div className="bg-gray-50 p-6">
-                  <div className="mb-6">
-                    <h3 className="font-andika text-gray-700 mb-4">Credit/Debit Card Secure Payment</h3>
-                    <div className="space-y-4">
-                      <div>
-                        <label className="block mb-2">
-                          Card Number <span className="text-red-500">*</span>
-                        </label>
-                        <input
-                          type="text"
-                          placeholder="1234 1234 1234 1234"
-                          className="w-full p-3 border border-gray-300 rounded-lg bg-white"
-                          value={formData.cardNumber}
-                          onChange={(e) => setFormData({...formData, cardNumber: e.target.value})}
-                        />
-                      </div>
-                      <div className="grid grid-cols-2 gap-4">
-                        <div>
-                          <label className="block mb-2">
-                            Expiration <span className="text-red-500">*</span>
-                          </label>
-                          <input
-                            type="text"
-                            placeholder="MM / AA"
-                            className="w-full p-3 border border-gray-300 rounded-lg bg-white"
-                            value={formData.expiry}
-                            onChange={(e) => setFormData({...formData, expiry: e.target.value})}
-                          />
-                        </div>
-                        <div>
-                          <label className="block mb-2">
-                            CVC <span className="text-red-500">*</span>
-                          </label>
-                          <input
-                            type="text"
-                            placeholder="CVC"
-                            className="w-full p-3 border border-gray-300 rounded-lg bg-white"
-                            value={formData.cvc}
-                            onChange={(e) => setFormData({...formData, cvc: e.target.value})}
-                          />
-                        </div>
-                      </div>
+              {/* Submit Button */}
+              <motion.button
+                className={`${andika.className} w-full bg-gradient-to-r from-pink-500 to-purple-500 
+                  text-white py-4 px-6 rounded-xl font-bold text-lg relative overflow-hidden group
+                  shadow-lg shadow-pink-500/25 hover:shadow-pink-500/40 transition-all
+                  disabled:opacity-70 disabled:cursor-not-allowed`}
+                onClick={handlePayment}
+                disabled={isProcessing}
+                whileHover={{ scale: isProcessing ? 1 : 1.02 }}
+                whileTap={{ scale: isProcessing ? 1 : 0.98 }}
+              >
+                <span className="relative z-10">
+                  {isProcessing ? (
+                    <div className="flex items-center justify-center gap-2">
+                      <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"/>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+                      </svg>
+                      Processing...
                     </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+                  ) : (
+                    'Proceed to Payment'
+                  )}
+                </span>
+              </motion.button>
 
-            {/* Place Order Button */}
-            <motion.button
-              className="w-full bg-gradient-to-r from-pink-600 to-purple-600 text-white py-4 
-                rounded-xl font-bold text-lg sm:text-xl relative overflow-hidden group
-                shadow-lg shadow-pink-500/25 hover:shadow-pink-500/40 transition-all"
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              <span className="relative z-10 flex items-center justify-center gap-2">
-                {isProcessing ? (
-                  <>
-                    <motion.div
-                      className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full"
-                      animate={{ rotate: 360 }}
-                      transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                    />
-                    Processing...
-                  </>
-                ) : (
-                  <>
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} 
-                        d="M12 15v2m0 0v2m0-2h2m-2 0H9m3-3V6a3 3 0 00-3-3H6a3 3 0 00-3 3v12a3 3 0 003 3h12a3 3 0 003-3V9a3 3 0 00-3-3h-3m-3 3v3" 
-                      />
-                    </svg>
-                    Complete Payment - ₹500.00
-                  </>
-                )}
-              </span>
-              <motion.div
-                className="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600"
-                initial={{ x: "100%" }}
-                whileHover={{ x: 0 }}
-                transition={{ duration: 0.3 }}
-              />
-            </motion.button>
-          </motion.div>
-        </AnimatePresence>
+              {/* Security Badge */}
+              <div className="flex items-center justify-center gap-3 text-sm text-gray-500">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} 
+                    d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                </svg>
+                Secure Payment via PayU
+              </div>
+            </motion.div>
+          </div>
+        </motion.div>
       </main>
 
       {/* Trust Badges Section */}
