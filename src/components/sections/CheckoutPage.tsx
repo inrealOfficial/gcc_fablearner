@@ -6,8 +6,8 @@ import { Andika } from "next/font/google";
 import Image from "next/image";
 import Link from "next/link";
 import ReactCountryFlag from "react-country-flag";
-import { nanoid } from 'nanoid';
-import CryptoJS from 'crypto-js';
+import { nanoid } from "nanoid";
+import CryptoJS from "crypto-js";
 
 const andika = Andika({
   weight: ["400", "700"],
@@ -20,24 +20,24 @@ const andika = Andika({
 const fadeInUp = {
   initial: {
     opacity: 0,
-    y: 20
+    y: 20,
   },
   animate: {
     opacity: 1,
     y: 0,
     transition: {
       duration: 0.5,
-      ease: "easeOut"
-    }
+      ease: "easeOut",
+    },
   },
   exit: {
     opacity: 0,
     y: -20,
     transition: {
       duration: 0.3,
-      ease: "easeIn"
-    }
-  }
+      ease: "easeIn",
+    },
+  },
 };
 
 // First, add these animation variants at the top of your file after the fadeInUp variant
@@ -298,28 +298,31 @@ const COUNTRIES = [
   { code: "EH", name: "Western Sahara" },
   { code: "YE", name: "Yemen" },
   { code: "ZM", name: "Zambia" },
-  { code: "ZW", name: "Zimbabwe" }
+  { code: "ZW", name: "Zimbabwe" },
 ];
 
 // Add this function outside your component
 const detectCountry = async () => {
   try {
-    const response = await fetch('https://api.ipapi.com/api/check?access_key=YOUR_API_KEY');
+    const response = await fetch(
+      "https://api.ipapi.com/api/check?access_key=YOUR_API_KEY"
+    );
     const data = await response.json();
     return data.country_code;
   } catch (error) {
-    console.error('Error detecting country:', error);
-    return 'US'; // Default to US if detection fails
+    console.error("Error detecting country:", error);
+    return "US"; // Default to US if detection fails
   }
 };
 
 // PayU configuration
 const PAYU_CONFIG = {
-  key: process.env.NEXT_PUBLIC_PAYU_KEY || '',
-  salt: process.env.NEXT_PUBLIC_PAYU_SALT || '',
-  baseURL: process.env.NODE_ENV === 'production' 
-    ? 'https://secure.payu.in' 
-    : 'https://test.payu.in',
+  key: process.env.NEXT_PUBLIC_PAYU_KEY || "",
+  salt: process.env.NEXT_PUBLIC_PAYU_SALT || "",
+  baseURL:
+    process.env.NODE_ENV === "production"
+      ? "https://secure.payu.in"
+      : "https://test.payu.in",
 };
 
 // Add this type for payment data
@@ -368,12 +371,23 @@ export default function CheckoutPage() {
   }, []);
 
   // Add this effect for country detection
+  const detectCountry = async () => {
+    try {
+      const response = await fetch("https://ipapi.co/json/");
+      const data = await response.json();
+      return data.country_code;
+    } catch (error) {
+      console.error("Country detection failed:", error);
+      return "US";
+    }
+  };
+
   useEffect(() => {
     const setInitialCountry = async () => {
       const detectedCountry = await detectCountry();
-      const country = COUNTRIES.find(c => c.code === detectedCountry);
+      const country = COUNTRIES.find((c) => c.code === detectedCountry);
       if (country) {
-        setFormData(prev => ({ ...prev, country: country.code }));
+        setFormData((prev) => ({ ...prev, country: country.code }));
       }
     };
     setInitialCountry();
@@ -381,13 +395,13 @@ export default function CheckoutPage() {
 
   const handlePayment = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     try {
       setIsProcessing(true);
 
       // Form validation
       if (!formData.email || !formData.firstName || !formData.phone) {
-        alert('Please fill in all required fields');
+        alert("Please fill in all required fields");
         setIsProcessing(false);
         return;
       }
@@ -396,10 +410,10 @@ export default function CheckoutPage() {
       const paymentData: PaymentData = {
         key: PAYU_CONFIG.key,
         txnid: generateTxnId(),
-        amount: '500.00',
-        productinfo: 'FAB MASTERCLASS',
+        amount: "500.00",
+        productinfo: "FAB MASTERCLASS",
         firstname: formData.firstName,
-        lastname: formData.lastName || '',
+        lastname: formData.lastName || "",
         email: formData.email,
         phone: formData.phone,
         surl: `${window.location.origin}/payment/success`,
@@ -410,16 +424,16 @@ export default function CheckoutPage() {
       const hash = generateHash(paymentData);
 
       // Create and submit form
-      const form = document.createElement('form');
-      form.method = 'POST';
+      const form = document.createElement("form");
+      form.method = "POST";
       form.action = `${PAYU_CONFIG.baseURL}/_payment`;
-      form.style.display = 'none';
+      form.style.display = "none";
 
       // Add all fields to form
       const allData = { ...paymentData, hash };
       Object.entries(allData).forEach(([key, value]) => {
-        const input = document.createElement('input');
-        input.type = 'hidden';
+        const input = document.createElement("input");
+        input.type = "hidden";
         input.name = key;
         input.value = value;
         form.appendChild(input);
@@ -428,19 +442,21 @@ export default function CheckoutPage() {
       document.body.appendChild(form);
       form.submit();
     } catch (error) {
-      console.error('Payment error:', error);
-      alert('Payment initialization failed. Please try again.');
+      console.error("Payment error:", error);
+      alert("Payment initialization failed. Please try again.");
       setIsProcessing(false);
     }
   };
 
   return (
-    <div className={`${andika.variable} min-h-screen bg-gradient-to-br from-pink-50 via-white to-purple-50`}>
+    <div
+      className={`${andika.variable} min-h-screen bg-gradient-to-br from-pink-50 via-white to-purple-50`}
+    >
       {/* Header with Navigation */}
       <motion.header
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-          scrolled 
-            ? "bg-white/95 shadow-md py-3" 
+          scrolled
+            ? "bg-white/95 shadow-md py-3"
             : "bg-gradient-to-r from-pink-600 to-purple-600 py-5"
         }`}
         initial={{ y: -100 }}
@@ -466,9 +482,9 @@ export default function CheckoutPage() {
               <a
                 key={item}
                 href={`/#${item.toLowerCase().replace(/\s+/g, "-")}`}
-                className={`text-${scrolled ? "gray-700" : "white"} hover:text-${
-                  scrolled ? "pink-600" : "white/80"
-                }`}
+                className={`text-${
+                  scrolled ? "gray-700" : "white"
+                } hover:text-${scrolled ? "pink-600" : "white/80"}`}
               >
                 {item}
               </a>
@@ -483,11 +499,21 @@ export default function CheckoutPage() {
             >
               {mobileMenuOpen ? (
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                  <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                  <path
+                    d="M18 6L6 18M6 6L18 18"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                  />
                 </svg>
               ) : (
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                  <path d="M4 6H20M4 12H20M4 18H20" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                  <path
+                    d="M4 6H20M4 12H20M4 18H20"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                  />
                 </svg>
               )}
             </button>
@@ -505,16 +531,18 @@ export default function CheckoutPage() {
               transition={{ duration: 0.3 }}
             >
               <div className="flex flex-col items-center py-4 gap-4">
-                {["Our Method", "Results", "FAQ", "Success Stories"].map((item) => (
-                  <a
-                    key={item}
-                    href={`/#${item.toLowerCase().replace(/\s+/g, "-")}`}
-                    className={`${andika.className} text-pink-700 font-medium w-full text-center py-3 hover:bg-pink-50`}
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    {item}
-                  </a>
-                ))}
+                {["Our Method", "Results", "FAQ", "Success Stories"].map(
+                  (item) => (
+                    <a
+                      key={item}
+                      href={`/#${item.toLowerCase().replace(/\s+/g, "-")}`}
+                      className={`${andika.className} text-pink-700 font-medium w-full text-center py-3 hover:bg-pink-50`}
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      {item}
+                    </a>
+                  )
+                )}
               </div>
             </motion.div>
           )}
@@ -528,16 +556,20 @@ export default function CheckoutPage() {
           variants={fadeInUp}
         >
           {/* Decorative Background Gradients */}
-          <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-pink-50 to-purple-50 
-            opacity-20 rounded-full blur-3xl -translate-y-48 translate-x-48 rotate-12"/>
-          <div className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-br from-blue-50 to-cyan-50 
-            opacity-20 rounded-full blur-3xl translate-y-48 -translate-x-48 -rotate-12"/>
+          <div
+            className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-pink-50 to-purple-50 
+            opacity-20 rounded-full blur-3xl -translate-y-48 translate-x-48 rotate-12"
+          />
+          <div
+            className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-br from-blue-50 to-cyan-50 
+            opacity-20 rounded-full blur-3xl translate-y-48 -translate-x-48 -rotate-12"
+          />
 
           {/* Content Container */}
           <div className="relative space-y-8">
             {/* Title Section */}
             <div className="text-center space-y-3">
-              <motion.h1 
+              <motion.h1
                 className="font-dingdong text-3xl bg-gradient-to-r from-pink-600 to-purple-600 
                   bg-clip-text text-transparent"
                 initial={{ opacity: 0, y: 20 }}
@@ -546,7 +578,7 @@ export default function CheckoutPage() {
               >
                 Complete Your Purchase
               </motion.h1>
-              <motion.div 
+              <motion.div
                 className="w-32 h-1 bg-gradient-to-r from-pink-500 to-purple-500 mx-auto rounded-full"
                 initial={{ width: 0 }}
                 animate={{ width: 128 }}
@@ -554,35 +586,49 @@ export default function CheckoutPage() {
             </div>
 
             {/* Course Summary Card */}
-            <motion.div className="bg-gradient-to-r from-pink-50/50 to-purple-50/50 rounded-2xl p-6 border-2 
-              border-gray-100 group hover:border-pink-100 transition-all duration-300">
+            <motion.div
+              className="bg-gradient-to-r from-pink-50/50 to-purple-50/50 rounded-2xl p-6 border-2 
+              border-gray-100 group hover:border-pink-100 transition-all duration-300"
+            >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
                   <div className="w-16 h-16 rounded-xl bg-white shadow-lg flex items-center justify-center">
-                    <motion.span 
+                    <motion.span
                       className="text-3xl"
                       animate={{ rotate: [0, -10, 10, -10, 10, 0] }}
-                      transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
+                      transition={{
+                        duration: 2,
+                        repeat: Infinity,
+                        repeatDelay: 3,
+                      }}
                     >
                       📚
                     </motion.span>
                   </div>
                   <div>
-                    <h2 className={`${andika.className} text-xl font-bold text-gray-800`}>
+                    <h2
+                      className={`${andika.className} text-xl font-bold text-gray-800`}
+                    >
                       FAB MASTERCLASS
                     </h2>
-                    <p className="font-dingdong text-gray-500">Lifetime Access</p>
+                    <p className="font-dingdong text-gray-500">
+                      Lifetime Access
+                    </p>
                   </div>
                 </div>
                 <div className="text-right">
                   <p className="text-sm text-gray-500">Total Amount</p>
-                  <p className={`${andika.className} text-2xl font-bold text-pink-600`}>₹500.00</p>
+                  <p
+                    className={`${andika.className} text-2xl font-bold text-pink-600`}
+                  >
+                    ₹500.00
+                  </p>
                 </div>
               </div>
             </motion.div>
 
             {/* Form Section */}
-            <motion.div 
+            <motion.div
               className="space-y-8"
               variants={containerVariants}
               initial="hidden"
@@ -590,10 +636,16 @@ export default function CheckoutPage() {
             >
               {/* Customer Information */}
               <div className="space-y-6 p-6 rounded-2xl bg-gray-50/50 border border-gray-100">
-                <h3 className={`${andika.className} text-lg font-bold text-gray-800`}>Customer Information</h3>
+                <h3
+                  className={`${andika.className} text-lg font-bold text-gray-800`}
+                >
+                  Customer Information
+                </h3>
                 <div className="space-y-4">
                   <div>
-                    <label className={`${andika.className} block text-sm font-medium text-gray-700 mb-1`}>
+                    <label
+                      className={`${andika.className} block text-sm font-medium text-gray-700 mb-1`}
+                    >
                       Email Address <span className="text-pink-500">*</span>
                     </label>
                     <input
@@ -601,41 +653,58 @@ export default function CheckoutPage() {
                       className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl
                         focus:ring-2 focus:ring-pink-100 focus:border-pink-500 transition-all"
                       value={formData.email}
-                      onChange={(e) => setFormData({...formData, email: e.target.value})}
+                      onChange={(e) =>
+                        setFormData({ ...formData, email: e.target.value })
+                      }
                       required
                     />
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className={`${andika.className} block text-sm font-medium text-gray-700 mb-1`}>
-                        First name
+                      <label
+                        className={`${andika.className} block text-sm font-medium text-gray-700 mb-1`}
+                      >
+                        First name <span className="text-pink-500">*</span>
                       </label>
                       <input
                         type="text"
                         className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl
                           focus:ring-2 focus:ring-pink-100 focus:border-pink-500 transition-all"
                         value={formData.firstName}
-                        onChange={(e) => setFormData({...formData, firstName: e.target.value})}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            firstName: e.target.value,
+                          })
+                        }
+                        required
                       />
                     </div>
                     <div>
-                      <label className={`${andika.className} block text-sm font-medium text-gray-700 mb-1`}>
-                        Last name
+                      <label
+                        className={`${andika.className} block text-sm font-medium text-gray-700 mb-1`}
+                      >
+                        Last name <span className="text-pink-500">*</span>
                       </label>
                       <input
                         type="text"
                         className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl
                           focus:ring-2 focus:ring-pink-100 focus:border-pink-500 transition-all"
                         value={formData.lastName}
-                        onChange={(e) => setFormData({...formData, lastName: e.target.value})}
+                        onChange={(e) =>
+                          setFormData({ ...formData, lastName: e.target.value })
+                        }
+                        required
                       />
                     </div>
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className={`${andika.className} block text-sm font-medium text-gray-700 mb-1`}>
+                      <label
+                        className={`${andika.className} block text-sm font-medium text-gray-700 mb-1`}
+                      >
                         Country <span className="text-pink-500">*</span>
                       </label>
                       <div className="relative">
@@ -643,7 +712,12 @@ export default function CheckoutPage() {
                           className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl
                             focus:ring-2 focus:ring-pink-100 focus:border-pink-500 transition-all appearance-none"
                           value={formData.country}
-                          onChange={(e) => setFormData({...formData, country: e.target.value})}
+                          onChange={(e) =>
+                            setFormData({
+                              ...formData,
+                              country: e.target.value,
+                            })
+                          }
                           required
                         >
                           <option value="">Select country</option>
@@ -655,14 +729,16 @@ export default function CheckoutPage() {
                         </select>
                         <div className="absolute right-4 top-1/2 -translate-y-1/2">
                           <ReactCountryFlag
-                            countryCode={formData.country || 'IN'}
-                            style={{ fontSize: '1.2em', opacity: 0.7 }}
+                            countryCode={formData.country || "IN"}
+                            style={{ fontSize: "1.2em", opacity: 0.7 }}
                           />
                         </div>
                       </div>
                     </div>
                     <div>
-                      <label className={`${andika.className} block text-sm font-medium text-gray-700 mb-1`}>
+                      <label
+                        className={`${andika.className} block text-sm font-medium text-gray-700 mb-1`}
+                      >
                         Phone Number
                       </label>
                       <input
@@ -670,7 +746,9 @@ export default function CheckoutPage() {
                         className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl
                           focus:ring-2 focus:ring-pink-100 focus:border-pink-500 transition-all"
                         value={formData.phone}
-                        onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                        onChange={(e) =>
+                          setFormData({ ...formData, phone: e.target.value })
+                        }
                       />
                     </div>
                   </div>
@@ -678,11 +756,15 @@ export default function CheckoutPage() {
               </div>
 
               {/* Payment Section */}
-              <div className="space-y-6 p-6 rounded-2xl bg-gradient-to-br from-pink-50/30 to-purple-50/30 
-                border border-gray-100">
+              <div
+                className="space-y-6 p-6 rounded-2xl bg-gradient-to-br from-pink-50/30 to-purple-50/30 
+                border border-gray-100"
+              >
                 <div className="flex items-center justify-between">
                   <div>
-                    <h3 className={`${andika.className} text-lg font-bold text-gray-800`}>
+                    <h3
+                      className={`${andika.className} text-lg font-bold text-gray-800`}
+                    >
                       Payment Method
                     </h3>
                     <p className="text-sm text-gray-600 mt-1">
@@ -691,7 +773,7 @@ export default function CheckoutPage() {
                   </div>
                   <div className="flex items-center gap-2">
                     <Image
-                      src="/payu-secure-badge.png"
+                      src="https://fablearner.com/wp-content/plugins/payu-india/images/payubizlogo.png"
                       alt="PayU Secure"
                       width={60}
                       height={60}
@@ -729,22 +811,43 @@ export default function CheckoutPage() {
                   {isProcessing ? (
                     <div className="flex items-center justify-center gap-2">
                       <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"/>
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                          fill="none"
+                        />
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                        />
                       </svg>
                       Processing...
                     </div>
                   ) : (
-                    'Proceed to Payment'
+                    "Proceed to Payment"
                   )}
                 </span>
               </motion.button>
 
               {/* Security Badge */}
               <div className="flex items-center justify-center gap-3 text-sm text-gray-500">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} 
-                    d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                  />
                 </svg>
                 Secure Payment via PayU
               </div>
@@ -757,7 +860,7 @@ export default function CheckoutPage() {
       <div className="bg-white py-20">
         <div className="max-w-6xl mx-auto px-4">
           {/* Section Header */}
-          <motion.div 
+          <motion.div
             className="text-center mb-16"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -768,7 +871,7 @@ export default function CheckoutPage() {
                 Our Guarantees
               </span>
             </h2>
-            <div className="w-24 h-1 bg-gradient-to-r from-pink-500 to-purple-500 mx-auto rounded-full mb-4"/>
+            <div className="w-24 h-1 bg-gradient-to-r from-pink-500 to-purple-500 mx-auto rounded-full mb-4" />
           </motion.div>
 
           {/* Badges Grid */}
@@ -788,10 +891,10 @@ export default function CheckoutPage() {
                 <motion.div
                   className="bg-gradient-to-br from-pink-500 to-purple-500 p-5 rounded-2xl
                     shadow-xl shadow-pink-500/20"
-                  whileHover={{ 
+                  whileHover={{
                     rotate: 360,
                     scale: 1.1,
-                    transition: { duration: 0.8 }
+                    transition: { duration: 0.8 },
                   }}
                 >
                   <Image
@@ -812,11 +915,12 @@ export default function CheckoutPage() {
                     100% Money-Back Guarantee
                   </h3>
                   <p className="text-gray-600 leading-relaxed">
-                    We're so confident in the FAB Masterclass that we offer a 100% money-back guarantee. 
-                    With a 5-star rating from over 9,000 parents, we're certain you'll love it.
+                    We're so confident in the FAB Masterclass that we offer a
+                    100% money-back guarantee. With a 5-star rating from over
+                    9,000 parents, we're certain you'll love it.
                   </p>
                 </div>
-                <motion.div 
+                <motion.div
                   className="w-full max-w-[240px] h-1 bg-gradient-to-r from-pink-200 to-purple-200 
                     rounded-full mt-8 group-hover:from-pink-400 group-hover:to-purple-400 transition-all duration-300"
                   whileHover={{ scaleX: 1.1 }}
@@ -839,10 +943,10 @@ export default function CheckoutPage() {
                 <motion.div
                   className="bg-gradient-to-br from-cyan-500 to-blue-500 p-5 rounded-2xl
                     shadow-xl shadow-blue-500/20"
-                  whileHover={{ 
+                  whileHover={{
                     rotate: -360,
                     scale: 1.1,
-                    transition: { duration: 0.8 }
+                    transition: { duration: 0.8 },
                   }}
                 >
                   <Image
@@ -863,11 +967,12 @@ export default function CheckoutPage() {
                     Privacy & Security
                   </h3>
                   <p className="text-gray-600 leading-relaxed">
-                    We will not share or trade online information that you provide us.
-                    All personal information you submit is encrypted and secure.
+                    We will not share or trade online information that you
+                    provide us. All personal information you submit is encrypted
+                    and secure.
                   </p>
                 </div>
-                <motion.div 
+                <motion.div
                   className="w-full max-w-[240px] h-1 bg-gradient-to-r from-cyan-200 to-blue-200 
                     rounded-full mt-8 group-hover:from-cyan-400 group-hover:to-blue-400 transition-all duration-300"
                   whileHover={{ scaleX: 1.1 }}
@@ -879,7 +984,7 @@ export default function CheckoutPage() {
       </div>
 
       {/* Contact Information */}
-      <footer 
+      <footer
         className="relative py-32 px-4 overflow-hidden mt-16"
         style={{ backgroundColor: "rgba(218, 38, 83, 0.8)" }}
       >
@@ -949,15 +1054,22 @@ export default function CheckoutPage() {
             <motion.div variants={itemVariants}>
               <h4 className="text-xl font-bold mb-6 text-white/90">About Us</h4>
               <ul className="space-y-3">
-                {["Who We Are", "FAB Masterclass", "Testimonials", "Refund Policy"].map((item) => (
+                {[
+                  "Who We Are",
+                  "FAB Masterclass",
+                  "Testimonials",
+                  "Refund Policy",
+                ].map((item) => (
                   <motion.li
                     key={item}
                     whileHover={{ x: 5 }}
                     transition={{ type: "spring", stiffness: 300 }}
                   >
                     <a href="#" className="inline-flex items-center group">
-                      <span className="w-6 h-px bg-white/30 group-hover:w-8 group-hover:bg-white/50 
-                        transition-all duration-300 mr-3"/>
+                      <span
+                        className="w-6 h-px bg-white/30 group-hover:w-8 group-hover:bg-white/50 
+                        transition-all duration-300 mr-3"
+                      />
                       <span className="text-white/80 group-hover:text-white font-medium transition-colors duration-300">
                         {item}
                       </span>
@@ -969,7 +1081,9 @@ export default function CheckoutPage() {
 
             {/* Quick Links */}
             <motion.div variants={itemVariants}>
-              <h4 className="text-xl font-bold mb-6 text-white/90">Quick Links</h4>
+              <h4 className="text-xl font-bold mb-6 text-white/90">
+                Quick Links
+              </h4>
               <ul className="space-y-3">
                 {["FAQs", "Contact Us"].map((item) => (
                   <motion.li
@@ -978,8 +1092,10 @@ export default function CheckoutPage() {
                     transition={{ type: "spring", stiffness: 300 }}
                   >
                     <a href="#" className="inline-flex items-center group">
-                      <span className="w-6 h-px bg-white/30 group-hover:w-8 group-hover:bg-white/50 
-                        transition-all duration-300 mr-3"/>
+                      <span
+                        className="w-6 h-px bg-white/30 group-hover:w-8 group-hover:bg-white/50 
+                        transition-all duration-300 mr-3"
+                      />
                       <span className="text-white/80 group-hover:text-white font-medium transition-colors duration-300">
                         {item}
                       </span>
@@ -992,7 +1108,7 @@ export default function CheckoutPage() {
             {/* Contact */}
             <motion.div variants={itemVariants}>
               <h4 className="text-xl font-bold mb-6 text-white/90">Contact</h4>
-              <motion.address 
+              <motion.address
                 className={`not-italic space-y-2 text-white/80 ${andika.className}`}
                 whileHover={{ scale: 1.02 }}
               >
