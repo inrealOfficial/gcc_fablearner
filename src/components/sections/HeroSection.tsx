@@ -77,7 +77,12 @@ export const HeroSection = () => {
 
   // Track mouse for parallax effect
   useEffect(() => {
-    const handleMouseMove = (e) => {
+    interface MousePosition {
+      x: number;
+      y: number;
+    }
+
+    const handleMouseMove = (e: MouseEvent) => {
       // Update mouse position state
       setMousePosition({
         x: e.clientX / window.innerWidth - 0.5,
@@ -394,7 +399,6 @@ export const HeroSection = () => {
               Only 28 seats left!
             </div>
           </motion.div>
-
           <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
             {/* Left Content Column */}
             <div className="order-1 md:order-1">
@@ -466,7 +470,65 @@ export const HeroSection = () => {
                 </motion.h1>
               </div>
 
-              {/* CTA Button - Hidden on mobile, shown after image */}
+              {/* CTA Button - Mobile: shown after heading, Desktop: shown after image */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.7, duration: 0.6 }}
+                className="mb-8 md:hidden order-2"
+              >
+                <div className="relative inline-block w-full">
+                  {/* Animated glow effect */}
+                  <motion.div
+                    className="absolute -inset-3 bg-yellow-300/70 rounded-full blur-lg"
+                    animate={{
+                      scale: [1, 1.2, 1],
+                      opacity: [0.4, 0.6, 0.4],
+                    }}
+                    transition={{
+                      duration: 2,
+                      repeat: Infinity,
+                      repeatType: "reverse",
+                    }}
+                  />
+                  <motion.a
+                    href="/checkout"
+                    className="relative block bg-white text-pink-700 font-dingdong text-lg px-6 py-4 rounded-full shadow-xl text-center w-full"
+                    whileHover={{ scale: 1.03 }}
+                    whileTap={{ scale: 0.98 }}
+                    animate={{
+                      y: [0, -5, 0],
+                    }}
+                    transition={{
+                      y: {
+                        duration: 2.5,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                      },
+                    }}
+                  >
+                    Reserve Your Spot - Rs.499
+                    <div className="absolute -top-3 -right-3 bg-yellow-400 text-pink-800 text-xs font-bold rounded-full px-2 py-1 transform rotate-12">
+                      70% OFF
+                    </div>
+                  </motion.a>
+                </div>
+
+                <div className="mt-4 flex items-center justify-center">
+                  <svg
+                    className="w-5 h-5 text-yellow-300 mr-2"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                  </svg>
+                  <p className={`${andika.className} text-white text-sm`}>
+                    <span className="font-bold">4.7/5</span> from 800+ reviews
+                  </p>
+                </div>
+              </motion.div>
+
+              {/* CTA Button - Desktop only */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -525,9 +587,9 @@ export const HeroSection = () => {
               </motion.div>
             </div>
 
-            {/* Right Image Column - Order 2 on mobile, order-last on desktop */}
+            {/* Right Image Column - Order 3 on mobile, order-last on desktop */}
             <motion.div
-              className="relative order-2 md:order-last"
+              className="relative order-3 md:order-last"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.5, duration: 0.8 }}
@@ -678,7 +740,7 @@ export const HeroSection = () => {
                 </motion.div>
               </div>
 
-              {/* Mobile stats display at the bottom instead of floating */}
+              {/* Mobile stats display at the bottom */}
               <div className="md:hidden mt-6 grid grid-cols-3 gap-2">
                 {stats.map((stat, index) => (
                   <div
@@ -697,66 +759,7 @@ export const HeroSection = () => {
                 ))}
               </div>
             </motion.div>
-
-            {/* CTA Button - Mobile only, shown after image */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.7, duration: 0.6 }}
-              className="mb-8 md:hidden order-3"
-            >
-              <div className="relative inline-block w-full">
-                {/* Animated glow effect */}
-                <motion.div
-                  className="absolute -inset-3 bg-yellow-300/70 rounded-full blur-lg"
-                  animate={{
-                    scale: [1, 1.2, 1],
-                    opacity: [0.4, 0.6, 0.4],
-                  }}
-                  transition={{
-                    duration: 2,
-                    repeat: Infinity,
-                    repeatType: "reverse",
-                  }}
-                />
-                <motion.a
-                  href="/checkout"
-                  className="relative block bg-white text-pink-700 font-dingdong text-lg px-6 py-4 rounded-full shadow-xl text-center w-full"
-                  whileHover={{ scale: 1.03 }}
-                  whileTap={{ scale: 0.98 }}
-                  animate={{
-                    y: [0, -5, 0],
-                  }}
-                  transition={{
-                    y: {
-                      duration: 2.5,
-                      repeat: Infinity,
-                      ease: "easeInOut",
-                    },
-                  }}
-                >
-                  Reserve Your Spot - Rs.499
-                  <div className="absolute -top-3 -right-3 bg-yellow-400 text-pink-800 text-xs font-bold rounded-full px-2 py-1 transform rotate-12">
-                    70% OFF
-                  </div>
-                </motion.a>
-              </div>
-
-              <div className="mt-4 flex items-center justify-center">
-                <svg
-                  className="w-5 h-5 text-yellow-300 mr-2"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-                </svg>
-                <p className={`${andika.className} text-white text-sm`}>
-                  <span className="font-bold">4.7/5</span> from 800+ reviews
-                </p>
-              </div>
-            </motion.div>
           </div>
-
           {/* Stats Row */}
           <motion.div
             className="mt-12 md:mt-16 grid grid-cols-1 md:grid-cols-3 gap-4"
