@@ -71,7 +71,7 @@ export const BenefitsSection = () => {
         className="absolute inset-0 z-0"
         style={{
           background:
-            'radial-gradient(circle at 50% 50%, rgba(252, 231, 243, 0.4) 0%, rgba(255, 255, 255, 0) 50%)',
+            "radial-gradient(circle at 50% 50%, rgba(252, 231, 243, 0.4) 0%, rgba(255, 255, 255, 0) 50%)",
           y: bgY,
         }}
       />
@@ -88,7 +88,8 @@ export const BenefitsSection = () => {
             className="inline-block mb-3"
             whileHover={{ scale: 1.02 }}
           >
-            <span className={`
+            <span
+              className={`
             ${andika.className} 
             relative inline-flex items-center px-6 py-2
             bg-pink-100 
@@ -100,14 +101,17 @@ export const BenefitsSection = () => {
             rounded-full
             shadow-sm
             border border-pink-200
-          `}>
+          `}
+            >
               Benefits
             </span>
           </motion.div>
 
-          <h2 className="font-dingdong text-4xl md:text-5xl font-bold text-transparent bg-clip-text 
-          bg-gradient-to-r from-pink-600 via-purple-600 to-pink-600 mb-4 tracking-tight">
-            Why Parents Trust Us
+          <h2
+            className="font-dingdong text-4xl md:text-5xl font-bold text-transparent bg-clip-text 
+          bg-gradient-to-r from-pink-600 via-purple-600 to-pink-600 mb-4 tracking-tight"
+          >
+            Why FAB Masterclass
           </h2>
         </motion.div>
 
@@ -129,10 +133,11 @@ export const BenefitsSection = () => {
               whileHover={{ y: -4, transition: { duration: 0.2 } }}
             >
               {/* Card with improved contrast */}
-              <div className="relative h-full p-6 rounded-2xl bg-white 
+              <div
+                className="relative h-full p-6 rounded-2xl bg-white 
               shadow-[0_8px_16px_-6px_rgba(0,0,0,0.1)]
-              hover:shadow-[0_12px_24px_-8px_rgba(0,0,0,0.15)] transition-all duration-300">
-              
+              hover:shadow-[0_12px_24px_-8px_rgba(0,0,0,0.15)] transition-all duration-300"
+              >
                 {/* Animated Number Badge */}
                 <motion.div
                   className="absolute -top-3 -left-3 w-10 h-10 bg-gradient-to-r from-pink-500 to-pink-600
@@ -146,13 +151,23 @@ export const BenefitsSection = () => {
                   {index + 1}
                 </motion.div>
 
-                <div className="pt-4 space-y-3"> {/* Increased spacing */}
-                  <h3 className="font-dingdong text-xl font-bold text-pink-600 line-clamp-2 
-                  min-h-[3.5rem] leading-tight"> {/* Removed gradient, added solid color */}
+                <div className="pt-4 space-y-3">
+                  {" "}
+                  {/* Increased spacing */}
+                  <h3
+                    className="font-dingdong text-xl font-bold text-pink-600 line-clamp-2 
+                  min-h-[3.5rem] leading-tight"
+                  >
+                    {" "}
+                    {/* Removed gradient, added solid color */}
                     {benefit.title}
                   </h3>
-                  <p className={`${andika.className} text-gray-700 text-[15px] leading-relaxed line-clamp-3
-                  group-hover:text-gray-900 transition-colors duration-300`}> {/* Darker text color and slightly larger size */}
+                  <p
+                    className={`${andika.className} text-gray-700 text-[15px] leading-relaxed line-clamp-3
+                  group-hover:text-gray-900 transition-colors duration-300`}
+                  >
+                    {" "}
+                    {/* Darker text color and slightly larger size */}
                     {benefit.description}
                   </p>
                 </div>
