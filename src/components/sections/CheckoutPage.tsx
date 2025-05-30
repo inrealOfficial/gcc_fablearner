@@ -363,6 +363,7 @@ export default function CheckoutPage() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [paymentError, setPaymentError] = useState(true);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
@@ -443,7 +444,7 @@ export default function CheckoutPage() {
       form.submit();
     } catch (error) {
       console.error("Payment error:", error);
-      alert("Payment initialization failed. Please try again.");
+      setPaymentError(true);
       setIsProcessing(false);
     }
   };
@@ -855,133 +856,6 @@ export default function CheckoutPage() {
           </div>
         </motion.div>
       </main>
-
-      {/* Trust Badges Section */}
-      <div className="bg-white py-20">
-        <div className="max-w-6xl mx-auto px-4">
-          {/* Section Header */}
-          <motion.div
-            className="text-center mb-16"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-          >
-            <h2 className="text-4xl font-bold mb-4">
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-600 to-purple-600">
-                Our Guarantees
-              </span>
-            </h2>
-            <div className="w-24 h-1 bg-gradient-to-r from-pink-500 to-purple-500 mx-auto rounded-full mb-4" />
-          </motion.div>
-
-          {/* Badges Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            {/* Money Back Guarantee Card */}
-            <motion.div
-              className="group h-[400px] relative rounded-3xl border border-gray-100 p-8 bg-white 
-                shadow-[0_0_50px_0_rgba(0,0,0,0.1)] transition-all duration-300
-                hover:shadow-[0_0_80px_0_rgba(236,72,153,0.1)]"
-              whileHover={{ y: -5 }}
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5 }}
-            >
-              {/* Icon Container */}
-              <div className="absolute -top-10 left-1/2 transform -translate-x-1/2">
-                <motion.div
-                  className="bg-gradient-to-br from-pink-500 to-purple-500 p-5 rounded-2xl
-                    shadow-xl shadow-pink-500/20"
-                  whileHover={{
-                    rotate: 360,
-                    scale: 1.1,
-                    transition: { duration: 0.8 },
-                  }}
-                >
-                  <Image
-                    src="https://fablearner.com/wp-content/uploads/2025/01/fab-guarantee-money-back-100-600-px-1.png"
-                    alt="Money Back Guarantee"
-                    width={60}
-                    height={60}
-                    className="w-14 h-14"
-                    unoptimized
-                  />
-                </motion.div>
-              </div>
-
-              {/* Content */}
-              <div className="pt-12 text-center h-full flex flex-col items-center justify-between">
-                <div>
-                  <h3 className="text-2xl font-bold text-gray-800 mb-6">
-                    100% Money-Back Guarantee
-                  </h3>
-                  <p className="text-gray-600 leading-relaxed">
-                    We're so confident in the FAB Masterclass that we offer a
-                    100% money-back guarantee. With a 5-star rating from over
-                    9,000 parents, we're certain you'll love it.
-                  </p>
-                </div>
-                <motion.div
-                  className="w-full max-w-[240px] h-1 bg-gradient-to-r from-pink-200 to-purple-200 
-                    rounded-full mt-8 group-hover:from-pink-400 group-hover:to-purple-400 transition-all duration-300"
-                  whileHover={{ scaleX: 1.1 }}
-                />
-              </div>
-            </motion.div>
-
-            {/* Privacy & Security Card */}
-            <motion.div
-              className="group h-[400px] relative rounded-3xl border border-gray-100 p-8 bg-white 
-                shadow-[0_0_50px_0_rgba(0,0,0,0.1)] transition-all duration-300
-                hover:shadow-[0_0_80px_0_rgba(56,189,248,0.1)]"
-              whileHover={{ y: -5 }}
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-            >
-              {/* Icon Container */}
-              <div className="absolute -top-10 left-1/2 transform -translate-x-1/2">
-                <motion.div
-                  className="bg-gradient-to-br from-cyan-500 to-blue-500 p-5 rounded-2xl
-                    shadow-xl shadow-blue-500/20"
-                  whileHover={{
-                    rotate: -360,
-                    scale: 1.1,
-                    transition: { duration: 0.8 },
-                  }}
-                >
-                  <Image
-                    src="https://fablearner.com/wp-content/uploads/2025/01/fab-encrypted-secure-payment-seal-600-px-1.png"
-                    alt="Security Badge"
-                    width={60}
-                    height={60}
-                    className="w-14 h-14"
-                    unoptimized
-                  />
-                </motion.div>
-              </div>
-
-              {/* Content */}
-              <div className="pt-12 text-center h-full flex flex-col items-center justify-between">
-                <div>
-                  <h3 className="text-2xl font-bold text-gray-800 mb-6">
-                    Privacy & Security
-                  </h3>
-                  <p className="text-gray-600 leading-relaxed">
-                    We will not share or trade online information that you
-                    provide us. All personal information you submit is encrypted
-                    and secure.
-                  </p>
-                </div>
-                <motion.div
-                  className="w-full max-w-[240px] h-1 bg-gradient-to-r from-cyan-200 to-blue-200 
-                    rounded-full mt-8 group-hover:from-cyan-400 group-hover:to-blue-400 transition-all duration-300"
-                  whileHover={{ scaleX: 1.1 }}
-                />
-              </div>
-            </motion.div>
-          </div>
-        </div>
-      </div>
 
       {/* Contact Information */}
       <footer
