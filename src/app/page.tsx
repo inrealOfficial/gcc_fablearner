@@ -15,9 +15,9 @@ export default function Home() {
     <main className="overflow-x-hidden font-sans bg-white">
       <HeroSection />
       <ResultsSection id="results" />
-      <BenefitsSection />
+      <BenefitsSection id="benifits" />
       <TestimonialsSection id="testimonials" />
-      <ScheduleSection />
+      <ScheduleSection id="schedule" />
       <FaqSection id="faq" />
       <RegistrationSection />
       <Footer />
