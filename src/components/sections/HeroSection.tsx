@@ -21,6 +21,56 @@ const andika = Andika({
   variable: "--font-andika",
 });
 
+// Function to get next weekend (Saturday-Sunday)
+const getNextWeekend = () => {
+  const now = new Date();
+  const dayOfWeek = now.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
+
+  let daysUntilSaturday;
+  if (dayOfWeek === 0) {
+    // Sunday
+    daysUntilSaturday = 6; // Next Saturday
+  } else if (dayOfWeek === 6) {
+    // Saturday
+    daysUntilSaturday = 7; // Next Saturday
+  } else {
+    // Monday-Friday
+    daysUntilSaturday = 6 - dayOfWeek; // Days until this Saturday
+  }
+
+  const saturday = new Date(now);
+  saturday.setDate(now.getDate() + daysUntilSaturday);
+  saturday.setHours(18, 0, 0, 0); // 6:00 PM
+
+  const sunday = new Date(saturday);
+  sunday.setDate(saturday.getDate() + 1);
+
+  return { saturday, sunday };
+};
+
+const formatWeekendDates = (saturday: Date, sunday: Date): string => {
+  const months: string[] = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+  const satDay: number = saturday.getDate();
+  const sunDay: number = sunday.getDate();
+  const month: string = months[saturday.getMonth()];
+  const year: number = saturday.getFullYear();
+
+  return `${satDay}-${sunDay} ${month} ${year}`;
+};
+
 export const HeroSection = () => {
   // State management
   const [scrolled, setScrolled] = useState(false);
@@ -30,6 +80,40 @@ export const HeroSection = () => {
   const [letterIndex, setLetterIndex] = useState(0);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const heroRef = useRef<HTMLElement>(null);
+  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0 });
+  const [weekendDates, setWeekendDates] = useState("");
+
+  useEffect(() => {
+    const { saturday } = getNextWeekend();
+    setWeekendDates(
+      formatWeekendDates(
+        saturday,
+        new Date(saturday.getTime() + 24 * 60 * 60 * 1000)
+      )
+    );
+
+    const updateCountdown = () => {
+      const now = new Date();
+      const timeDiff = saturday.getTime() - now.getTime();
+
+      if (timeDiff > 0) {
+        const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor(
+          (timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+        );
+        const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+
+        setTimeLeft({ days, hours, minutes });
+      } else {
+        setTimeLeft({ days: 0, hours: 0, minutes: 0 });
+      }
+    };
+
+    updateCountdown();
+    const interval = setInterval(updateCountdown, 60000); // Update every minute
+
+    return () => clearInterval(interval);
+  }, []);
 
   // NEW - Smooth scroll function
   const scrollToSection = (sectionId: string, event?: React.MouseEvent) => {
@@ -155,10 +239,11 @@ export const HeroSection = () => {
           <div className="hidden md:flex items-center gap-6">
             <motion.nav className={`flex gap-4 ${andika.className}`}>
               {[
-                { name: "Our Method", target: "our-method" },
-                { name: "Results", target: "testimonials" }, // Updated to point to testimonials
+                { name: "Success Stories", target: "results" },
+                { name: "Why FAB", target: "benifits" },
+                { name: "Testimonials", target: "testimonials" },
+                { name: "Schedule", target: "schedule" },
                 { name: "FAQ", target: "faq" },
-                { name: "Success Stories", target: "results" }, // Updated to point to results (here's the proof)
               ].map((item, i) => (
                 <motion.a
                   key={item.name}
@@ -399,19 +484,19 @@ export const HeroSection = () => {
                 </div>
                 <div>
                   <p className="font-dingdong text-lg md:text-xl text-white flex items-center">
-                    <span>24-25 May 2025</span>
+                    <span>{weekendDates}</span>
                     <span className="bg-white/20 h-4 w-px mx-3 inline-block"></span>
                     <span className="text-yellow-200">6:00-7:30 PM</span>
                   </p>
                   <div className="flex gap-1 mt-1">
                     <div className="bg-white/20 px-1.5 py-0.5 rounded text-xs text-white">
-                      <span className="font-bold">23</span> days
+                      <span className="font-bold">{timeLeft.days}</span> days
                     </div>
                     <div className="bg-white/20 px-1.5 py-0.5 rounded text-xs text-white">
-                      <span className="font-bold">14</span> hrs
+                      <span className="font-bold">{timeLeft.hours}</span> hrs
                     </div>
                     <div className="bg-white/20 px-1.5 py-0.5 rounded text-xs text-white">
-                      <span className="font-bold">56</span> min
+                      <span className="font-bold">{timeLeft.minutes}</span> min
                     </div>
                   </div>
                 </div>
@@ -562,7 +647,7 @@ export const HeroSection = () => {
                     <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
                   </svg>
                   <p className={`${andika.className} text-white text-sm`}>
-                    <span className="font-bold">4.7/5</span> from 800+ reviews
+                    <span className="font-bold"> ***** </span> from 800+ reviews
                   </p>
                 </div>
               </motion.div>
@@ -620,7 +705,7 @@ export const HeroSection = () => {
                     <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
                   </svg>
                   <p className={`${andika.className} text-white text-sm`}>
-                    <span className="font-bold">4.7/5</span> from 800+ reviews
+                    <span className="font-bold"> ***** </span> from 800+ reviews
                   </p>
                 </div>
               </motion.div>

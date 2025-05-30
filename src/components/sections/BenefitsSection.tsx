@@ -10,7 +10,7 @@ const andika = Andika({
   variable: "--font-andika",
 });
 
-export const BenefitsSection = () => {
+export const BenefitsSection = ({ id }: { id?: string }) => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(sectionRef, { once: true });
 
@@ -64,6 +64,7 @@ export const BenefitsSection = () => {
   return (
     <section
       ref={sectionRef}
+      id={id}
       className="relative py-12 overflow-hidden bg-gradient-to-b from-white via-pink-50/20 to-white"
     >
       {/* Modern Gradient Background */}

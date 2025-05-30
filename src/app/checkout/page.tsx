@@ -3,7 +3,7 @@ import { metadata as layoutMetadata } from "@/app/layout";
 
 export const metadata = {
   ...layoutMetadata,
-  title: "Checkout - Fablerner",
+  title: "Checkout - FabLearner",
 };
 
 export default function Page() {
