@@ -1,7 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { LoadingSpinner } from "@/components/ui/LoadingSpinner"; // You may need to create this component
+import { useRouter } from "next/navigation"; // You may need to create this component
 
 export default function PaymentCallback() {
   const router = useRouter();
