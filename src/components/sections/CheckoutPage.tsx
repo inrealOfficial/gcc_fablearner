@@ -417,8 +417,9 @@ export default function CheckoutPage() {
         lastname: formData.lastName || "",
         email: formData.email,
         phone: formData.phone,
-        surl: `${window.location.origin}/payment/success`,
-        furl: `${window.location.origin}/payment/failure`,
+        // Use a single callback URL
+        surl: `${window.location.origin}/api/payment/callback`,
+        furl: `${window.location.origin}/api/payment/callback`,
       };
 
       // Generate hash

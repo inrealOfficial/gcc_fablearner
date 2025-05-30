@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
+import Link from "next/link";
 import { Andika } from "next/font/google";
 
 const andika = Andika({
@@ -26,8 +27,27 @@ export const Footer = () => {
     visible: { opacity: 1, y: 0 },
   };
 
+  // Helper function for smooth scrolling when on home page
+  const scrollToSection = (sectionId: string, e: React.MouseEvent) => {
+    e.preventDefault();
+
+    // Only attempt to scroll if on the home page
+    if (window.location.pathname === "/") {
+      const section = document.getElementById(sectionId);
+      if (section) {
+        section.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      }
+    } else {
+      // If not on home page, navigate to home with hash
+      window.location.href = `/#${sectionId}`;
+    }
+  };
+
   return (
-    <footer 
+    <footer
       className="relative py-20 px-4 overflow-hidden"
       style={{ backgroundColor: "rgba(218, 38, 83, 0.8)" }}
     >
@@ -70,20 +90,22 @@ export const Footer = () => {
           initial="hidden"
           animate="visible"
         >
-          <motion.div 
-            className="inline-block mb-6 bg-white/10 backdrop-blur-sm rounded-lg p-4"
-            variants={itemVariants}
-          >
-            <Image
-              src="https://fablearner.com/wp-content/uploads/2025/05/logo.png"
-              alt="Fablearner Logo"
-              width={200}
-              height={50}
-              className="h-12 w-auto"
-              priority
-            />
-          </motion.div>
-          <motion.h3 
+          <Link href="/">
+            <motion.div
+              className="inline-block mb-6 bg-white/10 backdrop-blur-sm rounded-lg p-4"
+              variants={itemVariants}
+            >
+              <Image
+                src="https://fablearner.com/wp-content/uploads/2025/05/logo.png"
+                alt="Fablearner Logo"
+                width={200}
+                height={50}
+                className="h-12 w-auto"
+                priority
+              />
+            </motion.div>
+          </Link>
+          <motion.h3
             className="font-dingdong text-2xl md:text-3xl text-white leading-tight"
             variants={itemVariants}
           >
@@ -102,19 +124,47 @@ export const Footer = () => {
           <motion.div variants={itemVariants}>
             <h4 className="text-xl font-bold mb-6 text-white/90">About Us</h4>
             <ul className="space-y-3">
-              {["Who We Are", "FAB Masterclass", "Testimonials", "Refund Policy"].map((item) => (
+              {[
+                { name: "Who We Are", link: "/#our-method" },
+                { name: "FAB Masterclass", link: "/checkout" },
+                { name: "Testimonials", link: "/#results" },
+                { name: "Refund Policy", link: "/refund-policy" },
+              ].map((item) => (
                 <motion.li
-                  key={item}
+                  key={item.name}
                   whileHover={{ x: 5 }}
                   transition={{ type: "spring", stiffness: 300 }}
                 >
-                  <a href="#" className="inline-flex items-center group">
-                    <span className="w-6 h-px bg-white/30 group-hover:w-8 group-hover:bg-white/50 
-                      transition-all duration-300 mr-3"/>
-                    <span className="text-white/80 group-hover:text-white font-medium transition-colors duration-300">
-                      {item}
-                    </span>
-                  </a>
+                  {item.link.startsWith("/#") ? (
+                    <a
+                      href={item.link}
+                      className="inline-flex items-center group"
+                      onClick={(e) =>
+                        scrollToSection(item.link.substring(2), e)
+                      }
+                    >
+                      <span
+                        className="w-6 h-px bg-white/30 group-hover:w-8 group-hover:bg-white/50 
+                        transition-all duration-300 mr-3"
+                      />
+                      <span className="text-white/80 group-hover:text-white font-medium transition-colors duration-300">
+                        {item.name}
+                      </span>
+                    </a>
+                  ) : (
+                    <Link
+                      href={item.link}
+                      className="inline-flex items-center group"
+                    >
+                      <span
+                        className="w-6 h-px bg-white/30 group-hover:w-8 group-hover:bg-white/50 
+                        transition-all duration-300 mr-3"
+                      />
+                      <span className="text-white/80 group-hover:text-white font-medium transition-colors duration-300">
+                        {item.name}
+                      </span>
+                    </Link>
+                  )}
                 </motion.li>
               ))}
             </ul>
@@ -122,21 +172,49 @@ export const Footer = () => {
 
           {/* Quick Links */}
           <motion.div variants={itemVariants}>
-            <h4 className="text-xl font-bold mb-6 text-white/90">Quick Links</h4>
+            <h4 className="text-xl font-bold mb-6 text-white/90">
+              Quick Links
+            </h4>
             <ul className="space-y-3">
-              {["FAQs", "Contact Us"].map((item) => (
+              {[
+                { name: "FAQs", link: "/#faq" },
+                { name: "Contact Us", link: "mailto:support@fablearner.com" },
+              ].map((item) => (
                 <motion.li
-                  key={item}
+                  key={item.name}
                   whileHover={{ x: 5 }}
                   transition={{ type: "spring", stiffness: 300 }}
                 >
-                  <a href="#" className="inline-flex items-center group">
-                    <span className="w-6 h-px bg-white/30 group-hover:w-8 group-hover:bg-white/50 
-                      transition-all duration-300 mr-3"/>
-                    <span className="text-white/80 group-hover:text-white font-medium transition-colors duration-300">
-                      {item}
-                    </span>
-                  </a>
+                  {item.link.startsWith("/#") ? (
+                    <a
+                      href={item.link}
+                      className="inline-flex items-center group"
+                      onClick={(e) =>
+                        scrollToSection(item.link.substring(2), e)
+                      }
+                    >
+                      <span
+                        className="w-6 h-px bg-white/30 group-hover:w-8 group-hover:bg-white/50 
+                        transition-all duration-300 mr-3"
+                      />
+                      <span className="text-white/80 group-hover:text-white font-medium transition-colors duration-300">
+                        {item.name}
+                      </span>
+                    </a>
+                  ) : (
+                    <a
+                      href={item.link}
+                      className="inline-flex items-center group"
+                    >
+                      <span
+                        className="w-6 h-px bg-white/30 group-hover:w-8 group-hover:bg-white/50 
+                        transition-all duration-300 mr-3"
+                      />
+                      <span className="text-white/80 group-hover:text-white font-medium transition-colors duration-300">
+                        {item.name}
+                      </span>
+                    </a>
+                  )}
                 </motion.li>
               ))}
             </ul>
@@ -145,7 +223,7 @@ export const Footer = () => {
           {/* Contact */}
           <motion.div variants={itemVariants}>
             <h4 className="text-xl font-bold mb-6 text-white/90">Contact</h4>
-            <motion.address 
+            <motion.address
               className={`not-italic space-y-2 text-white/80 ${andika.className}`}
               whileHover={{ scale: 1.02 }}
             >
@@ -162,8 +240,28 @@ export const Footer = () => {
           className={`pt-8 border-t border-white/20 text-center ${andika.className}`}
           variants={itemVariants}
         >
+          <div className="flex justify-center space-x-6 mb-4">
+            <Link
+              href="/refund-policy"
+              className="text-white/80 hover:text-white transition-colors"
+            >
+              Refund Policy
+            </Link>
+            <Link
+              href="/terms"
+              className="text-white/80 hover:text-white transition-colors"
+            >
+              Terms & Conditions
+            </Link>
+            <Link
+              href="/privacy"
+              className="text-white/80 hover:text-white transition-colors"
+            >
+              Privacy Policy
+            </Link>
+          </div>
           <p className="text-sm text-white/70">
-            © 2025 FAB Learning. All rights reserved.
+            © {new Date().getFullYear()} FAB Learning. All rights reserved.
           </p>
         </motion.div>
       </div>

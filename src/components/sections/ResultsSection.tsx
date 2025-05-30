@@ -60,7 +60,7 @@ const students = [
   },
 ];
 
-export const ResultsSection = () => {
+export const ResultsSection = ({ id }: { id?: string }) => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(sectionRef, { once: true });
   const [activeVideo, setActiveVideo] = useState<string | null>(null);
@@ -141,19 +141,19 @@ export const ResultsSection = () => {
     if (isMobile) {
       return [students[videoIndex]];
     }
-    return [0, 1, 2].map((offset) => students[(videoIndex + offset) % students.length]);
+    return [0, 1, 2].map(
+      (offset) => students[(videoIndex + offset) % students.length]
+    );
   };
 
   return (
     <section
       ref={sectionRef}
       className="relative py-16 px-4 bg-white overflow-hidden"
+      id={id}
     >
       {/* SVG Background Pattern with Parallax */}
-      <motion.div
-        className="absolute inset-0 z-0 opacity-5"
-        style={{ y: bgY }}
-      >
+      <motion.div className="absolute inset-0 z-0 opacity-5" style={{ y: bgY }}>
         <div
           className="absolute inset-0"
           style={{
@@ -234,9 +234,7 @@ export const ResultsSection = () => {
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
         >
-          <motion.h2
-            className="inline-block relative text-4xl md:text-5xl font-bold mb-4 font-dingdong text-pink-600"
-          >
+          <motion.h2 className="inline-block relative text-4xl md:text-5xl font-bold mb-4 font-dingdong text-pink-600">
             REAL CHILDREN, REAL RESULTS
             <motion.div
               className="absolute -bottom-2 left-0 right-0 h-1 bg-gradient-to-r from-pink-400 to-pink-600"
@@ -276,18 +274,16 @@ export const ResultsSection = () => {
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
             >
-              <svg
-                className="w-6 h-6"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-              >
+              <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
               </svg>
             </motion.button>
 
             {/* Videos Grid */}
             <motion.div
-              className={`grid ${isMobile ? 'grid-cols-1' : 'grid-cols-3'} gap-4 md:gap-8 w-full`}
+              className={`grid ${
+                isMobile ? "grid-cols-1" : "grid-cols-3"
+              } gap-4 md:gap-8 w-full`}
               initial={false}
               animate="center"
               variants={slideVariants}
@@ -321,13 +317,20 @@ export const ResultsSection = () => {
                             whileHover={{ scale: 1.1 }}
                             whileTap={{ scale: 0.95 }}
                           >
-                            <svg className="w-6 h-6 text-pink-600" viewBox="0 0 24 24" fill="currentColor">
+                            <svg
+                              className="w-6 h-6 text-pink-600"
+                              viewBox="0 0 24 24"
+                              fill="currentColor"
+                            >
                               <path d="M6 6h12v12H6z" />
                             </svg>
                           </motion.button>
                         </>
                       ) : (
-                        <div className="group cursor-pointer" onClick={() => handleVideoPlay(student.name)}>
+                        <div
+                          className="group cursor-pointer"
+                          onClick={() => handleVideoPlay(student.name)}
+                        >
                           <img
                             src={student.imageUrl}
                             alt={`${student.name}'s Story`}
@@ -342,7 +345,11 @@ export const ResultsSection = () => {
                               whileHover={{ scale: 1.1 }}
                               whileTap={{ scale: 0.95 }}
                             >
-                              <svg className="w-6 h-6 text-pink-600" viewBox="0 0 24 24" fill="currentColor">
+                              <svg
+                                className="w-6 h-6 text-pink-600"
+                                viewBox="0 0 24 24"
+                                fill="currentColor"
+                              >
                                 <path d="M8 5v14l11-7z" />
                               </svg>
                             </motion.div>
@@ -351,7 +358,9 @@ export const ResultsSection = () => {
                       )}
                     </div>
                     <div className="p-4">
-                      <h3 className={`${andika.className} text-lg font-semibold text-pink-700 text-center`}>
+                      <h3
+                        className={`${andika.className} text-lg font-semibold text-pink-700 text-center`}
+                      >
                         {student.name}'s Reading Journey
                       </h3>
                     </div>
@@ -377,11 +386,7 @@ export const ResultsSection = () => {
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
             >
-              <svg
-                className="w-6 h-6"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-              >
+              <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M8.59 16.59L10 18l6-6-6-6-1.41 1.41L13.17 12z" />
               </svg>
             </motion.button>

@@ -1,7 +1,7 @@
 import { motion, useScroll, useTransform, useInView } from "framer-motion";
 import { useRef, useState } from "react";
 import { Andika } from "next/font/google";
-import Image from 'next/image';
+import Image from "next/image";
 import { wrap } from "popmotion";
 
 const andika = Andika({
@@ -18,7 +18,7 @@ interface Testimonial {
   childAge: number;
 }
 
-export const TestimonialsSection = () => {
+export const TestimonialsSection = ({ id }: { id?: string }) => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(sectionRef, { once: true });
   const { scrollYProgress } = useScroll({
@@ -31,52 +31,60 @@ export const TestimonialsSection = () => {
   const testimonials = [
     {
       id: 1,
-      imageUrl: "https://fablearner.com/wp-content/uploads/2025/02/Group-37297.png",
+      imageUrl:
+        "https://fablearner.com/wp-content/uploads/2025/02/Group-37297.png",
       rating: 5,
-      childAge: 3
+      childAge: 3,
     },
     {
       id: 2,
-      imageUrl: "https://fablearner.com/wp-content/uploads/2025/02/Group-37295.png",
+      imageUrl:
+        "https://fablearner.com/wp-content/uploads/2025/02/Group-37295.png",
       rating: 5,
-      childAge: 4
+      childAge: 4,
     },
     {
       id: 3,
-      imageUrl: "https://fablearner.com/wp-content/uploads/2025/02/Group-37294.png",
+      imageUrl:
+        "https://fablearner.com/wp-content/uploads/2025/02/Group-37294.png",
       rating: 5,
-      childAge: 3
+      childAge: 3,
     },
     {
       id: 4,
-      imageUrl: "https://fablearner.com/wp-content/uploads/2025/02/Group-37293.png",
+      imageUrl:
+        "https://fablearner.com/wp-content/uploads/2025/02/Group-37293.png",
       rating: 5,
-      childAge: 4
+      childAge: 4,
     },
     {
       id: 5,
-      imageUrl: "https://fablearner.com/wp-content/uploads/2025/02/Group-37292.png",
+      imageUrl:
+        "https://fablearner.com/wp-content/uploads/2025/02/Group-37292.png",
       rating: 5,
-      childAge: 3
+      childAge: 3,
     },
     {
       id: 6,
-      imageUrl: "https://fablearner.com/wp-content/uploads/2025/02/Group-37290.png",
+      imageUrl:
+        "https://fablearner.com/wp-content/uploads/2025/02/Group-37290.png",
       rating: 5,
-      childAge: 4
+      childAge: 4,
     },
     {
       id: 7,
-      imageUrl: "https://fablearner.com/wp-content/uploads/2025/02/Group-37288.png",
+      imageUrl:
+        "https://fablearner.com/wp-content/uploads/2025/02/Group-37288.png",
       rating: 5,
-      childAge: 3
+      childAge: 3,
     },
     {
       id: 8,
-      imageUrl: "https://fablearner.com/wp-content/uploads/2025/02/Group-37289.png",
+      imageUrl:
+        "https://fablearner.com/wp-content/uploads/2025/02/Group-37289.png",
       rating: 5,
-      childAge: 4
-    }
+      childAge: 4,
+    },
   ];
 
   // Add state for slideshow
@@ -89,29 +97,29 @@ export const TestimonialsSection = () => {
       x: direction > 0 ? 100 : -100,
       opacity: 0,
       scale: 0.8,
-      filter: 'blur(8px)',
+      filter: "blur(8px)",
     }),
     center: {
       zIndex: 1,
       x: 0,
       opacity: 1,
       scale: 1,
-      filter: 'blur(0px)',
+      filter: "blur(0px)",
     },
     exit: (direction: number) => ({
       zIndex: 0,
       x: direction < 0 ? 100 : -100,
       opacity: 0,
       scale: 0.8,
-      filter: 'blur(8px)',
-    })
+      filter: "blur(8px)",
+    }),
   };
 
   // Calculate visible testimonials (only 3 at a time with smooth transitions)
   const visibleTestimonials = [
     testimonials[wrap(0, testimonials.length, page - 1)],
     testimonials[wrap(0, testimonials.length, page)],
-    testimonials[wrap(0, testimonials.length, page + 1)]
+    testimonials[wrap(0, testimonials.length, page + 1)],
   ];
 
   const paginate = (newDirection: number) => {
@@ -135,12 +143,10 @@ export const TestimonialsSection = () => {
     <section
       ref={sectionRef}
       className="relative py-16 px-4 bg-white overflow-hidden"
+      id={id}
     >
       {/* Simplified Background Effect */}
-      <motion.div
-        className="absolute inset-0 z-0"
-        style={{ y: bgY }}
-      >
+      <motion.div className="absolute inset-0 z-0" style={{ y: bgY }}>
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(252,231,243,0.3)_0%,rgba(255,255,255,0)_70%)]" />
       </motion.div>
 
@@ -152,7 +158,8 @@ export const TestimonialsSection = () => {
           transition={{ duration: 0.8 }}
         >
           <motion.div className="relative mb-4">
-            <span className={`
+            <span
+              className={`
               ${andika.className} 
               relative inline-flex items-center px-6 py-2
               bg-pink-50
@@ -162,14 +169,17 @@ export const TestimonialsSection = () => {
               tracking-wide 
               rounded-full
               shadow-[0_2px_10px_-2px_rgba(236,72,153,0.2)]
-            `}>
+            `}
+            >
               Testimonials
             </span>
           </motion.div>
 
           <div className="mt-4">
-            <h2 className="font-dingdong text-5xl md:text-6xl font-bold bg-gradient-to-r from-pink-600 via-purple-600 to-pink-600 
-              bg-clip-text text-transparent relative inline-block">
+            <h2
+              className="font-dingdong text-5xl md:text-6xl font-bold bg-gradient-to-r from-pink-600 via-purple-600 to-pink-600 
+              bg-clip-text text-transparent relative inline-block"
+            >
               DOES IT REALLY WORK?
             </h2>
           </div>
@@ -177,7 +187,9 @@ export const TestimonialsSection = () => {
 
         {/* Updated Card Styles */}
         <div className="relative mt-16">
-          <div className="relative max-w-6xl mx-auto px-12"> {/* Added px-12 for arrow space */}
+          <div className="relative max-w-6xl mx-auto px-12">
+            {" "}
+            {/* Added px-12 for arrow space */}
             {/* Left Arrow Button */}
             <motion.button
               className="absolute -left-2 top-1/2 -translate-y-1/2 z-20 
@@ -192,11 +204,20 @@ export const TestimonialsSection = () => {
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
             >
-              <svg className="w-5 h-5 md:w-6 md:h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+              <svg
+                className="w-5 h-5 md:w-6 md:h-6"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M15 19l-7-7 7-7"
+                />
               </svg>
             </motion.button>
-
             {/* Updated Testimonials Grid with Responsive Layout */}
             <motion.div
               className="grid grid-cols-1 md:grid-cols-3 gap-8"
@@ -212,16 +233,18 @@ export const TestimonialsSection = () => {
                   key={`${testimonial.id}-${index}`}
                   className={`
                     group relative
-                    ${index !== 1 ? 'hidden md:block' : ''}
+                    ${index !== 1 ? "hidden md:block" : ""}
                   `}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: index * 0.2 }}
                 >
-                  <div className="relative bg-white rounded-2xl overflow-hidden
+                  <div
+                    className="relative bg-white rounded-2xl overflow-hidden
                     shadow-[0_4px_20px_-4px_rgba(0,0,0,0.06)]
                     hover:shadow-[0_4px_20px_-4px_rgba(236,72,153,0.15)]
-                    transition-all duration-500">
+                    transition-all duration-500"
+                  >
                     {/* Updated Image Container with better mobile handling */}
                     <div className="relative w-full aspect-[4/3] overflow-hidden">
                       <Image
@@ -233,33 +256,42 @@ export const TestimonialsSection = () => {
                           object-contain
                           transform transition-all duration-700
                           md:object-cover md:object-center
-                          ${index !== 1 ? 'md:group-hover:scale-110 md:group-hover:rotate-1' : ''}
+                          ${
+                            index !== 1
+                              ? "md:group-hover:scale-110 md:group-hover:rotate-1"
+                              : ""
+                          }
                         `}
                         sizes="(max-width: 768px) 100vw, (max-width: 1536px) 33vw, 400px"
                         quality={90}
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent 
+                      <div
+                        className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent 
                         opacity-0 group-hover:opacity-100 transition-opacity duration-500
-                        md:block hidden" 
+                        md:block hidden"
                       />
                     </div>
 
                     {/* Card Content */}
                     <div className="p-6 bg-white">
                       <div className="flex justify-center space-x-1 text-yellow-400 text-xl mb-3">
-                        {Array(testimonial.rating).fill("★").map((star, i) => (
-                          <motion.span
-                            key={i}
-                            initial={{ opacity: 0, scale: 0 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            transition={{ delay: i * 0.1, type: "spring" }}
-                          >
-                            {star}
-                          </motion.span>
-                        ))}
+                        {Array(testimonial.rating)
+                          .fill("★")
+                          .map((star, i) => (
+                            <motion.span
+                              key={i}
+                              initial={{ opacity: 0, scale: 0 }}
+                              animate={{ opacity: 1, scale: 1 }}
+                              transition={{ delay: i * 0.1, type: "spring" }}
+                            >
+                              {star}
+                            </motion.span>
+                          ))}
                       </div>
-                      <p className={`${andika.className} text-center text-base font-medium text-gray-700
-                        group-hover:text-pink-600 transition-colors duration-300`}>
+                      <p
+                        className={`${andika.className} text-center text-base font-medium text-gray-700
+                        group-hover:text-pink-600 transition-colors duration-300`}
+                      >
                         Parent of a {testimonial.childAge}-year-old
                       </p>
                     </div>
@@ -267,7 +299,6 @@ export const TestimonialsSection = () => {
                 </motion.div>
               ))}
             </motion.div>
-
             {/* Right Arrow Button */}
             <motion.button
               className="absolute -right-2 top-1/2 -translate-y-1/2 z-20 
@@ -282,8 +313,18 @@ export const TestimonialsSection = () => {
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
             >
-              <svg className="w-5 h-5 md:w-6 md:h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+              <svg
+                className="w-5 h-5 md:w-6 md:h-6"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M9 5l7 7-7 7"
+                />
               </svg>
             </motion.button>
           </div>
@@ -296,9 +337,10 @@ export const TestimonialsSection = () => {
                 onClick={() => setPage([index * 3, index * 3 > page ? 1 : -1])}
                 className={`
                   h-2 rounded-full transition-all duration-500 
-                  ${Math.floor(page / 3) === index 
-                    ? 'w-8 bg-pink-500' 
-                    : 'w-2 bg-pink-100 hover:bg-pink-200'
+                  ${
+                    Math.floor(page / 3) === index
+                      ? "w-8 bg-pink-500"
+                      : "w-2 bg-pink-100 hover:bg-pink-200"
                   }
                 `}
                 aria-label={`Go to testimonial group ${index + 1}`}

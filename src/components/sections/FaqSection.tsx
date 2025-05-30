@@ -9,7 +9,7 @@ const andika = Andika({
   variable: "--font-andika",
 });
 
-export const FaqSection = () => {
+export const FaqSection = ({ id }: { id?: string }) => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(sectionRef, { once: true });
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
@@ -51,14 +51,12 @@ export const FaqSection = () => {
 
   return (
     <section
+      id={id}
       ref={sectionRef}
       className="relative py-16 px-4 bg-white overflow-hidden" // Reduced from py-32 to py-16
     >
       {/* Creative Background Elements */}
-      <motion.div
-        className="absolute inset-0 z-0"
-        style={{ y: bgY }}
-      >
+      <motion.div className="absolute inset-0 z-0" style={{ y: bgY }}>
         <div className="absolute inset-0">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(252,231,243,0.3)_0%,rgba(255,255,255,0)_70%)]" />
           <div className="absolute inset-0 opacity-30">
@@ -78,7 +76,8 @@ export const FaqSection = () => {
           transition={{ duration: 0.8 }}
         >
           <motion.div className="relative inline-block mb-6">
-            <span className={`
+            <span
+              className={`
               ${andika.className} 
               relative inline-flex items-center gap-2 px-6 py-2
               bg-gradient-to-r from-pink-50 to-purple-50
@@ -89,24 +88,27 @@ export const FaqSection = () => {
               rounded-full
               shadow-[0_2px_10px_-2px_rgba(236,72,153,0.2)]
               border border-pink-100/50
-            `}>
+            `}
+            >
               <span className="animate-bounce">❓</span>
               FAQ
             </span>
           </motion.div>
-          <h2 className="font-dingdong text-4xl md:text-5xl bg-gradient-to-r from-pink-600 via-purple-600 to-pink-600 
-            bg-clip-text text-transparent relative">
+          <h2
+            className="font-dingdong text-4xl md:text-5xl bg-gradient-to-r from-pink-600 via-purple-600 to-pink-600 
+            bg-clip-text text-transparent relative"
+          >
             WE'VE GOT ALL THE ANSWERS FOR YOU!
-            <motion.span 
+            <motion.span
               className="absolute -right-8 -top-6 text-3xl"
-              animate={{ 
+              animate={{
                 y: [0, -10, 0],
-                rotate: [0, 10, 0]
+                rotate: [0, 10, 0],
               }}
-              transition={{ 
+              transition={{
                 duration: 2,
                 repeat: Infinity,
-                ease: "easeInOut"
+                ease: "easeInOut",
               }}
             >
               ✨
@@ -125,11 +127,12 @@ export const FaqSection = () => {
                 transition-all duration-500"
             >
               <details className="group">
-                <summary 
+                <summary
                   className="flex justify-between items-center cursor-pointer p-6 
                     focus:outline-none rounded-2xl"
                 >
-                  <span className={`${andika.className} font-semibold text-lg pr-6
+                  <span
+                    className={`${andika.className} font-semibold text-lg pr-6
                     bg-gradient-to-r from-gray-800 to-gray-600
                     group-hover:from-pink-600 group-hover:to-purple-600
                     bg-clip-text text-transparent transition-all duration-300`}
@@ -154,7 +157,9 @@ export const FaqSection = () => {
                 </summary>
                 <div className="px-6 pb-6">
                   <div className="pt-4 border-t border-pink-100">
-                    <p className={`${andika.className} text-gray-600 leading-relaxed`}>
+                    <p
+                      className={`${andika.className} text-gray-600 leading-relaxed`}
+                    >
                       {faq.answer}
                     </p>
                   </div>

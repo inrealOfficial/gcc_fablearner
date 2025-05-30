@@ -31,6 +31,26 @@ export const HeroSection = () => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const heroRef = useRef<HTMLElement>(null);
 
+  // NEW - Smooth scroll function
+  const scrollToSection = (sectionId: string, event?: React.MouseEvent) => {
+    if (event) {
+      event.preventDefault();
+    }
+
+    // Close mobile menu if open
+    if (mobileMenuOpen) {
+      setMobileMenuOpen(false);
+    }
+
+    const section = document.getElementById(sectionId);
+    if (section) {
+      section.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }
+  };
+
   // Animation hooks
   const controls = useAnimation();
   const { scrollYProgress } = useScroll();
@@ -134,25 +154,29 @@ export const HeroSection = () => {
           {/* Navigation */}
           <div className="hidden md:flex items-center gap-6">
             <motion.nav className={`flex gap-4 ${andika.className}`}>
-              {["Our Method", "Results", "FAQ", "Success Stories"].map(
-                (item, i) => (
-                  <motion.a
-                    key={item}
-                    href={`#${item.toLowerCase().replace(/\s+/g, "-")}`}
-                    className={`font-medium px-1 py-2 border-b-2 transition-all ${
-                      scrolled
-                        ? "text-pink-700 border-transparent hover:border-pink-600"
-                        : "text-white border-transparent hover:border-white/50"
-                    }`}
-                    whileHover={{ y: -2 }}
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.1 * i, duration: 0.5 }}
-                  >
-                    {item}
-                  </motion.a>
-                )
-              )}
+              {[
+                { name: "Our Method", target: "our-method" },
+                { name: "Results", target: "testimonials" }, // Updated to point to testimonials
+                { name: "FAQ", target: "faq" },
+                { name: "Success Stories", target: "results" }, // Updated to point to results (here's the proof)
+              ].map((item, i) => (
+                <motion.a
+                  key={item.name}
+                  href={`#${item.target}`}
+                  onClick={(e) => scrollToSection(item.target, e)}
+                  className={`font-medium px-1 py-2 border-b-2 transition-all ${
+                    scrolled
+                      ? "text-pink-700 border-transparent hover:border-pink-600"
+                      : "text-white border-transparent hover:border-white/50"
+                  }`}
+                  whileHover={{ y: -2 }}
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.1 * i, duration: 0.5 }}
+                >
+                  {item.name}
+                </motion.a>
+              ))}
             </motion.nav>
 
             <motion.a

@@ -14,11 +14,11 @@ export default function Home() {
   return (
     <main className="overflow-x-hidden font-sans bg-white">
       <HeroSection />
-      <ResultsSection />
+      <ResultsSection id="results" />
       <BenefitsSection />
-      <TestimonialsSection />
+      <TestimonialsSection id="testimonials" />
       <ScheduleSection />
-      <FaqSection />
+      <FaqSection id="faq" />
       <RegistrationSection />
       <Footer />
     </main>
