@@ -96,7 +96,7 @@ export const Footer = () => {
               variants={itemVariants}
             >
               <Image
-                src="https://fablearner.com/wp-content/uploads/2025/05/logo.png"
+                src="/logo.png"
                 alt="Fablearner Logo"
                 width={200}
                 height={50}

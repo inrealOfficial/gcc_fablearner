@@ -468,7 +468,7 @@ export default function CheckoutPage() {
         <div className="container mx-auto px-4 flex justify-between items-center">
           <Link href="/">
             <Image
-              src="https://fablearner.com/wp-content/uploads/2025/05/logo.png"
+              src="/logo.png"
               alt="Fablearner Logo"
               width={180}
               height={50}
@@ -775,7 +775,7 @@ export default function CheckoutPage() {
                   </div>
                   <div className="flex items-center gap-2">
                     <Image
-                      src="https://fablearner.com/wp-content/plugins/payu-india/images/payubizlogo.png"
+                      src="/payubizlogo.png"
                       alt="PayU Secure"
                       width={60}
                       height={60}

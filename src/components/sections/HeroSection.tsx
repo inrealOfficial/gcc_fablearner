@@ -141,7 +141,7 @@ export const HeroSection = () => {
             transition={{ type: "spring", stiffness: 400, damping: 10 }}
           >
             <Image
-              src="https://fablearner.com/wp-content/uploads/2025/05/logo.png"
+              src="/logo.png"
               alt="Fablearner Logo"
               width={180}
               height={50}
@@ -674,7 +674,7 @@ export const HeroSection = () => {
               {/* Main Hero Image */}
               <div className="relative rounded-2xl overflow-hidden border-4 border-white/30 shadow-2xl">
                 <Image
-                  src="https://fablearner.com/wp-content/uploads/2025/05/hero-1.png"
+                  src="/hero.png"
                   alt="Child learning to read"
                   width={600}
                   height={600}

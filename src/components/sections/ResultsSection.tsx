@@ -16,47 +16,47 @@ const students = [
   {
     name: "TRINESH",
     videoUrl: "https://player.vimeo.com/video/1060445446?h=70d3c8cea3",
-    imageUrl: "https://fablearner.com/wp-content/uploads/2025/02/TRINESH.png",
+    imageUrl: "results/TRINESH.png",
   },
   {
     name: "NIKITA",
     videoUrl: "https://player.vimeo.com/video/914827236",
-    imageUrl: "https://fablearner.com/wp-content/uploads/2025/02/NIKITA.png",
+    imageUrl: "results/NIKITA.png",
   },
   {
     name: "DHANYA",
     videoUrl: "https://player.vimeo.com/video/914830394",
-    imageUrl: "https://fablearner.com/wp-content/uploads/2025/02/DHANYA.png",
+    imageUrl: "results/DHANYA.png",
   },
   {
     name: "ARCHANA",
     videoUrl: "https://player.vimeo.com/video/1060441426",
-    imageUrl: "https://fablearner.com/wp-content/uploads/2025/02/Archana.png",
+    imageUrl: "results/Archana.png",
   },
   {
     name: "PREETHI",
     videoUrl: "https://player.vimeo.com/video/1060444439?h=b4d0746a73",
-    imageUrl: "https://fablearner.com/wp-content/uploads/2025/02/PREETHI.png",
+    imageUrl: "results/PREETHI.png",
   },
   {
     name: "RIDDHI",
     videoUrl: "https://player.vimeo.com/video/1060445247",
-    imageUrl: "https://fablearner.com/wp-content/uploads/2025/02/RIDDHI.png",
+    imageUrl: "results/RIDDHI.png",
   },
   {
     name: "AKSHARA",
     videoUrl: "https://player.vimeo.com/video/914828920",
-    imageUrl: "https://fablearner.com/wp-content/uploads/2025/02/AKSHARA.png",
+    imageUrl: "results/AKSHARA.png",
   },
   {
     name: "HUSSNAIN",
     videoUrl: "https://player.vimeo.com/video/914830394",
-    imageUrl: "https://fablearner.com/wp-content/uploads/2025/02/HUSSNAIN.png",
+    imageUrl: "results/HUSSNAIN.png",
   },
   {
     name: "PRIYANSH",
     videoUrl: "https://player.vimeo.com/video/914828006",
-    imageUrl: "https://fablearner.com/wp-content/uploads/2025/02/PRIYANSH.png",
+    imageUrl: "/PRIYANSH.png",
   },
 ];
 

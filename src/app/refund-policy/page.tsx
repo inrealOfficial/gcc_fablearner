@@ -65,7 +65,7 @@ export default function RefundPolicy() {
           >
             <Link href="/">
               <Image
-                src="https://fablearner.com/wp-content/uploads/2025/05/logo.png"
+                src="/logo.png"
                 alt="Fablearner Logo"
                 width={180}
                 height={50}

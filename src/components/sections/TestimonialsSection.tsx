@@ -31,57 +31,49 @@ export const TestimonialsSection = ({ id }: { id?: string }) => {
   const testimonials = [
     {
       id: 1,
-      imageUrl:
-        "https://fablearner.com/wp-content/uploads/2025/02/Group-37297.png",
+      imageUrl: "/testimonials/Group-37297.png",
       rating: 5,
       childAge: 3,
     },
     {
       id: 2,
-      imageUrl:
-        "https://fablearner.com/wp-content/uploads/2025/02/Group-37295.png",
+      imageUrl: "/testimonials/Group-37295.png",
       rating: 5,
       childAge: 4,
     },
     {
       id: 3,
-      imageUrl:
-        "https://fablearner.com/wp-content/uploads/2025/02/Group-37294.png",
+      imageUrl: "/testimonials/Group-37294.png",
       rating: 5,
       childAge: 3,
     },
     {
       id: 4,
-      imageUrl:
-        "https://fablearner.com/wp-content/uploads/2025/02/Group-37293.png",
+      imageUrl: "/testimonials/Group-37293.png",
       rating: 5,
       childAge: 4,
     },
     {
       id: 5,
-      imageUrl:
-        "https://fablearner.com/wp-content/uploads/2025/02/Group-37292.png",
+      imageUrl: "/testimonials/Group-37292.png",
       rating: 5,
       childAge: 3,
     },
     {
       id: 6,
-      imageUrl:
-        "https://fablearner.com/wp-content/uploads/2025/02/Group-37290.png",
+      imageUrl: "/testimonials/Group-37290.png",
       rating: 5,
       childAge: 4,
     },
     {
       id: 7,
-      imageUrl:
-        "https://fablearner.com/wp-content/uploads/2025/02/Group-37288.png",
+      imageUrl: "/testimonials/Group-37288.png",
       rating: 5,
       childAge: 3,
     },
     {
       id: 8,
-      imageUrl:
-        "https://fablearner.com/wp-content/uploads/2025/02/Group-37289.png",
+      imageUrl: "/testimonials/Group-37289.png",
       rating: 5,
       childAge: 4,
     },
