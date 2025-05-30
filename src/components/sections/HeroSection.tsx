@@ -492,6 +492,21 @@ export const HeroSection = () => {
                     Before Age 3!
                   </span>
                 </motion.h1>
+
+                {/* New text section */}
+                <motion.p
+                  className={`${andika.className} text-lg md:text-xl text-white/90 mt-4 mb-6 max-w-2xl leading-relaxed`}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.5, duration: 0.6 }}
+                >
+                  Join the World's Highest-Rated Online Masterclass (for
+                  Parents).
+                  <span className="block mt-1">
+                    Learn simple, science-backed techniques to teach your child
+                    to read — in just 15 minutes a day.
+                  </span>
+                </motion.p>
               </div>
 
               {/* CTA Button - Mobile: shown after heading, Desktop: shown after image */}
