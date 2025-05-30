@@ -1,10 +1,10 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Andika } from "next/font/google";
 import { CountdownTimer } from "../ui/CountdownTimer";
 import { motion, useScroll, useTransform } from "framer-motion";
-import confetti from 'canvas-confetti';
+import confetti from "canvas-confetti";
 
 // Font configuration
 const andika = Andika({
@@ -14,17 +14,92 @@ const andika = Andika({
   variable: "--font-andika",
 });
 
-// Helper function
-const get24HoursFromNow = () => {
-  const date = new Date();
-  date.setHours(date.getHours() + 24);
-  return date;
+// Function to get next weekend (Saturday-Sunday)
+const getNextWeekend = () => {
+  const now = new Date();
+  const dayOfWeek = now.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
+
+  let daysUntilSaturday;
+  if (dayOfWeek === 0) {
+    // Sunday
+    daysUntilSaturday = 6; // Next Saturday
+  } else if (dayOfWeek === 6) {
+    // Saturday
+    daysUntilSaturday = 7; // Next Saturday
+  } else {
+    // Monday-Friday
+    daysUntilSaturday = 6 - dayOfWeek; // Days until this Saturday
+  }
+
+  const saturday = new Date(now);
+  saturday.setDate(now.getDate() + daysUntilSaturday);
+  saturday.setHours(18, 0, 0, 0); // 6:00 PM
+
+  const sunday = new Date(saturday);
+  sunday.setDate(saturday.getDate() + 1);
+
+  return { saturday, sunday };
+};
+
+const formatWeekendDates = (saturday: Date, sunday: Date): string => {
+  const months: string[] = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+  const satDay: number = saturday.getDate();
+  const sunDay: number = sunday.getDate();
+  const month: string = months[saturday.getMonth()];
+  const year: number = saturday.getFullYear();
+
+  return `${satDay}-${sunDay} ${month} ${year}`;
 };
 
 export const RegistrationSection = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const [isHovering, setIsHovering] = useState(false);
-  
+  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0 });
+  const [weekendDates, setWeekendDates] = useState("");
+
+  useEffect(() => {
+    const { saturday } = getNextWeekend();
+    setWeekendDates(
+      formatWeekendDates(
+        saturday,
+        new Date(saturday.getTime() + 24 * 60 * 60 * 1000)
+      )
+    );
+
+    const updateCountdown = () => {
+      const now = new Date();
+      const timeDiff = saturday.getTime() - now.getTime();
+
+      if (timeDiff > 0) {
+        const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor(timeDiff / (1000 * 60 * 60));
+        const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+
+        setTimeLeft({ days, hours, minutes });
+      } else {
+        setTimeLeft({ days: 0, hours: 0, minutes: 0 });
+      }
+    };
+
+    updateCountdown();
+    const interval = setInterval(updateCountdown, 60000); // Update every minute
+
+    return () => clearInterval(interval);
+  }, []);
+
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ["start end", "end start"],
@@ -38,7 +113,7 @@ export const RegistrationSection = () => {
       particleCount: 100,
       spread: 70,
       origin: { y: 0.6 },
-      colors: ['#EC4899', '#9333EA', '#DB2777']
+      colors: ["#EC4899", "#9333EA", "#DB2777"],
     });
   };
 
@@ -48,16 +123,13 @@ export const RegistrationSection = () => {
       id="register"
       className="relative py-16 px-4 bg-white overflow-hidden"
       style={{
-        perspective: "1000px"
+        perspective: "1000px",
       }}
     >
       {/* Enhanced Background with 3D effect */}
-      <motion.div 
-        className="absolute inset-0"
-        style={{ y, opacity }}
-      >
+      <motion.div className="absolute inset-0" style={{ y, opacity }}>
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(252,231,243,0.5)_0%,rgba(255,255,255,0)_100%)]" />
-        
+
         {/* Animated particles */}
         {[...Array(20)].map((_, i) => (
           <motion.div
@@ -95,7 +167,8 @@ export const RegistrationSection = () => {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            <span className={`
+            <span
+              className={`
               ${andika.className} 
               inline-flex items-center gap-3 px-8 py-3
               bg-gradient-to-r from-pink-100/80 to-purple-100/80
@@ -108,23 +181,26 @@ export const RegistrationSection = () => {
               border border-pink-200/50
               backdrop-blur-md
               transform hover:scale-105 transition-transform duration-300
-            `}>
+            `}
+            >
               <motion.span
-                animate={{ 
+                animate={{
                   rotate: [0, 15, 0],
-                  scale: [1, 1.2, 1]
+                  scale: [1, 1.2, 1],
                 }}
-                transition={{ 
-                  duration: 1.5, 
+                transition={{
+                  duration: 1.5,
                   repeat: Infinity,
-                  ease: "easeInOut"
+                  ease: "easeInOut",
                 }}
-              >⚡</motion.span>
+              >
+                ⚡
+              </motion.span>
               Limited Time Offer
             </span>
           </motion.div>
 
-          <motion.h2 
+          <motion.h2
             className="font-dingdong text-6xl md:text-7xl font-bold mb-8
               relative inline-block cursor-default select-none"
             style={{
@@ -132,15 +208,17 @@ export const RegistrationSection = () => {
               transform: "translateZ(50px)",
             }}
           >
-            <span className="bg-gradient-to-r from-pink-600 via-purple-600 to-pink-600 
-              bg-clip-text text-transparent leading-tight block">
+            <span
+              className="bg-gradient-to-r from-pink-600 via-purple-600 to-pink-600 
+              bg-clip-text text-transparent leading-tight block"
+            >
               REGISTRATION FOR THE
               <br />
               NEXT MASTERCLASS
               <br />
               CLOSES SOON
             </span>
-            
+
             {/* Floating elements around heading */}
             {["✨", "🌟", "💫"].map((emoji, i) => (
               <motion.span
@@ -168,7 +246,7 @@ export const RegistrationSection = () => {
         </motion.div>
 
         {/* Countdown Timer Section */}
-        <motion.div 
+        <motion.div
           className="mb-16 relative overflow-hidden"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -179,7 +257,7 @@ export const RegistrationSection = () => {
             <div className="absolute inset-0 bg-gradient-to-r from-purple-200/20 via-pink-200/20 to-purple-200/20 blur-3xl transform rotate-12" />
             <div className="absolute inset-0 bg-gradient-to-l from-purple-200/20 via-pink-200/20 to-purple-200/20 blur-3xl transform -rotate-12" />
           </div>
-          
+
           {/* Timer container */}
           <div className="relative bg-white/90 backdrop-blur-xl rounded-2xl p-8 md:p-10 border border-pink-100 shadow-[0_8px_32px_-8px_rgba(236,72,153,0.3)]">
             <div className="flex flex-col items-center">
@@ -187,86 +265,114 @@ export const RegistrationSection = () => {
               <div className="flex items-center gap-3 mb-8">
                 <motion.div
                   animate={{ rotate: 360 }}
-                  transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+                  transition={{
+                    duration: 10,
+                    repeat: Infinity,
+                    ease: "linear",
+                  }}
                   className="w-12 h-12 bg-pink-50 rounded-full flex items-center justify-center"
                 >
-                  <svg className="w-6 h-6 text-pink-500" viewBox="0 0 24 24" fill="none">
-                    <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" />
+                  <svg
+                    className="w-6 h-6 text-pink-500"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                  >
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    />
                     <motion.path
                       d="M12 6v6l4 2"
                       stroke="currentColor"
                       strokeWidth="2"
                       strokeLinecap="round"
                       animate={{ rotate: 360 }}
-                      transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
-                      style={{ transformOrigin: '12px 12px' }}
+                      transition={{
+                        duration: 60,
+                        repeat: Infinity,
+                        ease: "linear",
+                      }}
+                      style={{ transformOrigin: "12px 12px" }}
                     />
                   </svg>
                 </motion.div>
                 <div className="text-center">
-                  <h3 className={`${andika.className} text-2xl font-bold bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent`}>
+                  <h3
+                    className={`${andika.className} text-2xl font-bold bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent`}
+                  >
                     Masterclass Starts In
                   </h3>
-                  <p className="text-gray-500 text-sm mt-1">Don't miss this opportunity!</p>
+                  <p className="text-gray-500 text-sm mt-1">
+                    Don't miss this opportunity!
+                  </p>
                 </div>
               </div>
 
-             
-
-{/* Timer digits */}
-<div className="grid grid-cols-3 gap-4 md:gap-8">
-  <CountdownTimer 
-    targetDate={get24HoursFromNow()}
-    render={({ hours, minutes, seconds }) => (
-      <>
-        {[
-          { unit: 'Hours', value: String(hours).padStart(2, '0') },
-          { unit: 'Minutes', value: String(minutes).padStart(2, '0') },
-          { unit: 'Seconds', value: String(seconds).padStart(2, '0') }
-        ].map((item, index) => (
-          <motion.div
-            key={item.unit}
-            initial={{ opacity: 0, scale: 0.5 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: index * 0.1 }}
-            className="relative group"
-          >
-            <motion.div
-              className="absolute inset-0 bg-gradient-to-b from-pink-400 to-purple-600 rounded-2xl blur-sm group-hover:blur-md transition-all duration-300"
-              animate={{
-                scale: [1, 1.05, 1],
-              }}
-              transition={{
-                duration: 2,
-                repeat: Infinity,
-                repeatType: "reverse"
-              }}
-            />
-            <div className="relative bg-white/90 backdrop-blur-sm rounded-2xl p-4 border border-pink-100 group-hover:transform group-hover:-translate-y-1 transition-all duration-300">
-              <div className="text-center">
-                <span className="font-dingdong text-4xl md:text-5xl font-bold bg-gradient-to-b from-pink-600 to-purple-600 bg-clip-text text-transparent">
-                  {item.value}
-                </span>
-                <span className="block text-sm font-medium text-gray-500 mt-1">
-                  {item.unit}
-                </span>
+              {/* Timer digits */}
+              <div className="grid grid-cols-3 gap-4 md:gap-8">
+                <CountdownTimer
+                  targetDate={getNextWeekend().saturday}
+                  render={({ hours, minutes, seconds }) => (
+                    <>
+                      {[
+                        {
+                          unit: "Hours",
+                          value: String(timeLeft.hours).padStart(2, "0"),
+                        },
+                        {
+                          unit: "Minutes",
+                          value: String(timeLeft.minutes).padStart(2, "0"),
+                        },
+                        {
+                          unit: "Seconds",
+                          value: String(seconds).padStart(2, "0"),
+                        },
+                      ].map((item, index) => (
+                        <motion.div
+                          key={item.unit}
+                          initial={{ opacity: 0, scale: 0.5 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          transition={{ delay: index * 0.1 }}
+                          className="relative group"
+                        >
+                          <motion.div
+                            className="absolute inset-0 bg-gradient-to-b from-pink-400 to-purple-600 rounded-2xl blur-sm group-hover:blur-md transition-all duration-300"
+                            animate={{
+                              scale: [1, 1.05, 1],
+                            }}
+                            transition={{
+                              duration: 2,
+                              repeat: Infinity,
+                              repeatType: "reverse",
+                            }}
+                          />
+                          <div className="relative bg-white/90 backdrop-blur-sm rounded-2xl p-4 border border-pink-100 group-hover:transform group-hover:-translate-y-1 transition-all duration-300">
+                            <div className="text-center">
+                              <span className="font-dingdong text-4xl md:text-5xl font-bold bg-gradient-to-b from-pink-600 to-purple-600 bg-clip-text text-transparent">
+                                {item.value}
+                              </span>
+                              <span className="block text-sm font-medium text-gray-500 mt-1">
+                                {item.unit}
+                              </span>
+                            </div>
+                          </div>
+                        </motion.div>
+                      ))}
+                    </>
+                  )}
+                />
               </div>
-            </div>
-          </motion.div>
-        ))}
-      </>
-    )}
-  />
-</div>
-
 
               {/* Live indicator */}
-              <motion.div 
+              <motion.div
                 className="mt-8 flex items-center gap-3 bg-gradient-to-r from-green-50 to-emerald-50 px-4 py-2 rounded-full"
                 animate={{ scale: [1, 1.02, 1] }}
                 transition={{ duration: 2, repeat: Infinity }}
               >
-                <motion.div 
+                <motion.div
                   className="w-2 h-2 bg-green-500 rounded-full"
                   animate={{ opacity: [1, 0.5, 1] }}
                   transition={{ duration: 1, repeat: Infinity }}
@@ -282,7 +388,7 @@ export const RegistrationSection = () => {
         {/* Button with synchronized animations */}
         <motion.div className="text-center">
           <motion.a
-            href="/checkout" // Update this line
+            href="/checkout"
             className={`
               relative block
               bg-yellow-300 text-black
@@ -297,29 +403,29 @@ export const RegistrationSection = () => {
             `}
             animate={{
               rotate: [0, -8, 8, -8, 0],
-              scale: [1, 0.92, 1.08, 0.92, 1], // Modified scale values
+              scale: [1, 0.92, 1.08, 0.92, 1],
               transition: {
                 duration: 6,
                 repeat: Infinity,
                 ease: "easeInOut",
-                times: [0, 0.25, 0.5, 0.75, 1]
-              }
+                times: [0, 0.25, 0.5, 0.75, 1],
+              },
             }}
             whileHover={{
-              scale: 1.15, // Increased hover scale
-              y: -8, // Added slight upward movement
-              transition: { 
+              scale: 1.15,
+              y: -8,
+              transition: {
                 duration: 0.4,
-                ease: "backOut"
-              }
+                ease: "backOut",
+              },
             }}
             whileTap={{
-              scale: 0.85, // Increased scale down on tap
-              y: 4, // Added slight downward movement
-              transition: { 
+              scale: 0.85,
+              y: 4,
+              transition: {
                 duration: 0.2,
-                ease: "backIn"
-              }
+                ease: "backIn",
+              },
             }}
             onClick={shootConfetti}
           >

@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Home - Fablerner",
+  title: "Home - FabLearner",
   description: "Fablerner",
   icons: {
     icon: "https://fablearner.com/wp-content/uploads/2025/05/logo.png",
