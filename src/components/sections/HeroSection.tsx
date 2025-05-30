@@ -485,9 +485,7 @@ export const HeroSection = () => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.4, duration: 0.6 }}
                 >
-                  {childAge
-                    ? `At Age ${childAge}, Your Child Can Already Read`
-                    : "Your Child Can Start Reading"}
+                  Your Child Can Start Reading
                   <span className="text-yellow-300 block mt-2">
                     Before Age 3!
                   </span>
