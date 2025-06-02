@@ -79,13 +79,17 @@ export const RegistrationSection = () => {
       )
     );
 
+    // In your main component, replace the updateCountdown function with this:
+
     const updateCountdown = () => {
       const now = new Date();
       const timeDiff = saturday.getTime() - now.getTime();
 
       if (timeDiff > 0) {
         const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
-        const hours = Math.floor(timeDiff / (1000 * 60 * 60));
+        const hours = Math.floor(
+          (timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+        );
         const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
 
         setTimeLeft({ days, hours, minutes });
@@ -315,9 +319,13 @@ export const RegistrationSection = () => {
               <div className="grid grid-cols-3 gap-4 md:gap-8">
                 <CountdownTimer
                   targetDate={getNextWeekend().saturday}
-                  render={({ hours, minutes, seconds }) => (
+                  render={({ days, hours, minutes }) => (
                     <>
                       {[
+                        {
+                          unit: "Days",
+                          value: String(timeLeft.days).padStart(2, "0"),
+                        },
                         {
                           unit: "Hours",
                           value: String(timeLeft.hours).padStart(2, "0"),
@@ -325,10 +333,6 @@ export const RegistrationSection = () => {
                         {
                           unit: "Minutes",
                           value: String(timeLeft.minutes).padStart(2, "0"),
-                        },
-                        {
-                          unit: "Seconds",
-                          value: String(seconds).padStart(2, "0"),
                         },
                       ].map((item, index) => (
                         <motion.div

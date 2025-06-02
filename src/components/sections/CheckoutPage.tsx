@@ -904,7 +904,7 @@ export default function CheckoutPage() {
           >
             <motion.div className="inline-block mb-6 bg-white/10 backdrop-blur-sm rounded-lg p-4">
               <Image
-                src="https://fablearner.com/wp-content/uploads/2025/05/logo.png"
+                src="./logo.png"
                 alt="Fablearner Logo"
                 width={200}
                 height={50}

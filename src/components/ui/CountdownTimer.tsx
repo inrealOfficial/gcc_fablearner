@@ -5,17 +5,17 @@ import { useState, useEffect } from "react";
 type CountdownTimerProps = {
   targetDate: Date;
   render: (time: {
+    days: number;
     hours: number;
     minutes: number;
-    seconds: number;
   }) => React.ReactNode;
 };
 
 export const CountdownTimer = ({ targetDate, render }: CountdownTimerProps) => {
   const [timeLeft, setTimeLeft] = useState({
+    days: 0,
     hours: 0,
     minutes: 0,
-    seconds: 0,
   });
 
   useEffect(() => {
@@ -31,7 +31,7 @@ export const CountdownTimer = ({ targetDate, render }: CountdownTimerProps) => {
       setTimeLeft({
         hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
         minutes: Math.floor((difference / 1000 / 60) % 60),
-        seconds: Math.floor((difference / 1000) % 60),
+        days: Math.floor(difference / (1000 * 60 * 60 * 24)),
       });
     }, 1000);
 
