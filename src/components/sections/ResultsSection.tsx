@@ -334,7 +334,11 @@ export const ResultsSection = ({ id }: { id?: string }) => {
                           <img
                             src={student.imageUrl}
                             alt={`${student.name}'s Story`}
-                            className="absolute inset-0 w-full h-full object-cover"
+                            fill
+                            sizes="(max-width: 768px) 100vw, 33vw"
+                            className="object-cover"
+                            loading={offset === 0 ? "eager" : "lazy"}
+                            priority={offset === 0}
                           />
                           <motion.div
                             className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center"

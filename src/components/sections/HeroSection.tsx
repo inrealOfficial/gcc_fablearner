@@ -777,12 +777,14 @@ export const HeroSection = () => {
               {/* Main Hero Image */}
               <div className="relative rounded-2xl overflow-hidden border-4 border-white/30 shadow-2xl">
                 <Image
-                  src="/hero.webp"
+                  src="/hero.webp" // Convert to WebP if not already
                   alt="Child learning to read"
                   width={600}
                   height={600}
                   className="w-full h-auto"
-                  priority
+                  priority // Already using priority which is good
+                  placeholder="blur" // Add this line
+                  blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+P+/HgAFeAJ7W82JugAAAABJRU5ErkJggg=="
                 />
 
                 {/* Interactive image overlay - simplified on mobile */}

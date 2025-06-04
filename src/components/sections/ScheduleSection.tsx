@@ -19,7 +19,7 @@ const scheduleData = [
   },
   {
     day: 2,
-    title: "THE 15-MINUTE METHOD TO TEACH READING BEFORE AGE 3",
+    title: "THE 15-MINUTE METHOD TO TEACH READING BEgit ORE AGE 3",
     description:
       "A proven step-by-step formula that has helped over 2,000+ parents teach their kids to read - without tutors, expensive programs, or stress.",
     color: "pink", // Changed from purple to pink to match Day 1

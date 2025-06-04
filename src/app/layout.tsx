@@ -6,6 +6,7 @@ import { FacebookPixel } from "@/components/FacebookPixel";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
+  display: "swap", // Already good - ensures text remains visible during font load
 });
 
 const geistMono = Geist_Mono({

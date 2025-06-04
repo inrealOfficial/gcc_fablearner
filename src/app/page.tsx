@@ -1,13 +1,36 @@
 "use client";
+import dynamic from "next/dynamic";
 
-// Import section components
+// Dynamically import non-critical sections
+const BenefitsSection = dynamic(() =>
+  import("../components/sections/BenefitsSection").then((mod) => ({
+    default: mod.BenefitsSection,
+  }))
+);
+const TestimonialsSection = dynamic(() =>
+  import("../components/sections/TestimonialsSection").then((mod) => ({
+    default: mod.TestimonialsSection,
+  }))
+);
+const ScheduleSection = dynamic(() =>
+  import("../components/sections/ScheduleSection").then((mod) => ({
+    default: mod.ScheduleSection,
+  }))
+);
+const FaqSection = dynamic(() =>
+  import("@/components/sections/FaqSection").then((mod) => ({
+    default: mod.FaqSection,
+  }))
+);
+const RegistrationSection = dynamic(() =>
+  import("../components/sections/RegistrationSection").then((mod) => ({
+    default: mod.RegistrationSection,
+  }))
+);
+
+// Import critical sections normally
 import { HeroSection } from "../components/sections/HeroSection";
 import { ResultsSection } from "../components/sections/ResultsSection";
-import { BenefitsSection } from "../components/sections/BenefitsSection";
-import { TestimonialsSection } from "../components/sections/TestimonialsSection";
-import { ScheduleSection } from "../components/sections/ScheduleSection";
-import { FaqSection } from "@/components/sections/FaqSection";
-import { RegistrationSection } from "../components/sections/RegistrationSection";
 import { Footer } from "../components/sections/Footer";
 import { CtaMobileOnly } from "@/components/sections/cta-mobile-only";
 export default function Home() {
