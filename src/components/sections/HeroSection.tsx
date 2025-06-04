@@ -777,7 +777,7 @@ export const HeroSection = () => {
               {/* Main Hero Image */}
               <div className="relative rounded-2xl overflow-hidden border-4 border-white/30 shadow-2xl">
                 <Image
-                  src="/hero.png"
+                  src="/hero.webp"
                   alt="Child learning to read"
                   width={600}
                   height={600}
