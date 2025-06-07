@@ -33,6 +33,8 @@ import { HeroSection } from "../components/sections/HeroSection";
 import { ResultsSection } from "../components/sections/ResultsSection";
 import { Footer } from "../components/sections/Footer";
 import { CtaMobileOnly } from "@/components/sections/cta-mobile-only";
+import { AffiliateTracker } from "@/components/AffiliateTracker";
+
 export default function Home() {
   return (
     <main className="overflow-x-hidden font-sans bg-white">
@@ -45,6 +47,7 @@ export default function Home() {
       <FaqSection id="faq" />
       <RegistrationSection />
       <Footer />
+      <AffiliateTracker />
     </main>
   );
 }

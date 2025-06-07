@@ -12,6 +12,7 @@
     "@maxmind/geoip2-node": "^6.1.0",
     "canvas-confetti": "^1.9.3",
     "crypto-js": "^4.2.0",
+    "firebase": "^11.9.0",
     "framer-motion": "^12.12.2",
     "nanoid": "^5.1.5",
     "next": "15.1.8",
