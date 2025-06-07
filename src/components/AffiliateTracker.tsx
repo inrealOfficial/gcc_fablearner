@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import {
   getAffiliateIdFromUrl,
@@ -11,7 +11,16 @@ import {
 // Track at the module level to persist across remounts
 const isTrackedGlobally = { current: false };
 
+// Creates a safe version that can be used in Layout
 export function AffiliateTracker() {
+  return (
+    <Suspense fallback={null}>
+      <AffiliateTrackerContent />
+    </Suspense>
+  );
+}
+
+function AffiliateTrackerContent() {
   const searchParams = useSearchParams();
   const hasTrackedRef = useRef(false);
   const affiliateIdRef = useRef<string | null>(null);
