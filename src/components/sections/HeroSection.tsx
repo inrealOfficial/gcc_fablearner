@@ -524,7 +524,7 @@ export const HeroSection = () => {
                       How old is your child?
                     </p>
                     <div className="flex flex-wrap gap-2">
-                      {[2, 3, 4, 5, "6+"].map((age) => (
+                      {[3, 4, 5, "6+"].map((age) => (
                         <motion.button
                           key={age}
                           className="bg-white/20 hover:bg-white/30 text-white px-4 py-1 rounded-full"
@@ -558,8 +558,19 @@ export const HeroSection = () => {
                     <div
                       className={`inline-flex bg-gradient-to-r from-yellow-400/20 to-yellow-400/30 backdrop-blur-sm text-yellow-200 rounded-full px-4 py-2 text-sm ${andika.className} font-bold`}
                     >
-                      Perfect timing! Age {childAge} is optimal for early
-                      reading skills.
+                      {childAge === 3 &&
+                        "You're right on time! Age 3 is when imagination thrives and language blossoms."}
+                      {childAge === 4 &&
+                        "4 years old? Don't wait, your child can start reading now, long before most schools even begin."}
+                      {childAge === 5 &&
+                        "At age 5, a key turning point. Many kids start school, but not all learn to read well."}
+                      {childAge === 6 &&
+                        "Many children at this age silently struggle with letters and words. The right approach can change that."}
+                      {childAge !== 3 &&
+                        childAge !== 4 &&
+                        childAge !== 5 &&
+                        childAge !== 6 &&
+                        "Perfect timing! Age {childAge} is optimal for early reading skills."}
                     </div>
                   </motion.div>
                 )}
