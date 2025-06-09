@@ -360,6 +360,24 @@ export default function CheckoutPage() {
     expiry: "",
     cvc: "",
   });
+  // Add these new states for coupon handling
+  const [couponCode, setCouponCode] = useState("");
+  const [couponError, setCouponError] = useState("");
+  const [appliedCoupon, setAppliedCoupon] = useState<{
+    code: string;
+    discount: number;
+    type: string;
+  } | null>(null);
+  const [isValidatingCoupon, setIsValidatingCoupon] = useState(false);
+
+  // Original price
+  const originalPrice = 500.0;
+
+  // Discounted price calculation
+  const discountedPrice = appliedCoupon
+    ? Math.max(originalPrice - appliedCoupon.discount, 0).toFixed(2)
+    : originalPrice.toFixed(2);
+
   const [step, setStep] = useState(1);
   const [isProcessing, setIsProcessing] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -395,6 +413,60 @@ export default function CheckoutPage() {
     setInitialCountry();
   }, []);
 
+  // Replace the existing coupon validation function with this updated version
+  const validateCoupon = () => {
+    if (!couponCode.trim()) {
+      setCouponError("Please enter a coupon code");
+      return;
+    }
+
+    setIsValidatingCoupon(true);
+    setCouponError("");
+
+    // Simulate API call with setTimeout
+    setTimeout(() => {
+      const normalizedCode = couponCode.toUpperCase().trim();
+      // More unique coupon codes - one per discount level
+      const COUPONS = {
+        // Unique codes that don't follow an obvious pattern
+        EARLYBIRD: { discount: 100, type: "fixed" },
+        FAMREADER: { discount: 200, type: "fixed" },
+        BOOKWORM: { discount: 300, type: "fixed" },
+        LEARNFAST: { discount: 400, type: "fixed" },
+        MASTERMIND: { discount: 500, type: "fixed" },
+      };
+
+      if (COUPONS.hasOwnProperty(normalizedCode)) {
+        setAppliedCoupon({
+          code: normalizedCode,
+          ...COUPONS[normalizedCode as keyof typeof COUPONS],
+        });
+
+        // Track coupon usage with Facebook Pixel
+        trackFBEvent("AddPaymentInfo", {
+          content_name: "FAB Masterclass",
+          coupon: normalizedCode,
+          discount_amount:
+            COUPONS[normalizedCode as keyof typeof COUPONS].discount,
+        });
+
+        setCouponCode("");
+        setCouponError("");
+      } else {
+        setCouponError("Invalid coupon code");
+        setAppliedCoupon(null);
+      }
+
+      setIsValidatingCoupon(false);
+    }, 500);
+  };
+
+  // Function to remove applied coupon
+  const removeCoupon = () => {
+    setAppliedCoupon(null);
+    setCouponCode("");
+  };
+
   const handlePayment = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -408,17 +480,18 @@ export default function CheckoutPage() {
         return;
       }
 
-      // Prepare payment data
+      // Prepare payment data with possibly discounted amount
       const paymentData: PaymentData = {
         key: PAYU_CONFIG.key,
         txnid: generateTxnId(),
-        amount: "500.00",
-        productinfo: "FAB MASTERCLASS",
+        amount: discountedPrice,
+        productinfo: appliedCoupon
+          ? `FAB MASTERCLASS (Coupon: ${appliedCoupon.code})`
+          : "FAB MASTERCLASS",
         firstname: formData.firstName,
         lastname: formData.lastName || "",
         email: formData.email,
         phone: formData.phone,
-        // Use a single callback URL
         surl: `${window.location.origin}/api/payment/callback`,
         furl: `${window.location.origin}/api/payment/callback`,
       };
@@ -799,16 +872,80 @@ export default function CheckoutPage() {
                   </div>
                 </div>
               </div>
+              {/* Coupon Section - Add this before Order Summary */}
+              <div className="space-y-4 p-6 rounded-2xl bg-white border border-gray-100">
+                <h3
+                  className={`${andika.className} text-lg font-bold text-gray-800`}
+                >
+                  Have a Coupon?
+                </h3>
 
+                {appliedCoupon ? (
+                  <div className="flex items-center justify-between bg-green-50 p-3 rounded-lg border border-green-200">
+                    <div>
+                      <span className="font-medium text-green-700">
+                        Applied:{" "}
+                      </span>
+                      <span className="font-semibold">
+                        {appliedCoupon.code}
+                      </span>
+                      <span className="ml-2 text-green-700">
+                        (₹{appliedCoupon.discount} off)
+                      </span>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={removeCoupon}
+                      className="text-sm text-red-500 hover:text-red-700"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                ) : (
+                  <div className="flex space-x-2">
+                    <input
+                      type="text"
+                      value={couponCode}
+                      onChange={(e) => setCouponCode(e.target.value)}
+                      placeholder="Enter coupon code"
+                      className="flex-1 p-2 border rounded-lg focus:ring-2 focus:ring-pink-300 focus:border-pink-300"
+                    />
+                    <button
+                      type="button"
+                      onClick={validateCoupon}
+                      disabled={isValidatingCoupon || !couponCode.trim()}
+                      className={`bg-pink-600 text-white px-4 py-2 rounded-lg ${
+                        isValidatingCoupon || !couponCode.trim()
+                          ? "opacity-70 cursor-not-allowed"
+                          : "hover:bg-pink-700"
+                      }`}
+                    >
+                      {isValidatingCoupon ? "Validating..." : "Apply"}
+                    </button>
+                  </div>
+                )}
+
+                {couponError && (
+                  <p className="mt-2 text-red-500 text-sm">{couponError}</p>
+                )}
+              </div>
               {/* Order Summary */}
               <div className="p-6 rounded-2xl bg-gray-50 space-y-4">
                 <div className="flex justify-between text-gray-600">
                   <span>Subtotal</span>
-                  <span>₹500.00</span>
+                  <span>₹{originalPrice.toFixed(2)}</span>
                 </div>
-                <div className="flex justify-between text-lg font-bold">
+
+                {appliedCoupon && (
+                  <div className="flex justify-between text-green-600">
+                    <span>Discount ({appliedCoupon.code})</span>
+                    <span>-₹{appliedCoupon.discount.toFixed(2)}</span>
+                  </div>
+                )}
+
+                <div className="flex justify-between text-lg font-bold pt-2 border-t border-gray-200">
                   <span>Total</span>
-                  <span className="text-pink-600">₹500.00</span>
+                  <span className="text-pink-600">₹{discountedPrice}</span>
                 </div>
               </div>
 
