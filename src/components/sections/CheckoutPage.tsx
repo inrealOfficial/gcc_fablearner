@@ -433,7 +433,7 @@ export default function CheckoutPage() {
         FAMREADER: { discount: 200, type: "fixed" },
         BOOKWORM: { discount: 300, type: "fixed" },
         LEARNFAST: { discount: 400, type: "fixed" },
-        MASTERMIND: { discount: 500, type: "fixed" },
+        MASTERMIND: { discount: 499, type: "fixed" },
       };
 
       if (COUPONS.hasOwnProperty(normalizedCode)) {
