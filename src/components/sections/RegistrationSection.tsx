@@ -5,6 +5,7 @@ import { Andika } from "next/font/google";
 import { CountdownTimer } from "../ui/CountdownTimer";
 import { motion, useScroll, useTransform } from "framer-motion";
 import confetti from "canvas-confetti";
+import { trackFBEvent } from "@/components/FacebookPixel";
 
 // Font configuration
 const andika = Andika({
@@ -118,6 +119,13 @@ export const RegistrationSection = () => {
       spread: 70,
       origin: { y: 0.6 },
       colors: ["#EC4899", "#9333EA", "#DB2777"],
+    });
+  };
+
+  const handleRegister = () => {
+    trackFBEvent("Lead", {
+      content_name: "Registration Interest",
+      content_category: "Button Click",
     });
   };
 
@@ -431,7 +439,10 @@ export const RegistrationSection = () => {
                 ease: "backIn",
               },
             }}
-            onClick={shootConfetti}
+            onClick={() => {
+              shootConfetti();
+              handleRegister();
+            }}
           >
             <div className="flex flex-col items-center justify-center gap-1">
               <span className="font-dingdong text-2xl md:text-3xl">

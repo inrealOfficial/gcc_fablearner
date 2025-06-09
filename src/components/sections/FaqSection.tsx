@@ -1,6 +1,7 @@
 import { motion, useScroll, useTransform, useInView } from "framer-motion";
 import { useRef, useState } from "react";
 import { Andika } from "next/font/google";
+import { trackFBEvent } from "@/components/FacebookPixel";
 
 const andika = Andika({
   weight: ["400", "700"],
@@ -13,6 +14,7 @@ export const FaqSection = ({ id }: { id?: string }) => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(sectionRef, { once: true });
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
@@ -48,6 +50,18 @@ export const FaqSection = ({ id }: { id?: string }) => {
         "You'll receive a confirmation email with the link to join the masterclass and all necessary materials to prepare.",
     },
   ];
+
+  const toggleFaq = (index: number) => {
+    // If opening an FAQ (not closing), track it
+    if (openIndex !== index) {
+      trackFBEvent("ViewContent", {
+        content_name: `FAQ: ${faqs[index].question.substring(0, 30)}...`,
+        content_category: "FAQ",
+      });
+    }
+
+    setOpenIndex(index === openIndex ? null : index);
+  };
 
   return (
     <section

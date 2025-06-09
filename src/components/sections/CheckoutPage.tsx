@@ -8,6 +8,7 @@ import Link from "next/link";
 import ReactCountryFlag from "react-country-flag";
 import { nanoid } from "nanoid";
 import CryptoJS from "crypto-js";
+import { trackFBEvent } from "@/components/FacebookPixel";
 
 const andika = Andika({
   weight: ["400", "700"],
@@ -448,6 +449,19 @@ export default function CheckoutPage() {
       setPaymentError(true);
       setIsProcessing(false);
     }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    // Add this tracking code before your existing submission logic
+    trackFBEvent("InitiateCheckout", {
+      content_name: "FAB Masterclass",
+      currency: "INR",
+      value: 500.0,
+    });
+
+    // Your existing form handling code continues...
   };
 
   return (
