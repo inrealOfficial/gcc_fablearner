@@ -9,6 +9,7 @@ import ReactCountryFlag from "react-country-flag";
 import { nanoid } from "nanoid";
 import CryptoJS from "crypto-js";
 import { trackFBEvent } from "@/components/FacebookPixel";
+import stripePromise from "@/lib/stripe";
 
 const andika = Andika({
   weight: ["400", "700"],
@@ -371,7 +372,7 @@ export default function CheckoutPage() {
   const [isValidatingCoupon, setIsValidatingCoupon] = useState(false);
 
   // Original price
-  const originalPrice = 500.0;
+  const originalPrice = 22.0;
 
   // Discounted price calculation
   const discountedPrice = appliedCoupon
@@ -467,6 +468,7 @@ export default function CheckoutPage() {
     setCouponCode("");
   };
 
+  // Updated handlePayment function for Stripe
   const handlePayment = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -480,43 +482,40 @@ export default function CheckoutPage() {
         return;
       }
 
-      // Prepare payment data with possibly discounted amount
-      const paymentData: PaymentData = {
-        key: PAYU_CONFIG.key,
-        txnid: generateTxnId(),
-        amount: discountedPrice,
-        productinfo: appliedCoupon
-          ? `FAB MASTERCLASS (Coupon: ${appliedCoupon.code})`
-          : "FAB MASTERCLASS",
-        firstname: formData.firstName,
-        lastname: formData.lastName || "",
-        email: formData.email,
-        phone: formData.phone,
-        surl: `${window.location.origin}/api/payment/callback`,
-        furl: `${window.location.origin}/api/payment/callback`,
-      };
-
-      // Generate hash
-      const hash = generateHash(paymentData);
-
-      // Create and submit form
-      const form = document.createElement("form");
-      form.method = "POST";
-      form.action = `${PAYU_CONFIG.baseURL}/_payment`;
-      form.style.display = "none";
-
-      // Add all fields to form
-      const allData = { ...paymentData, hash };
-      Object.entries(allData).forEach(([key, value]) => {
-        const input = document.createElement("input");
-        input.type = "hidden";
-        input.name = key;
-        input.value = value;
-        form.appendChild(input);
+      // Create checkout session
+      const response = await fetch("/api/stripe/checkout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          amount: discountedPrice,
+          productName: appliedCoupon
+            ? `FAB MASTERCLASS (Coupon: ${appliedCoupon.code})`
+            : "FAB MASTERCLASS",
+          customerEmail: formData.email,
+          customerName: `${formData.firstName} ${formData.lastName || ""}`,
+          customerPhone: formData.phone,
+          couponCode: appliedCoupon?.code || null,
+          metadata: {
+            firstName: formData.firstName,
+            lastName: formData.lastName || "",
+            phone: formData.phone,
+            couponApplied: appliedCoupon?.code || "none",
+          },
+        }),
       });
 
-      document.body.appendChild(form);
-      form.submit();
+      if (!response.ok) {
+        throw new Error("Failed to create checkout session");
+      }
+
+      const { url } = await response.json();
+      if (url) {
+        window.location.href = url;
+      } else {
+        throw new Error("No checkout URL received");
+      }
     } catch (error) {
       console.error("Payment error:", error);
       setPaymentError(true);
@@ -710,7 +709,7 @@ export default function CheckoutPage() {
                   <p
                     className={`${andika.className} text-2xl font-bold text-pink-600`}
                   >
-                    ₹500.00
+                    AED 22.00
                   </p>
                 </div>
               </div>
@@ -857,12 +856,12 @@ export default function CheckoutPage() {
                       Payment Method
                     </h3>
                     <p className="text-sm text-gray-600 mt-1">
-                      Secure payment via PayU
+                      Secure payment via Stripe
                     </p>
                   </div>
                   <div className="flex items-center gap-2">
                     <Image
-                      src="/payubizlogo.png"
+                      src="/stripe.png"
                       alt="PayU Secure"
                       width={60}
                       height={60}
@@ -933,19 +932,19 @@ export default function CheckoutPage() {
               <div className="p-6 rounded-2xl bg-gray-50 space-y-4">
                 <div className="flex justify-between text-gray-600">
                   <span>Subtotal</span>
-                  <span>₹{originalPrice.toFixed(2)}</span>
+                  <span>AED {originalPrice.toFixed(2)}</span>
                 </div>
 
                 {appliedCoupon && (
                   <div className="flex justify-between text-green-600">
                     <span>Discount ({appliedCoupon.code})</span>
-                    <span>-₹{appliedCoupon.discount.toFixed(2)}</span>
+                    <span>-AED {appliedCoupon.discount.toFixed(2)}</span>
                   </div>
                 )}
 
                 <div className="flex justify-between text-lg font-bold pt-2 border-t border-gray-200">
                   <span>Total</span>
-                  <span className="text-pink-600">₹{discountedPrice}</span>
+                  <span className="text-pink-600">AED {discountedPrice}</span>
                 </div>
               </div>
 
@@ -1002,7 +1001,7 @@ export default function CheckoutPage() {
                     d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
                   />
                 </svg>
-                Secure Payment via PayU
+                Secure Payment via Stripe
               </div>
             </motion.div>
           </div>

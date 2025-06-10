@@ -179,6 +179,12 @@ export const Footer = () => {
               {[
                 { name: "FAQs", link: "/#faq" },
                 { name: "Contact Us", link: "mailto:support@fablearner.com" },
+                {
+                  name: "Privacy Policy",
+                  link: "/privacy-policy",
+                },
+                { name: "Terms & Conditions", link: "/terms-and-condition" },
+                { name: "support", link: "/support" },
               ].map((item) => (
                 <motion.li
                   key={item.name}
@@ -248,13 +254,13 @@ export const Footer = () => {
               Refund Policy
             </Link>
             <Link
-              href="/terms"
+              href="/terms-and-condition"
               className="text-white/80 hover:text-white transition-colors"
             >
               Terms & Conditions
             </Link>
             <Link
-              href="/privacy"
+              href="/privacy-policy"
               className="text-white/80 hover:text-white transition-colors"
             >
               Privacy Policy

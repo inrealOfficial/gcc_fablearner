@@ -449,7 +449,7 @@ export const RegistrationSection = () => {
                 RESERVE YOUR
               </span>
               <span className="font-dingdong text-2xl md:text-3xl tracking-wider">
-                SPOT - RS.499
+                SPOT - AED 22
               </span>
             </div>
           </motion.a>
