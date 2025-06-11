@@ -355,7 +355,7 @@ export default function CheckoutPage() {
     firstName: "",
     lastName: "",
     phone: "",
-    country: "United States (US)",
+    country: "AE", // Changed to UAE country code
     couponCode: "",
     cardNumber: "",
     expiry: "",
@@ -399,7 +399,7 @@ export default function CheckoutPage() {
       return data.country_code;
     } catch (error) {
       console.error("Country detection failed:", error);
-      return "US";
+      return "AE"; // Default to UAE if detection fails
     }
   };
 
@@ -427,14 +427,14 @@ export default function CheckoutPage() {
     // Simulate API call with setTimeout
     setTimeout(() => {
       const normalizedCode = couponCode.toUpperCase().trim();
-      // More unique coupon codes - one per discount level
+      // Updated coupon codes with AED values
       const COUPONS = {
-        // Unique codes that don't follow an obvious pattern
-        EARLYBIRD: { discount: 100, type: "fixed" },
-        FAMREADER: { discount: 200, type: "fixed" },
-        BOOKWORM: { discount: 300, type: "fixed" },
-        LEARNFAST: { discount: 400, type: "fixed" },
-        MASTERMIND: { discount: 499, type: "fixed" },
+        // Unique codes with appropriate AED discount values
+        EARLYBIRD: { discount: 5, type: "fixed" },
+        FAMREADER: { discount: 7, type: "fixed" },
+        BOOKWORM: { discount: 10, type: "fixed" },
+        LEARNFAST: { discount: 15, type: "fixed" },
+        MASTERMIND: { discount: 20, type: "fixed" },
       };
 
       if (COUPONS.hasOwnProperty(normalizedCode)) {
@@ -889,7 +889,7 @@ export default function CheckoutPage() {
                         {appliedCoupon.code}
                       </span>
                       <span className="ml-2 text-green-700">
-                        (₹{appliedCoupon.discount} off)
+                        (AED {appliedCoupon.discount.toFixed(2)} off)
                       </span>
                     </div>
                     <button

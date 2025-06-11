@@ -690,7 +690,7 @@ export const HeroSection = () => {
                       },
                     }}
                   >
-                    Reserve Your Spot - Rs.499
+                    Reserve Your Spot - AED 22
                     <div className="absolute -top-3 -right-3 bg-yellow-400 text-pink-800 text-xs font-bold rounded-full px-2 py-1 transform rotate-12">
                       70% OFF
                     </div>
