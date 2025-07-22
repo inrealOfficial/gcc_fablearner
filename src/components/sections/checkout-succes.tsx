@@ -1,8 +1,62 @@
 "use client";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 
 export const CheckoutSuccess = () => {
+  const searchParams = useSearchParams();
+  const sessionId = searchParams.get("session_id");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState(false);
+
+  useEffect(() => {
+    const addUser = async () => {
+      if (!sessionId) {
+        setError("Missing session_id");
+        setLoading(false);
+        return;
+      }
+      try {
+        const res = await fetch("/api/users/add", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ session_id: sessionId }),
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          setError(data.error || "Failed to add user");
+        } else {
+          setSuccess(true);
+        }
+      } catch (err: any) {
+        setError(err.message || "Unknown error");
+      } finally {
+        setLoading(false);
+      }
+    };
+    addUser();
+    // Only run on mount
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sessionId]);
+
+  if (loading) {
+    return (
+      <section className="min-h-screen flex items-center justify-center bg-gradient-to-br from-pink-100 via-yellow-50 to-pink-50 px-4">
+        <div className="text-center">Processing your payment...</div>
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section className="min-h-screen flex items-center justify-center bg-gradient-to-br from-pink-100 via-yellow-50 to-pink-50 px-4">
+        <div className="text-center text-red-600">{error}</div>
+      </section>
+    );
+  }
+
   return (
     <section className="min-h-screen flex items-center justify-center bg-gradient-to-br from-pink-100 via-yellow-50 to-pink-50 px-4">
       <motion.div

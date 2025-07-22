@@ -31,7 +31,7 @@ try {
   console.log("Firebase already initialized", error);
 }
 
-const db = getFirestore(app);
+export const db = getFirestore(app || initializeApp(firebaseConfig));
 
 // Cookie/localStorage names
 const AFFILIATE_ID_KEY = "fablearner_affiliate_id";
