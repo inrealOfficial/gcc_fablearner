@@ -220,8 +220,8 @@ export default function FabGeniusCheckout() {
         body: JSON.stringify({
           amount: discountedPrice,
           productName: appliedCoupon
-            ? `FAB MASTERCLASS (Coupon: ${appliedCoupon.code})`
-            : "FAB MASTERCLASS",
+            ? `FABGENIUS GCC (Coupon: ${appliedCoupon.code})`
+            : "FABGENIUS GCC",
           customerEmail: formData.email,
           customerName: `${formData.firstName} ${formData.lastName || ""}`,
           customerPhone: formData.phone,

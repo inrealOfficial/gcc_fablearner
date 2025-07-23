@@ -431,7 +431,7 @@ export default function CheckoutPage() {
 
         // Track coupon usage with Facebook Pixel
         trackFBEvent("AddPaymentInfo", {
-          content_name: "FAB Masterclass",
+          content_name: "FAB Masterclass GCC",
           coupon: normalizedCode,
           discount_amount:
             COUPONS[normalizedCode as keyof typeof COUPONS].discount,
