@@ -54,14 +54,7 @@ const validateCoupon = async (code: string) => {
   // Simulate API call delay
   await new Promise((resolve) => setTimeout(resolve, 1000));
 
-  if (code.toUpperCase() === "FABREADER4K") {
-    return {
-      code: "FABREADER4K",
-      discount: 223.33, // AED equivalent of ₹4000 (4000/9000 * 500)
-      type: "fixed",
-      minAmount: 0,
-    };
-  }
+  // Remove FABREADER4K coupon logic
   return null;
 };
 
@@ -544,7 +537,7 @@ export default function FabReaderCheckout({ id }: { id?: string }) {
                       type="text"
                       value={couponCode}
                       onChange={(e) => setCouponCode(e.target.value)}
-                      placeholder="Enter coupon code (try FABREADER4K)"
+                      placeholder="Enter coupon code"
                       className="flex-1 p-2 sm:p-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-300 focus:border-indigo-300 text-sm sm:text-base min-w-0"
                     />
                     <button
