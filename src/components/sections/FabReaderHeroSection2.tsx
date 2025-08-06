@@ -157,7 +157,7 @@ export const FabReaderHeroSection2 = () => {
             >
               🎯 India's #1 Parent-Led Reading Program —{" "}
               <span className="text-yellow-200 font-bold">
-                Trusted by 5,000+ Families
+                Trusted by 10,000+ Families
               </span>
             </motion.p>
           </motion.div>
@@ -269,7 +269,7 @@ export const FabReaderHeroSection2 = () => {
               }}
             >
               <div className="text-2xl mb-1">🌟</div>
-              <div className="font-dingdong text-lg text-white">5,000+</div>
+              <div className="font-dingdong text-lg text-white">10,000+</div>
               <p className={`${andika.className} text-xs text-white/80`}>
                 Happy Families
               </p>
@@ -345,7 +345,7 @@ export const FabReaderHeroSection2 = () => {
               ))}
             </div>
             <span className={`${andika.className} text-sm font-medium`}>
-              4.9/5 rating from parents
+              4.7/5 ratings from 800+ reviews
             </span>
           </motion.div>
         </div>
