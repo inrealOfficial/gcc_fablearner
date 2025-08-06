@@ -46,8 +46,8 @@ const itemVariants = {
 // Import countries from your existing file or define them here
 import { COUNTRIES } from "@/utils/countries"; // Adjust import as needed
 
-// Updated price - AED 378 (equivalent to ₹9,000)
-const originalPrice = 378.00;
+// Updated price - AED 500 (equivalent to ₹9,000)
+const originalPrice = 500.00;
 
 // Mock coupon validation for FABREADER4K
 const validateCoupon = async (code: string) => {
@@ -57,7 +57,7 @@ const validateCoupon = async (code: string) => {
   if (code.toUpperCase() === "FABREADER4K") {
     return {
       code: "FABREADER4K",
-      discount: 168, // AED equivalent of ₹4000 (4000/9000 * 378)
+      discount: 223.33, // AED equivalent of ₹4000 (4000/9000 * 500)
       type: "fixed",
       minAmount: 0,
     };
