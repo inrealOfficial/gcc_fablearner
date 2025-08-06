@@ -332,6 +332,9 @@ export default function FabReaderCheckout({ id }: { id?: string }) {
                     <p className="font-dingdong text-gray-500 text-sm sm:text-base">
                       Lifetime Access + Premium Features
                     </p>
+                    <p className="text-green-600 text-xl font-semibold mt-1">
+                      Free Delivery
+                    </p>
                   </div>
                 </div>
                 <div className="text-left sm:text-right">
