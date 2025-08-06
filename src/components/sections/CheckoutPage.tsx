@@ -10,7 +10,7 @@ import { nanoid } from "nanoid";
 import CryptoJS from "crypto-js";
 import { trackFBEvent } from "@/components/FacebookPixel";
 import stripePromise from "@/lib/stripe";
-
+import { validateCouponFromFirestore } from "@/lib/coupon";
 const andika = Andika({
   weight: ["400", "700"],
   subsets: ["latin"],
@@ -358,7 +358,7 @@ export default function CheckoutPage() {
   const [isValidatingCoupon, setIsValidatingCoupon] = useState(false);
 
   // Original price
-  const originalPrice = 22.0;
+  const originalPrice = 500.0;
 
   // Discounted price calculation
   const discountedPrice = appliedCoupon
@@ -401,7 +401,7 @@ export default function CheckoutPage() {
   }, []);
 
   // Replace the existing coupon validation function with this updated version
-  const validateCoupon = () => {
+  const validateCoupon = async () => {
     if (!couponCode.trim()) {
       setCouponError("Please enter a coupon code");
       return;
@@ -410,31 +410,41 @@ export default function CheckoutPage() {
     setIsValidatingCoupon(true);
     setCouponError("");
 
-    // Simulate API call with setTimeout
-    setTimeout(() => {
-      const normalizedCode = couponCode.toUpperCase().trim();
-      // Updated coupon codes with AED values
-      const COUPONS = {
-        // Unique codes with appropriate AED discount values
-        EARLYBIRD: { discount: 5, type: "fixed" },
-        FAMREADER: { discount: 7, type: "fixed" },
-        BOOKWORM: { discount: 10, type: "fixed" },
-        LEARNFAST: { discount: 15, type: "fixed" },
-        MASTERMIND: { discount: 20, type: "fixed" },
-      };
+    try {
+      const couponData = await validateCouponFromFirestore(couponCode);
 
-      if (COUPONS.hasOwnProperty(normalizedCode)) {
+      if (couponData) {
+        if (couponData.type === "percentage" && couponData.discount < 100) {
+          couponData.discount = Number(
+            originalPrice * (couponData.discount / 100)
+          );
+        }
+        if (originalPrice < couponData.discount) {
+          setCouponError("Invalid coupon code");
+          setAppliedCoupon(null);
+          return;
+        }
+        if (originalPrice < couponData.minAmount) {
+          setCouponError("Invalid coupon code");
+          setAppliedCoupon(null);
+          return;
+        }
+        if (couponData.fabCourse !== "Gcc_Fablearner") {
+          setCouponError("Invalid coupon code");
+          setAppliedCoupon(null);
+          return;
+        }
         setAppliedCoupon({
-          code: normalizedCode,
-          ...COUPONS[normalizedCode as keyof typeof COUPONS],
+          code: couponData.code,
+          discount: couponData.discount,
+          type: couponData.type,
         });
 
         // Track coupon usage with Facebook Pixel
         trackFBEvent("AddPaymentInfo", {
-          content_name: "FAB Masterclass GCC",
-          coupon: normalizedCode,
-          discount_amount:
-            COUPONS[normalizedCode as keyof typeof COUPONS].discount,
+          content_name: "FAB Masterclass",
+          coupon: couponData.code,
+          discount_amount: couponData.discount,
         });
 
         setCouponCode("");
@@ -443,9 +453,15 @@ export default function CheckoutPage() {
         setCouponError("Invalid coupon code");
         setAppliedCoupon(null);
       }
-
+    } catch (error: any) {
+      console.error("Coupon validation error:", error);
+      setCouponError(
+        error.message || "Error validating coupon. Please try again."
+      );
+      setAppliedCoupon(null);
+    } finally {
       setIsValidatingCoupon(false);
-    }, 500);
+    }
   };
 
   // Function to remove applied coupon
@@ -695,7 +711,7 @@ export default function CheckoutPage() {
                   <p
                     className={`${andika.className} text-2xl font-bold text-pink-600`}
                   >
-                    AED 22.00
+                    AED 500.00
                   </p>
                 </div>
               </div>
