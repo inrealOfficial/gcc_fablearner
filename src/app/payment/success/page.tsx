@@ -2,15 +2,15 @@
 
 import { CheckoutSuccess } from "@/components/sections/checkout-succes";
 import { ConversionTracker } from "@/components/ConversionTracker";
-import { useEffect } from "react";
+import { useEffect, Suspense } from "react";
 import { trackFBEvent } from "@/components/FacebookPixel";
 
-export default function Page() {
+function SuccessPageContent() {
   useEffect(() => {
     // Track successful purchase
     trackFBEvent("Purchase", {
-      currency: "INR",
-      value: 500.0,
+      currency: "AED",
+      value: 22.0,
       content_name: "FAB Masterclass",
       content_type: "product",
       content_category: "Education",
@@ -22,5 +22,13 @@ export default function Page() {
       <ConversionTracker />
       <CheckoutSuccess />
     </>
+  );
+}
+
+export default function Page() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <SuccessPageContent />
+    </Suspense>
   );
 }

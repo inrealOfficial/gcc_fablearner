@@ -8,7 +8,8 @@ import { FabReaderHowitsWorks } from "@/components/sections/FabReaderHowitsWorks
 import { FabReaderBonuses } from "@/components/sections/FabReaderBonuses";
 import { FabReaderBenefitsSection } from "@/components/sections/FabReaderBenefitsSection";
 import { FabReaderFaqSection } from "@/components/sections/FabReaderFaqSection";
-import FabReader2Checkout from "@/components/sections/FabReader2Checkout";
+import FabReader2Checkout from "@/components/sections/FabReader2Checkout"
+
 
 export default function Page() {
   return (
