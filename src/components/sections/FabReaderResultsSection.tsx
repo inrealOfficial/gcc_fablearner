@@ -14,13 +14,13 @@ const andika = Andika({
 
 // List all book images here (relative to /public)
 const bookImages = [
-  "Book Pics/photo_6055225467667067008_y.jpg",
-  "Book Pics/photo_6059609740218053212_y.jpg",
-  "Book Pics/photo_6061861540031737505_y.jpg",
-  "Book Pics/photo_6064461189246726076_y.jpg",
-  "Book Pics/photo_6075578999855230911_y.jpg",
-  "Book Pics/photo_6087174720064696300_y.jpg",
-  "Book Pics/photo_6095782641979731878_y.jpg",
+  "Book Pics/photo_6055225467667067008_y.webp",
+  "Book Pics/photo_6059609740218053212_y.webp",
+  "Book Pics/photo_6061861540031737505_y.webp",
+  "Book Pics/photo_6064461189246726076_y.webp",
+  "Book Pics/photo_6075578999855230911_y.webp",
+  "Book Pics/photo_6087174720064696300_y.webp",
+  "Book Pics/photo_6095782641979731878_y.webp",
   "Book Pics/photo_6095782641979731879_y.jpg",
   "Book Pics/photo_6100286241607102502_y.jpg",
   "Book Pics/photo_6100286241607102566_y.jpg",
