@@ -9,7 +9,7 @@ import { FabReaderBonuses } from "@/components/sections/FabReaderBonuses";
 import { FabReaderBenefitsSection } from "@/components/sections/FabReaderBenefitsSection";
 import { FabReaderFaqSection } from "@/components/sections/FabReaderFaqSection";
 import FabReader2Checkout from "@/components/sections/FabReader2Checkout";
-
+import { TestimonialsSection } from "@/components/sections/TestimonialsSection";
 export default function Page() {
   return (
     <>
@@ -17,6 +17,7 @@ export default function Page() {
       <FabReaderHeroSection2 />
       <ResultsSection id="results" />
       <FabReaderResultsSection id="book" />
+      <TestimonialsSection id="testimonials" />
       <FabReaderHowitsWorks id="how" />
       <FabReaderBonuses id="bonuses" />
       <FabReaderBenefitsSection id="why" />
