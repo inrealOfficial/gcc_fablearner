@@ -341,12 +341,34 @@ export default function CheckoutPage() {
     firstName: "",
     lastName: "",
     phone: "",
-    country: "AE", // Changed to UAE country code
+    country: "AE", // Default, will be auto-detected
     couponCode: "",
     cardNumber: "",
     expiry: "",
     cvc: "",
   });
+
+  // Location-based country detection
+  useEffect(() => {
+    const detectCountry = async () => {
+      try {
+        const response = await fetch("https://ipapi.co/json/");
+        const data = await response.json();
+        return data.country_code;
+      } catch (error) {
+        console.error("Country detection failed:", error);
+        return "AE"; // Default to UAE if detection fails
+      }
+    };
+    const setInitialCountry = async () => {
+      const detectedCountry = await detectCountry();
+      const country = COUNTRIES.find((c) => c.code === detectedCountry);
+      if (country) {
+        setFormData((prev) => ({ ...prev, country: country.code }));
+      }
+    };
+    setInitialCountry();
+  }, []);
   // Add these new states for coupon handling
   const [couponCode, setCouponCode] = useState("");
   const [couponError, setCouponError] = useState("");
