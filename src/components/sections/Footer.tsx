@@ -98,10 +98,11 @@ export const Footer = () => {
               <Image
                 src="/logo.png"
                 alt="Fablearner Logo"
-                width={200}
+                width={180}
                 height={50}
-                className="h-12 w-auto"
+                className="h-12 w-auto object-contain"
                 priority
+                unoptimized // Add this if the image still doesn't load
               />
             </motion.div>
           </Link>
@@ -113,63 +114,13 @@ export const Footer = () => {
           </motion.h3>
         </motion.div>
 
-        {/* Grid Section with updated fonts */}
+        {/* Grid Section with updated fonts - Changed from 3 columns to 2 columns */}
         <motion.div
-          className={`grid grid-cols-1 md:grid-cols-3 gap-12 mb-16 ${andika.className}`}
+          className={`grid grid-cols-1 md:grid-cols-2 gap-12 mb-16 ${andika.className}`}
           variants={containerVariants}
           initial="hidden"
           animate="visible"
         >
-          {/* About Us */}
-          <motion.div variants={itemVariants}>
-            <h4 className="text-xl font-bold mb-6 text-white/90">About Us</h4>
-            <ul className="space-y-3">
-              {[
-                { name: "Who We Are", link: "/#our-method" },
-                { name: "FAB Masterclass", link: "/checkout" },
-                { name: "Testimonials", link: "/#results" },
-                { name: "Refund Policy", link: "/refund-policy" },
-              ].map((item) => (
-                <motion.li
-                  key={item.name}
-                  whileHover={{ x: 5 }}
-                  transition={{ type: "spring", stiffness: 300 }}
-                >
-                  {item.link.startsWith("/#") ? (
-                    <a
-                      href={item.link}
-                      className="inline-flex items-center group"
-                      onClick={(e) =>
-                        scrollToSection(item.link.substring(2), e)
-                      }
-                    >
-                      <span
-                        className="w-6 h-px bg-white/30 group-hover:w-8 group-hover:bg-white/50 
-                        transition-all duration-300 mr-3"
-                      />
-                      <span className="text-white/80 group-hover:text-white font-medium transition-colors duration-300">
-                        {item.name}
-                      </span>
-                    </a>
-                  ) : (
-                    <Link
-                      href={item.link}
-                      className="inline-flex items-center group"
-                    >
-                      <span
-                        className="w-6 h-px bg-white/30 group-hover:w-8 group-hover:bg-white/50 
-                        transition-all duration-300 mr-3"
-                      />
-                      <span className="text-white/80 group-hover:text-white font-medium transition-colors duration-300">
-                        {item.name}
-                      </span>
-                    </Link>
-                  )}
-                </motion.li>
-              ))}
-            </ul>
-          </motion.div>
-
           {/* Quick Links */}
           <motion.div variants={itemVariants}>
             <h4 className="text-xl font-bold mb-6 text-white/90">
@@ -183,7 +134,7 @@ export const Footer = () => {
                   name: "Privacy Policy",
                   link: "/privacy-policy",
                 },
-                { name: "Terms & Conditions", link: "/terms-and-condition" },
+                { name: "Terms & Conditions", link: "/termsofservice" },
                 { name: "support", link: "/support" },
               ].map((item) => (
                 <motion.li
@@ -254,13 +205,13 @@ export const Footer = () => {
               Refund Policy
             </Link>
             <Link
-              href="/terms-and-condition"
+              href="/terms"
               className="text-white/80 hover:text-white transition-colors"
             >
               Terms & Conditions
             </Link>
             <Link
-              href="/privacy-policy"
+              href="/privacy"
               className="text-white/80 hover:text-white transition-colors"
             >
               Privacy Policy
