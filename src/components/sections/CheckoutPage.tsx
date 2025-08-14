@@ -358,7 +358,7 @@ export default function CheckoutPage() {
   const [isValidatingCoupon, setIsValidatingCoupon] = useState(false);
 
   // Original price
-  const originalPrice = 500.0;
+  const originalPrice = 19.99;
 
   // Discounted price calculation
   const discountedPrice = appliedCoupon
@@ -531,8 +531,8 @@ export default function CheckoutPage() {
     // Add this tracking code before your existing submission logic
     trackFBEvent("InitiateCheckout", {
       content_name: "FAB Masterclass",
-      currency: "INR",
-      value: 500.0,
+      currency: "USD",
+      value: 19.99,
     });
 
     // Your existing form handling code continues...
@@ -711,7 +711,7 @@ export default function CheckoutPage() {
                   <p
                     className={`${andika.className} text-2xl font-bold text-pink-600`}
                   >
-                    AED 500.00
+                    19.99 USD
                   </p>
                 </div>
               </div>
@@ -891,7 +891,7 @@ export default function CheckoutPage() {
                         {appliedCoupon.code}
                       </span>
                       <span className="ml-2 text-green-700">
-                        (AED {appliedCoupon.discount.toFixed(2)} off)
+                        (USD {appliedCoupon.discount.toFixed(2)} off)
                       </span>
                     </div>
                     <button
@@ -934,19 +934,19 @@ export default function CheckoutPage() {
               <div className="p-6 rounded-2xl bg-gray-50 space-y-4">
                 <div className="flex justify-between text-gray-600">
                   <span>Subtotal</span>
-                  <span>AED {originalPrice.toFixed(2)}</span>
+                  <span>{originalPrice.toFixed(2)} USD</span>
                 </div>
 
                 {appliedCoupon && (
                   <div className="flex justify-between text-green-600">
                     <span>Discount ({appliedCoupon.code})</span>
-                    <span>-AED {appliedCoupon.discount.toFixed(2)}</span>
+                    <span>-{appliedCoupon.discount.toFixed(2)} USD</span>
                   </div>
                 )}
 
                 <div className="flex justify-between text-lg font-bold pt-2 border-t border-gray-200">
                   <span>Total</span>
-                  <span className="text-pink-600">AED {discountedPrice}</span>
+                  <span className="text-pink-600">{discountedPrice} USD</span>
                 </div>
               </div>
 
