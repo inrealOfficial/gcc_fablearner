@@ -32,12 +32,12 @@ export const FaqSection = ({ id }: { id?: string }) => {
     {
       question: "How long is the session?",
       answer:
-        "Each session lasts 90 minutes (6:00 PM to 7:30 PM) on May 24th and 25th, 2025.",
+        "Each session lasts 30 minutes (6:00 PM to 6:30 PM).",
     },
     {
-      question: "Why is this so cheap?",
+      question: "Why is it only ₹299?",
       answer:
-        "We believe every child deserves the gift of reading. Our mission is to make high-quality education accessible to all families.",
+        " We’ve priced this at just ₹299 because our mission is to make early reading skills accessible to as many families as possible — without cost being a barrier. This small fee covers our workshop hosting costs and ensures only genuinely interested parents join. Our real goal is to show you how powerful and simple our method is, so you can start teaching your child right away.",
     },
     {
       question: "Do I need any experience to teach my child?",
@@ -48,6 +48,21 @@ export const FaqSection = ({ id }: { id?: string }) => {
       question: "What happens after I register?",
       answer:
         "You'll receive a confirmation email with the link to join the masterclass and all necessary materials to prepare.",
+    },
+    {
+      question: "What if I don’t like the session?",
+      answer:
+        "We want you to love the workshop. If you feel it’s not for you, just let us know before the start of Day 2, and we’ll give you a full refund — no questions asked.",
+    },
+    {
+      question: "Do we get any material?",
+      answer:
+        "No, this workshop is designed to give you the knowledge and step-by-step approach you need. You won’t receive physical or digital materials — but you will leave with a clear, actionable plan to teach your child to read.",
+    },
+    {
+      question: "Is this workshop by itself enough to teach my child?",
+      answer:
+        "Yes — by the end of these 3 days, you’ll have the exact method and steps to start teaching your child to read confidently at home. Many parents see amazing progress just by applying what they learn here. At the end, we’ll also introduce the FabReader Programme for those who want ready-made materials, a structured 90-day plan, and personal support to make the journey even smoother.",
     },
   ];
 

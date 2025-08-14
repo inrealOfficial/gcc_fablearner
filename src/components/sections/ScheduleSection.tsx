@@ -12,17 +12,26 @@ const andika = Andika({
 const scheduleData = [
   {
     day: 1,
-    title: "7 DEADLY MISTAKES THAT STOP KIDS FROM LEARNING TO READ",
-    description: "Most parents make these without even realizing it.",
+    title: "The Hidden Traps That Stop Kids from Learning to Read",
+    description:
+      "Discover the biggest mistakes schools and parents make — and why most kids struggle despite \"learning phonics.\" We'll also show you the simple shift that makes reading smooth and frustration-free.",
     color: "pink",
     emoji: "⏱️",
   },
   {
     day: 2,
-    title: "THE 15-MINUTE METHOD TO TEACH READING BEgit ORE AGE 3",
+    title: "The 15-Minute \"Reading Code\" That Works for Every Child",
     description:
-      "A proven step-by-step formula that has helped over 2,000+ parents teach their kids to read - without tutors, expensive programs, or stress.",
-    color: "pink", // Changed from purple to pink to match Day 1
+      "Learn the step-by-step method that has helped over 10,000 parents teach their children to read — without tutors, expensive programs, or stress. Works even for active kids who can't sit still.",
+    color: "purple",
+    emoji: "⏱️",
+  },
+  {
+    day: 3,
+    title: "Your 90-Day Plan to Get Your Child Reading 2nd-Grade Books — Independently",
+    description:
+      "Walk away with a clear action plan, the tools, and the confidence to get your child reading fluently in just 90 days. Plus, we'll guide you on exactly how to make it happen at home.",
+    color: "indigo",
     emoji: "⏱️",
   },
 ];
@@ -42,7 +51,7 @@ export const ScheduleSection = ({ id }: { id?: string }) => {
     <section
       ref={sectionRef}
       id={id}
-      className="relative py-16 px-4 bg-white overflow-hidden" // Reduced from py-32 to py-16
+      className="relative py-16 px-4 bg-white overflow-hidden"
     >
       {/* Updated Background with subtle gradient */}
       <motion.div className="absolute inset-0 z-0" style={{ y: bgY }}>
@@ -109,8 +118,8 @@ export const ScheduleSection = ({ id }: { id?: string }) => {
           </h2>
         </motion.div>
 
-        {/* Enhanced Schedule Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 px-4">
+        {/* Enhanced Schedule Cards - Updated to 3 columns on large screens */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 px-4">
           {scheduleData.map((day, index) => (
             <motion.div
               key={day.day}
@@ -131,7 +140,9 @@ export const ScheduleSection = ({ id }: { id?: string }) => {
                 ${
                   index === 0
                     ? "bg-gradient-to-br from-pink-100 via-pink-50/95 to-rose-100/90"
-                    : "bg-gradient-to-br from-purple-100 via-purple-50/95 to-pink-100/90"
+                    : index === 1
+                    ? "bg-gradient-to-br from-purple-100 via-purple-50/95 to-pink-100/90"
+                    : "bg-gradient-to-br from-indigo-100 via-indigo-50/95 to-purple-100/90"
                 }
                 border border-white/20
                 backdrop-blur-sm
@@ -152,7 +163,9 @@ export const ScheduleSection = ({ id }: { id?: string }) => {
                       ${
                         index === 0
                           ? "bg-gradient-to-br from-pink-500 to-rose-600"
-                          : "bg-gradient-to-br from-purple-500 to-pink-600"
+                          : index === 1
+                          ? "bg-gradient-to-br from-purple-500 to-pink-600"
+                          : "bg-gradient-to-br from-indigo-500 to-purple-600"
                       }
                       text-white
                       shadow-lg
@@ -171,8 +184,8 @@ export const ScheduleSection = ({ id }: { id?: string }) => {
                     <motion.div
                       className={`
                         inline-flex items-center gap-2 px-4 py-2
-                        ${index === 0 ? "bg-pink-500/10" : "bg-purple-500/10"}
-                        ${index === 0 ? "text-pink-600" : "text-purple-600"}
+                        ${index === 0 ? "bg-pink-500/10" : index === 1 ? "bg-purple-500/10" : "bg-indigo-500/10"}
+                        ${index === 0 ? "text-pink-600" : index === 1 ? "text-purple-600" : "text-indigo-600"}
                         rounded-xl
                         ${andika.className}
                         text-sm font-semibold
@@ -189,7 +202,7 @@ export const ScheduleSection = ({ id }: { id?: string }) => {
                       }}
                     >
                       <span className="text-lg">{day.emoji}</span>
-                      <span>15 Minutes</span>
+                      <span>30 Minutes</span>
                     </motion.div>
                   </div>
 
@@ -197,7 +210,7 @@ export const ScheduleSection = ({ id }: { id?: string }) => {
                   <h3
                     className={`
                     font-dingdong text-xl md:text-2xl font-bold mb-3
-                    ${index === 0 ? "text-pink-700" : "text-purple-700"}
+                    ${index === 0 ? "text-pink-700" : index === 1 ? "text-purple-700" : "text-indigo-700"}
                     leading-tight
                   `}
                   >
@@ -209,7 +222,7 @@ export const ScheduleSection = ({ id }: { id?: string }) => {
                     className={`
                     ${andika.className}
                     text-base
-                    ${index === 0 ? "text-pink-950" : "text-purple-950"}
+                    ${index === 0 ? "text-pink-950" : index === 1 ? "text-purple-950" : "text-indigo-950"}
                     leading-relaxed
                     opacity-90
                   `}
@@ -225,7 +238,9 @@ export const ScheduleSection = ({ id }: { id?: string }) => {
                     ${
                       index === 0
                         ? "bg-gradient-to-br from-pink-200/30 via-rose-200/20 to-transparent"
-                        : "bg-gradient-to-br from-purple-200/30 via-pink-200/20 to-transparent"
+                        : index === 1
+                        ? "bg-gradient-to-br from-purple-200/30 via-pink-200/20 to-transparent"
+                        : "bg-gradient-to-br from-indigo-200/30 via-purple-200/20 to-transparent"
                     }
                     blur-3xl
                     group-hover:scale-110
