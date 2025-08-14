@@ -2,10 +2,10 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import { Andika } from "next/font/google";
-import { CountdownTimer } from "../ui/CountdownTimer";
 import { motion, useScroll, useTransform } from "framer-motion";
 import confetti from "canvas-confetti";
 import { trackFBEvent } from "@/components/FacebookPixel";
+import { DateTime } from "luxon";
 
 // Font configuration
 const andika = Andika({
@@ -15,95 +15,54 @@ const andika = Andika({
   variable: "--font-andika",
 });
 
-// Function to get next weekend (Saturday-Sunday)
-const getNextWeekend = () => {
-  const now = new Date();
-  const dayOfWeek = now.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
-
-  let daysUntilSaturday;
-  if (dayOfWeek === 0) {
-    // Sunday
-    daysUntilSaturday = 6; // Next Saturday
-  } else if (dayOfWeek === 6) {
-    // Saturday
-    daysUntilSaturday = 7; // Next Saturday
-  } else {
-    // Monday-Friday
-    daysUntilSaturday = 6 - dayOfWeek; // Days until this Saturday
+// Function to get next session date in UAE timezone (same as HeroSection)
+const getNextSessionUAE = () => {
+  const nowUAE = DateTime.now().setZone("Asia/Dubai");
+  let sessionDate = nowUAE.set({ hour: 18, minute: 0, second: 0, millisecond: 0 });
+  if (nowUAE > sessionDate) {
+    sessionDate = sessionDate.plus({ days: 1 });
   }
-
-  const saturday = new Date(now);
-  saturday.setDate(now.getDate() + daysUntilSaturday);
-  saturday.setHours(18, 0, 0, 0); // 6:00 PM
-
-  const sunday = new Date(saturday);
-  sunday.setDate(saturday.getDate() + 1);
-
-  return { saturday, sunday };
-};
-
-const formatWeekendDates = (saturday: Date, sunday: Date): string => {
-  const months: string[] = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
-  ];
-  const satDay: number = saturday.getDate();
-  const sunDay: number = sunday.getDate();
-  const month: string = months[saturday.getMonth()];
-  const year: number = saturday.getFullYear();
-
-  return `${satDay}-${sunDay} ${month} ${year}`;
+  return sessionDate;
 };
 
 export const RegistrationSection = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const [isHovering, setIsHovering] = useState(false);
-  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0 });
-  const [weekendDates, setWeekendDates] = useState("");
+  const [sessionDate, setSessionDate] = useState(getNextSessionUAE());
+  const [timeLeft, setTimeLeft] = useState({ hours: 0, minutes: 0, seconds: 0 });
+  const [sessionDateString, setSessionDateString] = useState("");
 
   useEffect(() => {
-    const { saturday } = getNextWeekend();
-    setWeekendDates(
-      formatWeekendDates(
-        saturday,
-        new Date(saturday.getTime() + 24 * 60 * 60 * 1000)
-      )
-    );
-
-    // In your main component, replace the updateCountdown function with this:
-
-    const updateCountdown = () => {
-      const now = new Date();
-      const timeDiff = saturday.getTime() - now.getTime();
-
-      if (timeDiff > 0) {
-        const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
-        const hours = Math.floor(
-          (timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-        );
-        const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
-
-        setTimeLeft({ days, hours, minutes });
-      } else {
-        setTimeLeft({ days: 0, hours: 0, minutes: 0 });
-      }
-    };
-
-    updateCountdown();
-    const interval = setInterval(updateCountdown, 60000); // Update every minute
-
-    return () => clearInterval(interval);
+    // Update session date at midnight UAE time
+    const updateSession = () => setSessionDate(getNextSessionUAE());
+    const now = DateTime.now().setZone("Asia/Dubai");
+    const tomorrow = now.plus({ days: 1 }).startOf("day");
+    const msUntilMidnight = tomorrow.diff(now).toObject().milliseconds || 0;
+    const timeout = setTimeout(() => {
+      updateSession();
+      setInterval(updateSession, 24 * 60 * 60 * 1000);
+    }, msUntilMidnight);
+    return () => clearTimeout(timeout);
   }, []);
+
+  // Countdown calculation
+  useEffect(() => {
+    const updateCountdown = () => {
+      const now = DateTime.now().setZone("Asia/Dubai");
+      const diff = sessionDate.diff(now, ["hours", "minutes", "seconds"]).toObject();
+      setTimeLeft({
+        hours: Math.max(0, Math.floor(diff.hours || 0)),
+        minutes: Math.max(0, Math.floor(diff.minutes || 0)),
+        seconds: Math.max(0, Math.floor(diff.seconds || 0)),
+      });
+      setSessionDateString(
+        sessionDate.toFormat("cccc, LLLL d, yyyy 'at' h:mm a 'UAE'")
+      );
+    };
+    updateCountdown();
+    const interval = setInterval(updateCountdown, 1000);
+    return () => clearInterval(interval);
+  }, [sessionDate]);
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
@@ -264,12 +223,6 @@ export const RegistrationSection = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.4 }}
         >
-          {/* Glowing background effect */}
-          <div className="absolute inset-0">
-            <div className="absolute inset-0 bg-gradient-to-r from-purple-200/20 via-pink-200/20 to-purple-200/20 blur-3xl transform rotate-12" />
-            <div className="absolute inset-0 bg-gradient-to-l from-purple-200/20 via-pink-200/20 to-purple-200/20 blur-3xl transform -rotate-12" />
-          </div>
-
           {/* Timer container */}
           <div className="relative bg-white/90 backdrop-blur-xl rounded-2xl p-8 md:p-10 border border-pink-100 shadow-[0_8px_32px_-8px_rgba(236,72,153,0.3)]">
             <div className="flex flex-col items-center">
@@ -315,83 +268,79 @@ export const RegistrationSection = () => {
                   <h3
                     className={`${andika.className} text-2xl font-bold bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent`}
                   >
-                    Masterclass Starts In
+                    Next Session Starts In
                   </h3>
                   <p className="text-gray-500 text-sm mt-1">
-                    Don't miss this opportunity!
+                    {sessionDateString}
                   </p>
                 </div>
               </div>
 
               {/* Timer digits */}
               <div className="grid grid-cols-3 gap-4 md:gap-8">
-                <CountdownTimer
-                  targetDate={getNextWeekend().saturday}
-                  render={({ days, hours, minutes }) => (
-                    <>
-                      {[
-                        {
-                          unit: "Days",
-                          value: String(timeLeft.days).padStart(2, "0"),
-                        },
-                        {
-                          unit: "Hours",
-                          value: String(timeLeft.hours).padStart(2, "0"),
-                        },
-                        {
-                          unit: "Minutes",
-                          value: String(timeLeft.minutes).padStart(2, "0"),
-                        },
-                      ].map((item, index) => (
-                        <motion.div
-                          key={item.unit}
-                          initial={{ opacity: 0, scale: 0.5 }}
-                          animate={{ opacity: 1, scale: 1 }}
-                          transition={{ delay: index * 0.1 }}
-                          className="relative group"
-                        >
-                          <motion.div
-                            className="absolute inset-0 bg-gradient-to-b from-pink-400 to-purple-600 rounded-2xl blur-sm group-hover:blur-md transition-all duration-300"
-                            animate={{
-                              scale: [1, 1.05, 1],
-                            }}
-                            transition={{
-                              duration: 2,
-                              repeat: Infinity,
-                              repeatType: "reverse",
-                            }}
-                          />
-                          <div className="relative bg-white/90 backdrop-blur-sm rounded-2xl p-4 border border-pink-100 group-hover:transform group-hover:-translate-y-1 transition-all duration-300">
-                            <div className="text-center">
-                              <span className="font-dingdong text-4xl md:text-5xl font-bold bg-gradient-to-b from-pink-600 to-purple-600 bg-clip-text text-transparent">
-                                {item.value}
-                              </span>
-                              <span className="block text-sm font-medium text-gray-500 mt-1">
-                                {item.unit}
-                              </span>
-                            </div>
-                          </div>
-                        </motion.div>
-                      ))}
-                    </>
-                  )}
-                />
+                {[
+                  {
+                  unit: "Hours",
+                  value: String(timeLeft.hours).padStart(2, "0"),
+                },
+                {
+                  unit: "Minutes",
+                  value: String(timeLeft.minutes).padStart(2, "0"),
+                },
+                {
+                  unit: "Seconds",
+                  value: String(timeLeft.seconds).padStart(2, "0"),
+                },
+              ].map((item, index) => (
+                <motion.div
+                  key={item.unit}
+                  initial={{ opacity: 0, scale: 0.5 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: index * 0.1 }}
+                    className="relative group"
+                  >
+                    <motion.div
+                      className="absolute inset-0 bg-gradient-to-b from-pink-400 to-purple-600 rounded-2xl blur-sm group-hover:blur-md transition-all duration-300"
+                      animate={{
+                        scale: [1, 1.05, 1],
+                      }}
+                      transition={{
+                        duration: 2,
+                        repeat: Infinity,
+                        repeatType: "reverse",
+                      }}
+                    />
+                    <div className="relative bg-white/90 backdrop-blur-sm rounded-2xl p-4 border border-pink-100 group-hover:transform group-hover:-translate-y-1 transition-all duration-300">
+                      <div className="text-center">
+                        <span className="font-dingdong text-4xl md:text-5xl font-bold bg-gradient-to-b from-pink-600 to-purple-600 bg-clip-text text-transparent">
+                          {item.value}
+                        </span>
+                        <span className="block text-sm font-medium text-gray-500 mt-1">
+                          {item.unit}
+                        </span>
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
               </div>
 
-              {/* Live indicator */}
+              {/* Simple urgency indicator */}
               <motion.div
-                className="mt-8 flex items-center gap-3 bg-gradient-to-r from-green-50 to-emerald-50 px-4 py-2 rounded-full"
-                animate={{ scale: [1, 1.02, 1] }}
-                transition={{ duration: 2, repeat: Infinity }}
+                className="flex items-center justify-center gap-2 text-center mt-6"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 1, duration: 0.5 }}
               >
-                <motion.div
-                  className="w-2 h-2 bg-green-500 rounded-full"
-                  animate={{ opacity: [1, 0.5, 1] }}
-                  transition={{ duration: 1, repeat: Infinity }}
-                />
-                <span className="text-sm text-gray-600">
-                  {Math.floor(Math.random() * 50) + 130} people viewing now
+                <div className="w-2 h-2 bg-red-400 rounded-full animate-pulse" />
+                <span
+                  className={`${andika.className} text-red-600 font-medium text-sm md:text-base`}
+                >
+                  Limited Seats Available
                 </span>
+                <div
+                  className="w-2 h-2 bg-red-400 rounded-full animate-pulse"
+                  style={{ animationDelay: "0.5s" }}
+                />
               </motion.div>
             </div>
           </div>
@@ -421,8 +370,8 @@ export const RegistrationSection = () => {
                 repeat: Infinity,
                 ease: "easeInOut",
                 times: [0, 0.25, 0.5, 0.75, 1],
-              },
-            }}
+              }}
+            }
             whileHover={{
               scale: 1.15,
               y: -8,
@@ -449,7 +398,7 @@ export const RegistrationSection = () => {
                 RESERVE YOUR
               </span>
               <span className="font-dingdong text-2xl md:text-3xl tracking-wider">
-                SPOT - AED 22
+                SPOT - 19.99 USD
               </span>
             </div>
           </motion.a>
