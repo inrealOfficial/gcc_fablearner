@@ -11,6 +11,8 @@ import CryptoJS from "crypto-js";
 import { trackFBEvent } from "@/components/FacebookPixel";
 import stripePromise from "@/lib/stripe";
 import { validateCouponFromFirestore } from "@/lib/coupon";
+import { Dialog } from "@headlessui/react";
+import { DateTime } from "luxon";
 const andika = Andika({
   weight: ["400", "700"],
   subsets: ["latin"],
@@ -392,6 +394,39 @@ export default function CheckoutPage() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [paymentError, setPaymentError] = useState(true);
+  const [sessionModalOpen, setSessionModalOpen] = useState(false);
+  // UAE timezone session options (dynamic)
+  const [sessionOptions, setSessionOptions] = useState([
+    { date: "", label: "", time: "" },
+    { date: "", label: "", time: "" },
+    { date: "", label: "", time: "" },
+  ]);
+  const [selectedSession, setSelectedSession] = useState({
+    date: "",
+    label: "",
+    time: "",
+  });
+
+  useEffect(() => {
+    // Get current date/time in UAE timezone
+    const nowUAE = DateTime.now().setZone("Asia/Dubai");
+    const sessions = [];
+    for (let i = 0; i < 3; i++) {
+      const sessionDate = nowUAE.plus({ days: i });
+      sessions.push({
+        date: sessionDate.toFormat("dd LLL yyyy"),
+        label:
+          i === 0
+            ? "Today"
+            : i === 1
+            ? "Tomorrow"
+            : sessionDate.toFormat("cccc"),
+        time: "6 PM UAE",
+      });
+    }
+    setSessionOptions(sessions);
+    setSelectedSession(sessions[0]);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
@@ -864,6 +899,93 @@ export default function CheckoutPage() {
                       />
                     </div>
                   </div>
+                  {/* Session Info - moved below phone number */}
+                  <div className="mt-4">
+                    <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 flex items-center gap-4 mb-2">
+                      <div>
+                        <span className="inline-block bg-blue-100 rounded-full p-2 mr-2">
+                          <svg width="24" height="24" fill="none" stroke="currentColor">
+                            <rect x="3" y="4" width="18" height="18" rx="4" strokeWidth="2"/>
+                            <path d="M16 2v4M8 2v4M3 10h18" strokeWidth="2"/>
+                          </svg>
+                        </span>
+                      </div>
+                      <div>
+                        <div className="font-bold text-blue-900 mb-1">Your Session</div>
+                        <div className="font-semibold text-gray-800">
+                          Session on {selectedSession.date} @ {selectedSession.time} <span className="font-normal text-gray-500">({selectedSession.label})</span>
+                        </div>
+                        <div className="text-gray-600 text-sm">Interactive live session with Q&amp;A</div>
+                        <button
+                          type="button"
+                          className="text-pink-600 text-sm font-medium underline mt-1 inline-block"
+                          onClick={() => setSessionModalOpen(true)}
+                        >
+                          Select different time
+                        </button>
+                      </div>
+                    </div>
+                    {/* Session Modal */}
+                    <Dialog open={sessionModalOpen} onClose={() => setSessionModalOpen(false)} className="fixed z-50 inset-0 overflow-y-auto">
+                      <div className="flex items-center justify-center min-h-screen px-4">
+                        {/* Overlay */}
+                        <div className="fixed inset-0 bg-black bg-opacity-30" aria-hidden="true" />
+                        <Dialog.Panel className="bg-white rounded-2xl max-w-md w-full mx-auto p-6 relative z-10 shadow-xl">
+                          <Dialog.Title className="font-bold text-lg mb-4">Select Your Session</Dialog.Title>
+                          <div className="space-y-4">
+                            {sessionOptions.map((option, idx) => (
+                              <label
+                                key={option.date}
+                                className={`flex items-center p-4 rounded-xl border cursor-pointer transition-all
+                                  ${selectedSession.date === option.date ? "border-pink-300 bg-pink-50" : "border-gray-200 bg-gray-50"}`}
+                              >
+                                <input
+                                  type="radio"
+                                  name="session"
+                                  checked={selectedSession.date === option.date}
+                                  onChange={() => setSelectedSession(option)}
+                                  className="mr-3 accent-pink-600"
+                                />
+                                <div>
+                                  <div className="font-semibold text-gray-800">
+                                    {option.label === "Today" && (
+                                      <span className="inline-block bg-pink-100 text-pink-700 text-xs px-2 py-1 rounded-full mr-2">Today</span>
+                                    )}
+                                    {option.label === "Tomorrow" && (
+                                      <span className="inline-block bg-blue-100 text-blue-700 text-xs px-2 py-1 rounded-full mr-2">Tomorrow</span>
+                                    )}
+                                    {option.label !== "Today" && option.label !== "Tomorrow" && (
+                                      <span className="inline-block bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded-full mr-2">{option.label}</span>
+                                    )}
+                                    {option.label},{" "}
+                                    {option.date} @ {option.time}
+                                  </div>
+                                  <div className="text-gray-600 text-sm">Interactive live session with Q&amp;A</div>
+                                </div>
+                              </label>
+                            ))}
+                          </div>
+                          <div className="mt-6 flex justify-end">
+                            <button
+                              className="bg-pink-600 text-white px-6 py-2 rounded-lg font-bold hover:bg-pink-700"
+                              onClick={() => setSessionModalOpen(false)}
+                            >
+                              Confirm Selection
+                            </button>
+                          </div>
+                          <button
+                            className="absolute top-4 right-4 text-gray-400 hover:text-gray-700"
+                            onClick={() => setSessionModalOpen(false)}
+                          >
+                            <svg width="24" height="24" fill="none" stroke="currentColor">
+                              <path d="M18 6L6 18M6 6L18 18" strokeWidth="2" strokeLinecap="round"/>
+                            </svg>
+                          </button>
+                        </Dialog.Panel>
+                      </div>
+                    </Dialog>
+                  </div>
+                  {/* End Session Info */}
                 </div>
               </div>
 
