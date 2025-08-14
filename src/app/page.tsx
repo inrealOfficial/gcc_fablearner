@@ -1,28 +1,56 @@
 "use client";
+import dynamic from "next/dynamic";
 
-import FabReaderHeader from "@/components/sections/FabReaderHeader";
-import { FabReaderHeroSection2 } from "@/components/sections/FabReaderHeroSection2";
-import { FabReaderResultsSection } from "@/components/sections/FabReaderResultsSection";
-import { ResultsSection } from "@/components/sections/ResultsSection";
-import { FabReaderHowitsWorks } from "@/components/sections/FabReaderHowitsWorks";
-import { FabReaderBonuses } from "@/components/sections/FabReaderBonuses";
-import { FabReaderBenefitsSection } from "@/components/sections/FabReaderBenefitsSection";
-import { FabReaderFaqSection } from "@/components/sections/FabReaderFaqSection";
-import FabReader2Checkout from "@/components/sections/FabReader2Checkout";
-import { TestimonialsSection } from "@/components/sections/TestimonialsSection";
-export default function Page() {
+// Dynamically import non-critical sections
+const BenefitsSection = dynamic(() =>
+  import("../components/sections/BenefitsSection").then((mod) => ({
+    default: mod.BenefitsSection,
+  }))
+);
+const TestimonialsSection = dynamic(() =>
+  import("../components/sections/TestimonialsSection").then((mod) => ({
+    default: mod.TestimonialsSection,
+  }))
+);
+const ScheduleSection = dynamic(() =>
+  import("../components/sections/ScheduleSection").then((mod) => ({
+    default: mod.ScheduleSection,
+  }))
+);
+const FaqSection = dynamic(() =>
+  import("@/components/sections/FaqSection").then((mod) => ({
+    default: mod.FaqSection,
+  }))
+);
+const RegistrationSection = dynamic(() =>
+  import("../components/sections/RegistrationSection").then((mod) => ({
+    default: mod.RegistrationSection,
+  }))
+);
+
+// Import critical sections normally
+import { HeroSection } from "../components/sections/HeroSection";
+import { ResultsSection } from "../components/sections/ResultsSection";
+import { Footer } from "../components/sections/Footer";
+import { CtaMobileOnly } from "@/components/sections/cta-mobile-only";
+import { AffiliateTracker } from "@/components/AffiliateTracker";
+import { RegistrationSection } from "@/components/sections/RegistrationSection";
+import { Instructor } from "@/components/sections/Instructor";
+
+export default function Home() {
   return (
-    <>
-      <FabReaderHeader />
-      <FabReaderHeroSection2 />
+    <main className="overflow-x-hidden font-sans bg-white">
+      <CtaMobileOnly />
+      <HeroSection />
       <ResultsSection id="results" />
-      <FabReaderResultsSection id="book" />
+      <BenefitsSection id="benefits" />
+      <Instructor id="instructor" />
       <TestimonialsSection id="testimonials" />
-      <FabReaderHowitsWorks id="how" />
-      <FabReaderBonuses id="bonuses" />
-      <FabReaderBenefitsSection id="why" />
-      <FabReaderFaqSection id="faq" />
-      <FabReader2Checkout id="premium" />
-    </>
+      <ScheduleSection id="schedule" />
+      <FaqSection id="faq" />
+      <RegistrationSection />
+      <Footer />
+      <AffiliateTracker />
+    </main>
   );
 }
