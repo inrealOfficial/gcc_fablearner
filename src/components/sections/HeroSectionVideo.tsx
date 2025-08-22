@@ -868,6 +868,7 @@ export const HeroSectionVideo = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.8, duration: 0.6 }}
+                className="hidden md:block"
               >
                 <p
                   className={`${andika.className} text-lg md:text-xl text-white/90 leading-relaxed max-w-2xl`}
