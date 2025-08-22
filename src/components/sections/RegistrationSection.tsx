@@ -18,7 +18,12 @@ const andika = Andika({
 // Function to get next session date in UAE timezone (same as HeroSection)
 const getNextSessionUAE = () => {
   const nowUAE = DateTime.now().setZone("Asia/Dubai");
-  let sessionDate = nowUAE.set({ hour: 18, minute: 0, second: 0, millisecond: 0 });
+  let sessionDate = nowUAE.set({
+    hour: 18,
+    minute: 0,
+    second: 0,
+    millisecond: 0,
+  });
   if (nowUAE > sessionDate) {
     sessionDate = sessionDate.plus({ days: 1 });
   }
@@ -29,7 +34,11 @@ export const RegistrationSection = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const [isHovering, setIsHovering] = useState(false);
   const [sessionDate, setSessionDate] = useState(getNextSessionUAE());
-  const [timeLeft, setTimeLeft] = useState({ hours: 0, minutes: 0, seconds: 0 });
+  const [timeLeft, setTimeLeft] = useState({
+    hours: 0,
+    minutes: 0,
+    seconds: 0,
+  });
   const [sessionDateString, setSessionDateString] = useState("");
 
   useEffect(() => {
@@ -49,7 +58,9 @@ export const RegistrationSection = () => {
   useEffect(() => {
     const updateCountdown = () => {
       const now = DateTime.now().setZone("Asia/Dubai");
-      const diff = sessionDate.diff(now, ["hours", "minutes", "seconds"]).toObject();
+      const diff = sessionDate
+        .diff(now, ["hours", "minutes", "seconds"])
+        .toObject();
       setTimeLeft({
         hours: Math.max(0, Math.floor(diff.hours || 0)),
         minutes: Math.max(0, Math.floor(diff.minutes || 0)),
@@ -280,23 +291,23 @@ export const RegistrationSection = () => {
               <div className="grid grid-cols-3 gap-4 md:gap-8">
                 {[
                   {
-                  unit: "Hours",
-                  value: String(timeLeft.hours).padStart(2, "0"),
-                },
-                {
-                  unit: "Minutes",
-                  value: String(timeLeft.minutes).padStart(2, "0"),
-                },
-                {
-                  unit: "Seconds",
-                  value: String(timeLeft.seconds).padStart(2, "0"),
-                },
-              ].map((item, index) => (
-                <motion.div
-                  key={item.unit}
-                  initial={{ opacity: 0, scale: 0.5 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: index * 0.1 }}
+                    unit: "Hours",
+                    value: String(timeLeft.hours).padStart(2, "0"),
+                  },
+                  {
+                    unit: "Minutes",
+                    value: String(timeLeft.minutes).padStart(2, "0"),
+                  },
+                  {
+                    unit: "Seconds",
+                    value: String(timeLeft.seconds).padStart(2, "0"),
+                  },
+                ].map((item, index) => (
+                  <motion.div
+                    key={item.unit}
+                    initial={{ opacity: 0, scale: 0.5 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: index * 0.1 }}
                     className="relative group"
                   >
                     <motion.div
@@ -370,8 +381,8 @@ export const RegistrationSection = () => {
                 repeat: Infinity,
                 ease: "easeInOut",
                 times: [0, 0.25, 0.5, 0.75, 1],
-              }}
-            }
+              },
+            }}
             whileHover={{
               scale: 1.15,
               y: -8,
@@ -398,7 +409,7 @@ export const RegistrationSection = () => {
                 RESERVE YOUR
               </span>
               <span className="font-dingdong text-2xl md:text-3xl tracking-wider">
-                SPOT - 19.99 USD
+                SPOT - 9.99 USD
               </span>
             </div>
           </motion.a>

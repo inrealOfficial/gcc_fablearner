@@ -382,7 +382,7 @@ export default function CheckoutPage() {
   const [isValidatingCoupon, setIsValidatingCoupon] = useState(false);
 
   // Original price
-  const originalPrice = 19.99;
+  const originalPrice = 9.99;
 
   // Discounted price calculation
   const discountedPrice = appliedCoupon
@@ -589,7 +589,7 @@ export default function CheckoutPage() {
     trackFBEvent("InitiateCheckout", {
       content_name: "FAB Masterclass",
       currency: "USD",
-      value: 19.99,
+      value: 9.99,
     });
 
     // Your existing form handling code continues...
@@ -768,7 +768,7 @@ export default function CheckoutPage() {
                   <p
                     className={`${andika.className} text-2xl font-bold text-pink-600`}
                   >
-                    19.99 USD
+                    9.99 USD
                   </p>
                 </div>
               </div>
@@ -904,18 +904,38 @@ export default function CheckoutPage() {
                     <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 flex items-center gap-4 mb-2">
                       <div>
                         <span className="inline-block bg-blue-100 rounded-full p-2 mr-2">
-                          <svg width="24" height="24" fill="none" stroke="currentColor">
-                            <rect x="3" y="4" width="18" height="18" rx="4" strokeWidth="2"/>
-                            <path d="M16 2v4M8 2v4M3 10h18" strokeWidth="2"/>
+                          <svg
+                            width="24"
+                            height="24"
+                            fill="none"
+                            stroke="currentColor"
+                          >
+                            <rect
+                              x="3"
+                              y="4"
+                              width="18"
+                              height="18"
+                              rx="4"
+                              strokeWidth="2"
+                            />
+                            <path d="M16 2v4M8 2v4M3 10h18" strokeWidth="2" />
                           </svg>
                         </span>
                       </div>
                       <div>
-                        <div className="font-bold text-blue-900 mb-1">Your Session</div>
-                        <div className="font-semibold text-gray-800">
-                          Session on {selectedSession.date} @ {selectedSession.time} <span className="font-normal text-gray-500">({selectedSession.label})</span>
+                        <div className="font-bold text-blue-900 mb-1">
+                          Your Session
                         </div>
-                        <div className="text-gray-600 text-sm">Interactive live session with Q&amp;A</div>
+                        <div className="font-semibold text-gray-800">
+                          Session on {selectedSession.date} @{" "}
+                          {selectedSession.time}{" "}
+                          <span className="font-normal text-gray-500">
+                            ({selectedSession.label})
+                          </span>
+                        </div>
+                        <div className="text-gray-600 text-sm">
+                          Interactive live session with Q&amp;A
+                        </div>
                         <button
                           type="button"
                           className="text-pink-600 text-sm font-medium underline mt-1 inline-block"
@@ -926,18 +946,31 @@ export default function CheckoutPage() {
                       </div>
                     </div>
                     {/* Session Modal */}
-                    <Dialog open={sessionModalOpen} onClose={() => setSessionModalOpen(false)} className="fixed z-50 inset-0 overflow-y-auto">
+                    <Dialog
+                      open={sessionModalOpen}
+                      onClose={() => setSessionModalOpen(false)}
+                      className="fixed z-50 inset-0 overflow-y-auto"
+                    >
                       <div className="flex items-center justify-center min-h-screen px-4">
                         {/* Overlay */}
-                        <div className="fixed inset-0 bg-black bg-opacity-30" aria-hidden="true" />
+                        <div
+                          className="fixed inset-0 bg-black bg-opacity-30"
+                          aria-hidden="true"
+                        />
                         <Dialog.Panel className="bg-white rounded-2xl max-w-md w-full mx-auto p-6 relative z-10 shadow-xl">
-                          <Dialog.Title className="font-bold text-lg mb-4">Select Your Session</Dialog.Title>
+                          <Dialog.Title className="font-bold text-lg mb-4">
+                            Select Your Session
+                          </Dialog.Title>
                           <div className="space-y-4">
                             {sessionOptions.map((option, idx) => (
                               <label
                                 key={option.date}
                                 className={`flex items-center p-4 rounded-xl border cursor-pointer transition-all
-                                  ${selectedSession.date === option.date ? "border-pink-300 bg-pink-50" : "border-gray-200 bg-gray-50"}`}
+                                  ${
+                                    selectedSession.date === option.date
+                                      ? "border-pink-300 bg-pink-50"
+                                      : "border-gray-200 bg-gray-50"
+                                  }`}
                               >
                                 <input
                                   type="radio"
@@ -949,18 +982,27 @@ export default function CheckoutPage() {
                                 <div>
                                   <div className="font-semibold text-gray-800">
                                     {option.label === "Today" && (
-                                      <span className="inline-block bg-pink-100 text-pink-700 text-xs px-2 py-1 rounded-full mr-2">Today</span>
+                                      <span className="inline-block bg-pink-100 text-pink-700 text-xs px-2 py-1 rounded-full mr-2">
+                                        Today
+                                      </span>
                                     )}
                                     {option.label === "Tomorrow" && (
-                                      <span className="inline-block bg-blue-100 text-blue-700 text-xs px-2 py-1 rounded-full mr-2">Tomorrow</span>
+                                      <span className="inline-block bg-blue-100 text-blue-700 text-xs px-2 py-1 rounded-full mr-2">
+                                        Tomorrow
+                                      </span>
                                     )}
-                                    {option.label !== "Today" && option.label !== "Tomorrow" && (
-                                      <span className="inline-block bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded-full mr-2">{option.label}</span>
-                                    )}
-                                    {option.label},{" "}
-                                    {option.date} @ {option.time}
+                                    {option.label !== "Today" &&
+                                      option.label !== "Tomorrow" && (
+                                        <span className="inline-block bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded-full mr-2">
+                                          {option.label}
+                                        </span>
+                                      )}
+                                    {option.label}, {option.date} @{" "}
+                                    {option.time}
                                   </div>
-                                  <div className="text-gray-600 text-sm">Interactive live session with Q&amp;A</div>
+                                  <div className="text-gray-600 text-sm">
+                                    Interactive live session with Q&amp;A
+                                  </div>
                                 </div>
                               </label>
                             ))}
@@ -977,8 +1019,17 @@ export default function CheckoutPage() {
                             className="absolute top-4 right-4 text-gray-400 hover:text-gray-700"
                             onClick={() => setSessionModalOpen(false)}
                           >
-                            <svg width="24" height="24" fill="none" stroke="currentColor">
-                              <path d="M18 6L6 18M6 6L18 18" strokeWidth="2" strokeLinecap="round"/>
+                            <svg
+                              width="24"
+                              height="24"
+                              fill="none"
+                              stroke="currentColor"
+                            >
+                              <path
+                                d="M18 6L6 18M6 6L18 18"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                              />
                             </svg>
                           </button>
                         </Dialog.Panel>

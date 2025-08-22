@@ -36,14 +36,18 @@ import { CtaMobileOnly } from "@/components/sections/cta-mobile-only";
 import { AffiliateTracker } from "@/components/AffiliateTracker";
 import { RegistrationSection } from "@/components/sections/RegistrationSection";
 import { Instructor } from "@/components/sections/Instructor";
+import { HeroSectionVideo } from "@/components/sections/HeroSectionVideo";
+import { WorkshopForSection } from "@/components/sections/WorkshopForSection";
 
 export default function Home() {
   return (
     <main className="overflow-x-hidden font-sans bg-white">
       <CtaMobileOnly />
-      <HeroSection />
+      <HeroSectionVideo />
+
       <ResultsSection id="results" />
-      <BenefitsSection id="benefits" />
+      <WorkshopForSection />
+      {/* <BenefitsSection id="benefits" /> */}
       <Instructor id="instructor" />
       <TestimonialsSection id="testimonials" />
       <ScheduleSection id="schedule" />
