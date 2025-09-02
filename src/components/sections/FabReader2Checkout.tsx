@@ -1,18 +1,17 @@
-"use client";
+'use client';
 
-import { motion, AnimatePresence } from "framer-motion";
-import { useState, useEffect } from "react";
-import { Andika } from "next/font/google";
-import Image from "next/image";
-import Link from "next/link";
-import ReactCountryFlag from "react-country-flag";
-import { trackFBEvent } from "@/components/FacebookPixel";
+import { trackFBEvent } from '@/components/FacebookPixel';
+import { motion } from 'framer-motion';
+import { Andika } from 'next/font/google';
+import Image from 'next/image';
+import { useEffect, useState } from 'react';
+import ReactCountryFlag from 'react-country-flag';
 
 const andika = Andika({
-  weight: ["400", "700"],
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--font-andika",
+  weight: ['400', '700'],
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-andika',
 });
 
 // Animation variants
@@ -21,12 +20,12 @@ const fadeInUp = {
   animate: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.5, ease: "easeOut" },
+    transition: { duration: 0.5, ease: 'easeOut' },
   },
   exit: {
     opacity: 0,
     y: -20,
-    transition: { duration: 0.3, ease: "easeIn" },
+    transition: { duration: 0.3, ease: 'easeIn' },
   },
 };
 
@@ -44,10 +43,10 @@ const itemVariants = {
 };
 
 // Import countries from your existing file or define them here
-import { COUNTRIES } from "@/utils/countries"; // Adjust import as needed
+import { COUNTRIES } from '@/utils/countries'; // Adjust import as needed
 
-// Updated price - AED 500 (equivalent to ₹9,000)
-const originalPrice = 500.00;
+// Updated price - USD $200
+const originalPrice = 200.0;
 
 // Mock coupon validation for FABREADER4K
 const validateCoupon = async (code: string) => {
@@ -60,19 +59,19 @@ const validateCoupon = async (code: string) => {
 
 export default function FabReaderCheckout({ id }: { id?: string }) {
   const [formData, setFormData] = useState({
-    email: "",
-    firstName: "",
-    lastName: "",
-    phone: "",
-    country: "India (IN)",
-    cardNumber: "",
-    expiry: "",
-    cvc: "",
+    email: '',
+    firstName: '',
+    lastName: '',
+    phone: '',
+    country: 'India (IN)',
+    cardNumber: '',
+    expiry: '',
+    cvc: '',
   });
 
   // Coupon states
-  const [couponCode, setCouponCode] = useState("");
-  const [couponError, setCouponError] = useState("");
+  const [couponCode, setCouponCode] = useState('');
+  const [couponError, setCouponError] = useState('');
   const [appliedCoupon, setAppliedCoupon] = useState<{
     code: string;
     discount: number;
@@ -82,12 +81,12 @@ export default function FabReaderCheckout({ id }: { id?: string }) {
 
   const detectCountry = async () => {
     try {
-      const response = await fetch("https://ipapi.co/json/");
+      const response = await fetch('https://ipapi.co/json/');
       const data = await response.json();
       return data.country_code;
     } catch (error) {
-      console.error("Country detection failed:", error);
-      return "IN"; // Default to India
+      console.error('Country detection failed:', error);
+      return 'IN'; // Default to India
     }
   };
 
@@ -113,19 +112,19 @@ export default function FabReaderCheckout({ id }: { id?: string }) {
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   // Coupon validation
   const validateCouponCode = async () => {
     if (!couponCode.trim()) {
-      setCouponError("Please enter a coupon code");
+      setCouponError('Please enter a coupon code');
       return;
     }
 
     setIsValidatingCoupon(true);
-    setCouponError("");
+    setCouponError('');
 
     try {
       const normalizedCode = couponCode.toUpperCase().trim();
@@ -134,18 +133,18 @@ export default function FabReaderCheckout({ id }: { id?: string }) {
       const couponData = await validateCoupon(normalizedCode);
 
       if (couponData) {
-        if (couponData.type === "percentage" && couponData.discount < 100) {
+        if (couponData.type === 'percentage' && couponData.discount < 100) {
           couponData.discount = Number(
             originalPrice * (couponData.discount / 100)
           );
         }
         if (originalPrice < couponData.discount) {
-          setCouponError("Invalid coupon code");
+          setCouponError('Invalid coupon code');
           setAppliedCoupon(null);
           return;
         }
         if (originalPrice < couponData.minAmount) {
-          setCouponError("Invalid coupon code");
+          setCouponError('Invalid coupon code');
           setAppliedCoupon(null);
           return;
         }
@@ -157,21 +156,21 @@ export default function FabReaderCheckout({ id }: { id?: string }) {
         });
 
         // Track coupon usage with Facebook Pixel
-        trackFBEvent("AddPaymentInfo", {
-          content_name: "FabReader Premium Program",
+        trackFBEvent('AddPaymentInfo', {
+          content_name: 'FabReader Premium Program',
           coupon: normalizedCode,
           discount_amount: couponData.discount,
         });
 
-        setCouponCode("");
-        setCouponError("");
+        setCouponCode('');
+        setCouponError('');
       } else {
-        setCouponError("Invalid coupon code");
+        setCouponError('Invalid coupon code');
         setAppliedCoupon(null);
       }
     } catch (error) {
-      console.error("Error validating coupon:", error);
-      setCouponError("Error validating coupon. Please try again.");
+      console.error('Error validating coupon:', error);
+      setCouponError('Error validating coupon. Please try again.');
       setAppliedCoupon(null);
     } finally {
       setIsValidatingCoupon(false);
@@ -181,7 +180,7 @@ export default function FabReaderCheckout({ id }: { id?: string }) {
   // Remove coupon
   const removeCoupon = () => {
     setAppliedCoupon(null);
-    setCouponCode("");
+    setCouponCode('');
   };
 
   // Handle payment - replace with Stripe implementation
@@ -193,55 +192,55 @@ export default function FabReaderCheckout({ id }: { id?: string }) {
 
       // Form validation
       if (!formData.email || !formData.firstName || !formData.phone) {
-        alert("Please fill in all required fields");
+        alert('Please fill in all required fields');
         setIsProcessing(false);
         return;
       }
 
       // Track checkout event
-      trackFBEvent("InitiateCheckout", {
-        content_name: "FabReader Premium",
-        currency: "AED",
+      trackFBEvent('InitiateCheckout', {
+        content_name: 'FabReader Premium',
+        currency: 'USD',
         value: Number(discountedPrice),
         coupon: appliedCoupon?.code || null,
       });
 
       // Create Stripe checkout session
-      const response = await fetch("/api/stripe/checkout", {
-        method: "POST",
+      const response = await fetch('/api/stripe/checkout', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           amount: discountedPrice,
           productName: appliedCoupon
             ? `FABREADER PREMIUM (Coupon: ${appliedCoupon.code})`
-            : "FABREADER PREMIUM",
+            : 'FABREADER PREMIUM',
           customerEmail: formData.email,
-          customerName: `${formData.firstName} ${formData.lastName || ""}`,
+          customerName: `${formData.firstName} ${formData.lastName || ''}`,
           customerPhone: formData.phone,
           couponCode: appliedCoupon?.code || null,
           metadata: {
             firstName: formData.firstName,
-            lastName: formData.lastName || "",
+            lastName: formData.lastName || '',
             phone: formData.phone,
-            couponApplied: appliedCoupon?.code || "none",
+            couponApplied: appliedCoupon?.code || 'none',
           },
         }),
       });
 
       if (!response.ok) {
-        throw new Error("Failed to create checkout session");
+        throw new Error('Failed to create checkout session');
       }
 
       const { url } = await response.json();
       if (url) {
         window.location.href = url;
       } else {
-        throw new Error("No checkout URL received");
+        throw new Error('No checkout URL received');
       }
     } catch (error) {
-      console.error("Payment error:", error);
+      console.error('Payment error:', error);
       setIsProcessing(false);
     }
   };
@@ -261,11 +260,11 @@ export default function FabReaderCheckout({ id }: { id?: string }) {
         >
           {/* Decorative Background Gradients */}
           <div
-            className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-indigo-50 to-purple-50 
+            className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-indigo-50 to-purple-50
             opacity-20 rounded-full blur-3xl -translate-y-48 translate-x-48 rotate-12"
           />
           <div
-            className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-br from-blue-50 to-indigo-50 
+            className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-br from-blue-50 to-indigo-50
             opacity-20 rounded-full blur-3xl translate-y-48 -translate-x-48 -rotate-12"
           />
 
@@ -277,7 +276,7 @@ export default function FabReaderCheckout({ id }: { id?: string }) {
                 className="mx-auto mb-4 w-16 h-16 rounded-full bg-indigo-100 flex items-center justify-center"
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
-                transition={{ type: "spring", stiffness: 200, damping: 10 }}
+                transition={{ type: 'spring', stiffness: 200, damping: 10 }}
               >
                 <span className="text-3xl" role="img" aria-label="book">
                   📚
@@ -285,7 +284,7 @@ export default function FabReaderCheckout({ id }: { id?: string }) {
               </motion.div>
 
               <motion.h1
-                className="font-dingdong text-2xl sm:text-3xl bg-gradient-to-r from-indigo-600 to-purple-600 
+                className="font-dingdong text-2xl sm:text-3xl bg-gradient-to-r from-indigo-600 to-purple-600
                   bg-clip-text text-transparent"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -305,7 +304,7 @@ export default function FabReaderCheckout({ id }: { id?: string }) {
 
             {/* Course Summary Card - Mobile Optimized */}
             <motion.div
-              className="bg-gradient-to-r from-indigo-50/50 to-purple-50/50 rounded-2xl p-4 sm:p-6 border-2 
+              className="bg-gradient-to-r from-indigo-50/50 to-purple-50/50 rounded-2xl p-4 sm:p-6 border-2
               border-gray-100 group hover:border-indigo-100 transition-all duration-300"
             >
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -342,7 +341,7 @@ export default function FabReaderCheckout({ id }: { id?: string }) {
                   <p
                     className={`${andika.className} text-xl sm:text-2xl font-bold text-indigo-600`}
                   >
-                    AED {originalPrice.toFixed(2)}
+                    ${originalPrice.toFixed(2)}
                   </p>
                 </div>
               </div>
@@ -449,8 +448,8 @@ export default function FabReaderCheckout({ id }: { id?: string }) {
                         </select>
                         <div className="absolute right-3 sm:right-4 top-1/2 -translate-y-1/2">
                           <ReactCountryFlag
-                            countryCode={formData.country || "IN"}
-                            style={{ fontSize: "1.2em", opacity: 0.7 }}
+                            countryCode={formData.country || 'IN'}
+                            style={{ fontSize: '1.2em', opacity: 0.7 }}
                           />
                         </div>
                       </div>
@@ -478,7 +477,7 @@ export default function FabReaderCheckout({ id }: { id?: string }) {
 
               {/* Payment Section - Update to show Stripe */}
               <div
-                className="space-y-4 sm:space-y-6 p-4 sm:p-6 rounded-2xl bg-gradient-to-br from-indigo-50/30 to-purple-50/30 
+                className="space-y-4 sm:space-y-6 p-4 sm:p-6 rounded-2xl bg-gradient-to-br from-indigo-50/30 to-purple-50/30
                 border border-gray-100"
               >
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
@@ -517,13 +516,13 @@ export default function FabReaderCheckout({ id }: { id?: string }) {
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between bg-green-50 p-3 rounded-lg border border-green-200 gap-2">
                     <div className="min-w-0">
                       <span className="font-medium text-green-700">
-                        Applied:{" "}
+                        Applied:{' '}
                       </span>
                       <span className="font-semibold">
                         {appliedCoupon.code}
                       </span>
                       <span className="ml-2 text-green-700">
-                        (AED {appliedCoupon.discount.toFixed(2)} off)
+                        (${appliedCoupon.discount.toFixed(2)} off)
                       </span>
                     </div>
                     <button
@@ -549,11 +548,11 @@ export default function FabReaderCheckout({ id }: { id?: string }) {
                       disabled={isValidatingCoupon || !couponCode.trim()}
                       className={`bg-indigo-600 text-white px-4 py-2 sm:py-3 rounded-lg text-sm sm:text-base whitespace-nowrap ${
                         isValidatingCoupon || !couponCode.trim()
-                          ? "opacity-70 cursor-not-allowed"
-                          : "hover:bg-indigo-700"
+                          ? 'opacity-70 cursor-not-allowed'
+                          : 'hover:bg-indigo-700'
                       }`}
                     >
-                      {isValidatingCoupon ? "Validating..." : "Apply"}
+                      {isValidatingCoupon ? 'Validating...' : 'Apply'}
                     </button>
                   </div>
                 )}
@@ -567,27 +566,27 @@ export default function FabReaderCheckout({ id }: { id?: string }) {
               <div className="p-4 sm:p-6 rounded-2xl bg-gray-50 space-y-3 sm:space-y-4">
                 <div className="flex justify-between text-gray-600 text-sm sm:text-base">
                   <span>Subtotal</span>
-                  <span>AED {originalPrice.toFixed(2)}</span>
+                  <span>${originalPrice.toFixed(2)}</span>
                 </div>
 
                 {appliedCoupon && (
                   <div className="flex justify-between text-green-600 text-sm sm:text-base">
                     <span>Discount ({appliedCoupon.code})</span>
-                    <span>-AED {appliedCoupon.discount.toFixed(2)}</span>
+                    <span>-${appliedCoupon.discount.toFixed(2)}</span>
                   </div>
                 )}
 
                 <div className="flex justify-between text-lg sm:text-xl font-bold pt-2 border-t border-gray-200">
                   <span>Total</span>
                   <span className="text-indigo-600">
-                    AED {Number(discountedPrice).toFixed(2)}
+                    ${Number(discountedPrice).toFixed(2)}
                   </span>
                 </div>
               </div>
 
               {/* Submit Button */}
               <motion.button
-                className={`${andika.className} w-full bg-gradient-to-r from-indigo-500 to-purple-500 
+                className={`${andika.className} w-full bg-gradient-to-r from-indigo-500 to-purple-500
                   text-white py-3 sm:py-4 px-4 sm:px-6 rounded-xl font-bold text-base sm:text-lg relative overflow-hidden group
                   shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 transition-all
                   disabled:opacity-70 disabled:cursor-not-allowed`}
@@ -618,13 +617,13 @@ export default function FabReaderCheckout({ id }: { id?: string }) {
                       Processing...
                     </div>
                   ) : (
-                    "Secure Premium Access"
+                    'Secure Premium Access'
                   )}
                 </span>
                 <motion.span
                   className="absolute inset-0 bg-gradient-to-r from-purple-500 to-indigo-500 opacity-0 group-hover:opacity-100 transition-opacity"
                   animate={{
-                    backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
+                    backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'],
                   }}
                   transition={{ duration: 5, repeat: Infinity }}
                 />
@@ -655,12 +654,12 @@ export default function FabReaderCheckout({ id }: { id?: string }) {
       {/* Footer */}
       <footer
         className="relative py-16 sm:py-32 px-4 overflow-hidden mt-16"
-        style={{ backgroundColor: "rgba(37, 150, 190, 0.8)" }} // teal-600 with opacity
+        style={{ backgroundColor: 'rgba(37, 150, 190, 0.8)' }} // teal-600 with opacity
       >
         {/* Background Elements */}
         <motion.div className="absolute inset-0 z-0">
           <motion.div
-            className="absolute top-[20%] left-[10%] w-[30vw] h-[30vw] rounded-full 
+            className="absolute top-[20%] left-[10%] w-[30vw] h-[30vw] rounded-full
               bg-indigo-500/30 filter blur-3xl"
             animate={{
               scale: [1, 1.2, 1],
@@ -669,11 +668,11 @@ export default function FabReaderCheckout({ id }: { id?: string }) {
             transition={{
               duration: 8,
               repeat: Infinity,
-              repeatType: "reverse",
+              repeatType: 'reverse',
             }}
           />
           <motion.div
-            className="absolute bottom-[10%] right-[10%] w-[40vw] h-[40vw] rounded-full 
+            className="absolute bottom-[10%] right-[10%] w-[40vw] h-[40vw] rounded-full
               bg-purple-500/30 filter blur-3xl"
             animate={{
               scale: [1, 1.1, 1],
@@ -682,7 +681,7 @@ export default function FabReaderCheckout({ id }: { id?: string }) {
             transition={{
               duration: 10,
               repeat: Infinity,
-              repeatType: "reverse",
+              repeatType: 'reverse',
               delay: 2,
             }}
           />
