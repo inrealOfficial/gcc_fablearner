@@ -25,7 +25,7 @@ export async function POST(req: NextRequest) {
       line_items: [
         {
           price_data: {
-            currency: "aed", // or 'usd' based on your preference
+            currency: "usd", // or 'usd' based on your preference
             product_data: {
               name: productName,
               description: "FAB MASTERCLASS - Complete Course Access",

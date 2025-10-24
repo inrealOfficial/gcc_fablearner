@@ -3,7 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { FacebookPixel } from "@/components/FacebookPixel";
 import { AffiliateTracker } from "@/components/AffiliateTracker";
-import Script from "next/script"; // Add this import
+import Script from "next/script";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,6 +33,21 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        {/* Google Tag (gtag.js) */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=AW-10872870140"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'AW-10872870140');
+          `}
+        </Script>
+
+        {/* TikTok Pixel */}
         <Script id="tiktok-pixel" strategy="afterInteractive">
           {`
             !function (w, d, t) {
@@ -57,5 +72,3 @@ export default function RootLayout({
     </html>
   );
 }
-
-// Example usage in a checkout component
