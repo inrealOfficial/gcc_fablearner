@@ -118,7 +118,7 @@ const formatWorkshopDateTime = (
   const dayLabels = ["TODAY", "TOMORROW", "DAY AFTER"];
   const dayLabel = dayLabels[index];
   const dateStr = `${weekday}, ${month} ${day}`;
-  const timeStr = "6:00 PM - 6:30 PM IST";
+  const timeStr = "6:00 PM - 6:30 PM KSA"; // Changed from IST
 
   return { dateStr, timeStr, dayLabel };
 };
@@ -798,7 +798,7 @@ export const HeroSectionVideo = () => {
                             strokeLinecap="round"
                           />
                         </svg>
-                        <span>6:00-6:30 PM IST</span>
+                        <span>6:00-6:30 PM KSA</span> {/* Changed from IST */}
                       </div>
                     </div>
 

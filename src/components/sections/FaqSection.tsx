@@ -35,9 +35,9 @@ export const FaqSection = ({ id }: { id?: string }) => {
         "Each session lasts 30 minutes (6:00 PM to 6:30 PM).",
     },
     {
-      question: "Why is it only ₹299?",
+      question: "Why is it only $9.99?",
       answer:
-        " We’ve priced this at just ₹299 because our mission is to make early reading skills accessible to as many families as possible — without cost being a barrier. This small fee covers our workshop hosting costs and ensures only genuinely interested parents join. Our real goal is to show you how powerful and simple our method is, so you can start teaching your child right away.",
+        " We’ve priced this at just $9.99 because our mission is to make early reading skills accessible to as many families as possible — without cost being a barrier. This small fee covers our workshop hosting costs and ensures only genuinely interested parents join. Our real goal is to show you how powerful and simple our method is, so you can start teaching your child right away.",
     },
     {
       question: "Do I need any experience to teach my child?",

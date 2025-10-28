@@ -350,7 +350,7 @@ export const WorkshopForSection = () => {
                     }}
                     whileTap={{ scale: 0.98 }}
                   >
-                    Reserve Your Spot Now - ₹299
+                    Reserve Your Spot Now - $9.99
                   </motion.a>
                   <div className="absolute -top-2 -right-2 bg-yellow-400 text-pink-800 text-xs font-bold rounded-full px-2 py-1 transform rotate-12">
                     70% OFF

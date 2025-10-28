@@ -15,16 +15,16 @@ const andika = Andika({
   variable: "--font-andika",
 });
 
-// Function to get next session date in UAE timezone (same as HeroSection)
+// Function to get next session date in KSA timezone (changed from UAE)
 const getNextSessionUAE = () => {
-  const nowUAE = DateTime.now().setZone("Asia/Dubai");
-  let sessionDate = nowUAE.set({
+  const nowKSA = DateTime.now().setZone("Asia/Riyadh"); // Changed from Asia/Dubai
+  let sessionDate = nowKSA.set({
     hour: 18,
     minute: 0,
     second: 0,
     millisecond: 0,
   });
-  if (nowUAE > sessionDate) {
+  if (nowKSA > sessionDate) {
     sessionDate = sessionDate.plus({ days: 1 });
   }
   return sessionDate;
@@ -42,9 +42,9 @@ export const RegistrationSection = () => {
   const [sessionDateString, setSessionDateString] = useState("");
 
   useEffect(() => {
-    // Update session date at midnight UAE time
+    // Update session date at midnight KSA time (changed from UAE)
     const updateSession = () => setSessionDate(getNextSessionUAE());
-    const now = DateTime.now().setZone("Asia/Dubai");
+    const now = DateTime.now().setZone("Asia/Riyadh"); // Changed from Asia/Dubai
     const tomorrow = now.plus({ days: 1 }).startOf("day");
     const msUntilMidnight = tomorrow.diff(now).toObject().milliseconds || 0;
     const timeout = setTimeout(() => {
@@ -57,7 +57,7 @@ export const RegistrationSection = () => {
   // Countdown calculation
   useEffect(() => {
     const updateCountdown = () => {
-      const now = DateTime.now().setZone("Asia/Dubai");
+      const now = DateTime.now().setZone("Asia/Riyadh"); // Changed from Asia/Dubai
       const diff = sessionDate
         .diff(now, ["hours", "minutes", "seconds"])
         .toObject();
@@ -67,7 +67,7 @@ export const RegistrationSection = () => {
         seconds: Math.max(0, Math.floor(diff.seconds || 0)),
       });
       setSessionDateString(
-        sessionDate.toFormat("cccc, LLLL d, yyyy 'at' h:mm a 'UAE'")
+        sessionDate.toFormat("cccc, LLLL d, yyyy 'at' h:mm a 'KSA'") // Changed from UAE
       );
     };
     updateCountdown();
